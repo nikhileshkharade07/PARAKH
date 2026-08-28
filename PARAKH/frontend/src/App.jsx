@@ -5,6 +5,7 @@ import ContractDetailContainer from "./pages/ContractDetailContainer";
 import VendorProfilePage from "./pages/VendorProfilePage";
 import DepartmentProfilePage from "./pages/DepartmentProfilePage";
 import NetworkPage from "./pages/NetworkPage";
+import SimulatorPage from "./pages/SimulatorPage";
 
 function Shell({ children }) {
   return (
@@ -27,7 +28,10 @@ function Shell({ children }) {
             Contracts Registry
           </NavLink>
           <NavLink to="/network" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
-            Cytoscape Network Graph
+            Network Graph
+          </NavLink>
+          <NavLink to="/simulator" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            Risk Sandbox
           </NavLink>
         </nav>
       </header>
@@ -46,6 +50,7 @@ export default function App() {
         <Route path="/vendors/:id" element={<VendorProfilePage />} />
         <Route path="/departments/:id" element={<DepartmentProfilePage />} />
         <Route path="/network" element={<NetworkPage />} />
+        <Route path="/simulator" element={<SimulatorPage />} />
       </Routes>
     </Shell>
   );
