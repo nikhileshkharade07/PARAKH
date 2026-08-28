@@ -1,3 +1,13 @@
+import os
+import sys
+
+# Ensure backend and root directory are in sys.path regardless of execution directory
+backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+root_dir = os.path.dirname(backend_dir)
+for p in [backend_dir, root_dir]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
