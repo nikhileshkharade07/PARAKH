@@ -45,6 +45,25 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Custom Sleek Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
 code, pre, .font-mono {
   font-family: 'JetBrains Mono', monospace;
 }
@@ -379,7 +398,6 @@ a:hover {
   border-radius: 10px;
   padding: 16px;
   background: rgba(255, 255, 255, 0.02);
-
 }
 
 .flag-card.detected {
@@ -442,4 +460,28 @@ a:hover {
   padding: 48px;
   color: var(--text-muted);
   font-size: 14px;
+}
+
+/* Print Styling for Official Forensic Reports */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .topbar, .nav-menu, .btn, .filter-bar, .cytoscape-wrapper {
+    display: none !important;
+  }
+
+  .card {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .risk-badge {
+    border: 1px solid #000000 !important;
+  }
 }
