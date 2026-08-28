@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import { api } from "@/services/api";
 
 export default function Contracts() {
   const [contracts, setContracts] = useState([]);
@@ -14,40 +15,68 @@ export default function Contracts() {
   const contractsPerPage = 10;
 
   useEffect(() => {
-    // Mock data - in real app, fetch from /api/contracts
-    setLoading(true);
-    setTimeout(() => {
-      const mockContracts = Array.from({ length: 50 }, (_, i) => ({
-        id: `C${String(i + 1).padStart(3, "0")}`,
-        vendor: [`TechCorp Solutions`, `BuildRight Inc`, `OfficeSupplies Ltd`, `ConstructionCo`, `DataSystems LLC`][
-          Math.floor(Math.random() * 5)
-        ],
-        department: [`IT Department`, `Public Works`, `Admin Department`, `Health Services`, `Education`][
-          Math.floor(Math.random() * 5)
-        ],
-        value: Math.floor(Math.random() * 2000000) + 50000,
-        crs: Math.floor(Math.random() * 100),
-        date: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}-${String(
-          Math.floor(Math.random() * 28) + 1
-        ).padStart(2, "0")`,
-      }));
-      setContracts(mockContracts);
-      setLoading(false);
-    }, 1000);
+    const fetchContracts = async () => {
+      try {
+        setLoading(true);
+        // Fetch contracts from API
+        const response = await api.get("/contracts");
+        setContracts(response.data);
+      } catch (error) {
+        console.error("Error fetching contracts:", error);
+        // Fallback to mock data on error
+        setLoading(true);
+        setTimeout(() => {
+          const mockContracts = Array.from({ length: 50 }, (_, i) => ({
+            id: `C${String(i + 1).padStart(3, "0")}`,
+            vendor: [`TechCorp Solutions`, `BuildRight Inc`, `OfficeSupplies Ltd`, `ConstructionCo`, `DataSystems LLC`][
+              Math.floor(Math.random() * 5)
+            ],
+            department: [`IT Department`, `Public Works`, `Admin Department`, `Health Services`, `Education`][
+              Math.floor(Math.random() * 5)
+            ],
+            value: Math.floor(Math.random() * 2000000) + 50000,
+            crs: Math.floor(Math.random() * 100),
+            date: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}-${String(
+              Math.floor(Math.random() * 28) + 1
+            ).padStart(2, "0")}`,
+          }));
+          setContracts(mockContracts);
+          setLoading(false);
+        }, 1000);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContracts();
   }, []);
 
   // Filter contracts based on search term
   const filteredContracts = contracts.filter(
     (contract) =>
       contract.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contract.vendor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contract.department.toLowerCase().includes(searchTerm.toLowerCase())
+      contract.vendor?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contract.department?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Sort contracts
   const sortedContracts = [...filteredContracts].sort((a, b) => {
-    if (a[sortBy] < b[sortBy]) return sortDirection === "asc" ? -1 : 1;
-    if (a[sortBy] > b[sortBy]) return sortDirection === "asc" ? 1 : -1;
+    const valueA = sortBy === "id" ? a.id :
+                    sortBy === "vendor" ? (a.vendor || "") :
+                    sortBy === "department" ? (a.department || "") :
+                    sortBy === "value" ? (a.value || 0) :
+                    sortBy === "crs" ? (a.risk_assessment?.crs || 0) :
+                    a.id;
+
+    const valueB = sortBy === "id" ? b.id :
+                    sortBy === "vendor" ? (b.vendor || "") :
+                    sortBy === "department" ? (b.department || "") :
+                    sortBy === "value" ? (b.value || 0) :
+                    sortBy === "crs" ? (b.risk_assessment?.crs || 0) :
+                    b.id;
+
+    if (valueA < valueB) return sortDirection === "asc" ? -1 : 1;
+    if (valueA > valueB) return sortDirection === "asc" ? 1 : -1;
     return 0;
   });
 
@@ -87,7 +116,7 @@ export default function Contracts() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
         <div>Total Contracts: {contracts.length}</div>
         <div>Filtered: {filteredContracts.length}</div>
-        <div>High Risk (CRS ≥ 70): {filteredContracts.filter((c) => c.crs >= 70).length}</div>
+        <div>High Risk (CRS ≥ 70): {filteredContracts.filter((c) => c.risk_assessment?.crs >= 70).length}</div>
       </div>
 
       {/* Table */}
@@ -148,21 +177,21 @@ export default function Contracts() {
                     paginatedContracts.map((contract) => (
                       <tr key={contract.id}>
                         <td>{contract.id}</td>
-                        <td>{contract.vendor}</td>
-                        <td>{contract.department}</td>
-                        <td>${contract.value.toLocaleString()}</td>
+                        <td>{contract.vendor || "Unknown Vendor"}</td>
+                        <td>{contract.department || "Unknown Department"}</td>
+                        <td>${(contract.value || 0).toLocaleString()}</td>
                         <td>
                           <span className={`px-2 py-1 text-xs rounded-full ${
-                            contract.crs >= 70
+                            (contract.risk_assessment?.crs || 0) >= 70
                               ? "bg-destructive/20 text-destructive"
-                              : contract.crs >= 40
+                              : (contract.risk_assessment?.crs || 0) >= 40
                               ? "bg-warning/20 text-warning"
                               : "bg-secondary/20 text-secondary"
                           }`}>
-                            {contract.crs}
+                            {contract.risk_assessment?.crs || "N/A"}
                           </span>
                         </td>
-                        <td>{contract.date}</td>
+                        <td>{contract.date?.split('T')[0] || contract.date || "N/A"}</td>
                         <td>
                           <Button variant="outline" size="sm">
                             View Details
