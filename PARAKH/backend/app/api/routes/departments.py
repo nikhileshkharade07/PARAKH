@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.dependencies import get_department_service
+from app.services.department_service import DepartmentService
 
 router = APIRouter()
 
