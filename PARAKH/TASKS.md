@@ -90,6 +90,9 @@ No direct commits to `main`.
 
 - [x] Bug fixing & deprecation cleanup
 - [x] Demo stabilization
-- [x] Final smoke tests (16/16 tests passing)
-- [x] Export audit report feature (JSON)
+- [x] Final smoke & integration tests (21/21 tests passing)
+- [x] Export audit report feature (JSON & CSV dossier downloads)
 - [x] Re-run risk engine on demand
+- [x] Cytoscape multi-layout switcher, entity search, and zoom controls
+- [x] Risk Engine Sensitivity Sandbox & Simulator (`/simulator`)
+- [x] Official printable report stylesheet (`@media print`)
