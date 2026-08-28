@@ -21,17 +21,43 @@ def test_contracts_list():
         assert "contract_number" in c
         assert "crs" in c
 
+def test_contract_detail():
+    r = client.get("/api/contracts/1")
+    assert r.status_code in (200, 404)
+    if r.status_code == 200:
+        data = r.json()
+        assert "id" in data
+        assert "contract_number" in data
+        assert "bids" in data
+        assert "extensions" in data
+
 def test_departments_list():
     r = client.get("/api/departments")
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
 
+def test_department_detail():
+    r = client.get("/api/departments/1")
+    assert r.status_code in (200, 404)
+    if r.status_code == 200:
+        data = r.json()
+        assert "id" in data
+        assert "name" in data
+
 def test_vendors_list():
     r = client.get("/api/vendors")
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
+
+def test_vendor_detail():
+    r = client.get("/api/vendors/1")
+    assert r.status_code in (200, 404)
+    if r.status_code == 200:
+        data = r.json()
+        assert "id" in data
+        assert "name" in data
 
 def test_network_graph():
     r = client.get("/api/network")
