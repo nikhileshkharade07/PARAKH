@@ -52,12 +52,35 @@ export default function ContractsPage() {
     loadContracts();
   }, [search, riskLevel, deptId, vendorId]);
 
-  const updateFilter = (key, val) => {
-    const newParams = new URLSearchParams(searchParams);
-    if (val) newParams.set(key, val);
-    else newParams.delete(key);
-    setSearchParams(newParams);
+  const [page, setPage] = useState(1);
+  const pageSize = 25;
+
+  const exportCSV = () => {
+    if (contracts.length === 0) return;
+    const headers = ["Contract Number", "Title", "Department", "Vendor", "Estimate Value", "Award Value", "CRS Score", "Risk Level"];
+    const rows = contracts.map(c => [
+      c.contract_number,
+      `"${c.title.replace(/"/g, '""')}"`,
+      `"${c.department_name || ''}"`,
+      `"${c.vendor_name || ''}"`,
+      c.estimate_value,
+      c.award_value,
+      c.crs || 0,
+      c.risk_level || ''
+    ]);
+    const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `parakh-contracts-export-${new Date().toISOString().slice(0,10)}.csv`);
+    link.click();
+    URL.revokeObjectURL(url);
   };
+
+  const startIndex = (page - 1) * pageSize;
+  const paginatedContracts = contracts.slice(startIndex, startIndex + pageSize);
+  const totalPages = Math.ceil(contracts.length / pageSize) || 1;
 
   const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
 
@@ -123,59 +146,95 @@ export default function ContractsPage() {
       </div>
 
       <div className="card">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div style={{ fontSize: 14, color: "var(--text-secondary)" }}>
+            Showing <strong>{contracts.length > 0 ? startIndex + 1 : 0} – {Math.min(startIndex + pageSize, contracts.length)}</strong> of <strong>{contracts.length}</strong> audited contracts
+          </div>
+          <button className="btn btn-outline" onClick={exportCSV} disabled={contracts.length === 0} style={{ padding: "6px 14px", fontSize: 13 }}>
+            📊 Export to CSV
+          </button>
+        </div>
+
         {loading ? (
           <div className="loading-spinner">Loading contracts database...</div>
         ) : (
-          <div className="table-container">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Contract No.</th>
-                  <th>Title</th>
-                  <th>Department</th>
-                  <th>Vendor</th>
-                  <th>Estimate Value</th>
-                  <th>Award Value</th>
-                  <th>CRS Score</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {contracts.length === 0 ? (
+          <>
+            <div className="table-container">
+              <table className="data-table">
+                <thead>
                   <tr>
-                    <td colSpan="8" style={{ textAlign: "center", padding: 32, color: "var(--text-muted)" }}>
-                      No contracts matching the selected filters.
-                    </td>
+                    <th>Contract No.</th>
+                    <th>Title</th>
+                    <th>Department</th>
+                    <th>Vendor</th>
+                    <th>Estimate Value</th>
+                    <th>Award Value</th>
+                    <th>CRS Score</th>
+                    <th>Action</th>
                   </tr>
-                ) : (
-                  contracts.map((c) => (
-                    <tr key={c.id}>
-                      <td className="font-mono" style={{ fontSize: 13, fontWeight: 600 }}>{c.contract_number}</td>
-                      <td>
-                        <Link to={`/contracts/${c.id}`} style={{ fontWeight: 600, color: "#fff" }}>{c.title}</Link>
-                      </td>
-                      <td>
-                        <Link to={`/departments/${c.department_id}`}>{c.department_name}</Link>
-                      </td>
-                      <td>
-                        <Link to={`/vendors/${c.vendor_id}`}>{c.vendor_name}</Link>
-                      </td>
-                      <td className="font-mono">{formatINR(c.estimate_value)}</td>
-                      <td className="font-mono">{formatINR(c.award_value)}</td>
-                      <td>
-                        <span className={`risk-badge ${c.risk_level}`}>
-                          CRS {c.crs}
-                        </span>
-                      </td>
-                      <td>
-                        <Link to={`/contracts/${c.id}`} className="btn btn-outline" style={{ padding: "4px 10px", fontSize: 12 }}>Audit</Link>
+                </thead>
+                <tbody>
+                  {paginatedContracts.length === 0 ? (
+                    <tr>
+                      <td colSpan="8" style={{ textAlign: "center", padding: 32, color: "var(--text-muted)" }}>
+                        No contracts matching the selected filters.
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ) : (
+                    paginatedContracts.map((c) => (
+                      <tr key={c.id}>
+                        <td className="font-mono" style={{ fontSize: 13, fontWeight: 600 }}>{c.contract_number}</td>
+                        <td>
+                          <Link to={`/contracts/${c.id}`} style={{ fontWeight: 600, color: "#fff" }}>{c.title}</Link>
+                        </td>
+                        <td>
+                          <Link to={`/departments/${c.department_id}`}>{c.department_name}</Link>
+                        </td>
+                        <td>
+                          <Link to={`/vendors/${c.vendor_id}`}>{c.vendor_name}</Link>
+                        </td>
+                        <td className="font-mono">{formatINR(c.estimate_value)}</td>
+                        <td className="font-mono">{formatINR(c.award_value)}</td>
+                        <td>
+                          <span className={`risk-badge ${c.risk_level}`}>
+                            CRS {c.crs}
+                          </span>
+                        </td>
+                        <td>
+                          <Link to={`/contracts/${c.id}`} className="btn btn-outline" style={{ padding: "4px 10px", fontSize: 12 }}>Audit</Link>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 20 }}>
+                <button
+                  className="btn btn-outline"
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  style={{ padding: "6px 14px", fontSize: 13 }}
+                >
+                  ← Previous
+                </button>
+                <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+                  Page <strong>{page}</strong> of <strong>{totalPages}</strong>
+                </span>
+                <button
+                  className="btn btn-outline"
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  style={{ padding: "6px 14px", fontSize: 13 }}
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

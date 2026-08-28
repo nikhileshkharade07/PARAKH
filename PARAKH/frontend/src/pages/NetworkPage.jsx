@@ -9,6 +9,9 @@ export default function NetworkPage() {
   const [networkData, setNetworkData] = useState(null);
   const [selectedElement, setSelectedElement] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [layoutName, setLayoutName] = useState("cose");
+  const [highRiskOnly, setHighRiskOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function fetchNetwork() {
@@ -31,9 +34,20 @@ export default function NetworkPage() {
       cyInstance.current.destroy();
     }
 
+    let nodes = networkData.nodes;
+    let edges = networkData.edges;
+
+    if (highRiskOnly) {
+      const highRiskNodeIds = new Set(
+        nodes.filter(n => (n.data.average_crs || 0) >= 70).map(n => n.data.id)
+      );
+      nodes = nodes.filter(n => highRiskNodeIds.has(n.data.id));
+      edges = edges.filter(e => highRiskNodeIds.has(e.data.source) || highRiskNodeIds.has(e.data.target));
+    }
+
     const cy = cytoscape({
       container: cyRef.current,
-      elements: [...networkData.nodes, ...networkData.edges],
+      elements: [...nodes, ...edges],
       style: [
         {
           selector: 'node[type="vendor"]',
@@ -44,8 +58,8 @@ export default function NetworkPage() {
             'font-size': '11px',
             'text-valign': 'bottom',
             'text-margin-y': 5,
-            'width': 'mapData(contract_count, 1, 50, 24, 56)',
-            'height': 'mapData(contract_count, 1, 50, 24, 56)',
+            'width': 'mapData(contract_count, 1, 50, 26, 60)',
+            'height': 'mapData(contract_count, 1, 50, 26, 60)',
             'border-width': 2,
             'border-color': '#0284c7'
           }
@@ -59,8 +73,8 @@ export default function NetworkPage() {
             'font-size': '11px',
             'text-valign': 'bottom',
             'text-margin-y': 5,
-            'width': 'mapData(contract_count, 1, 100, 28, 64)',
-            'height': 'mapData(contract_count, 1, 100, 28, 64)',
+            'width': 'mapData(contract_count, 1, 100, 30, 68)',
+            'height': 'mapData(contract_count, 1, 100, 30, 68)',
             'shape': 'round-rectangle',
             'border-width': 2,
             'border-color': '#6d28d9'
@@ -93,7 +107,7 @@ export default function NetworkPage() {
         }
       ],
       layout: {
-        name: 'cose',
+        name: layoutName,
         animate: false,
         padding: 30,
         nodeOverlap: 20,
@@ -116,7 +130,36 @@ export default function NetworkPage() {
     return () => {
       if (cyInstance.current) cyInstance.current.destroy();
     };
-  }, [networkData]);
+  }, [networkData, layoutName, highRiskOnly]);
+
+  const handleSearchNode = (e) => {
+    e.preventDefault();
+    if (!cyInstance.current || !searchQuery.trim()) return;
+    const q = searchQuery.toLowerCase();
+    const found = cyInstance.current.nodes().filter(n => n.data('label').toLowerCase().includes(q));
+    if (found.length > 0) {
+      cyInstance.current.nodes().unselect();
+      found.select();
+      cyInstance.current.animate({
+        center: { eles: found },
+        zoom: 1.4,
+        duration: 500
+      });
+      setSelectedElement(found[0].data());
+    }
+  };
+
+  const handleFit = () => {
+    if (cyInstance.current) {
+      cyInstance.current.fit(undefined, 30);
+    }
+  };
+
+  const handleZoom = (factor) => {
+    if (cyInstance.current) {
+      cyInstance.current.zoom(cyInstance.current.zoom() * factor);
+    }
+  };
 
   const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
 
@@ -128,6 +171,57 @@ export default function NetworkPage() {
         <p style={{ color: "var(--text-secondary)" }}>
           Visualizing systemic collusion indicators, vendor dominance, and recurring award relationships between vendors (blue circles) and departments (purple squares).
         </p>
+      </div>
+
+      {/* Graph Control Bar */}
+      <div className="card" style={{ marginBottom: 16, padding: "14px 20px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 14 }}>
+          <form onSubmit={handleSearchNode} style={{ display: "flex", gap: 8, flex: 1, minWidth: 260, maxWidth: 400 }}>
+            <input
+              type="text"
+              className="input-field"
+              placeholder="Search vendor or department..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{ padding: "8px 12px", fontSize: 13 }}
+            />
+            <button type="submit" className="btn btn-outline" style={{ padding: "8px 14px", fontSize: 13 }}>
+              Find
+            </button>
+          </form>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
+              <span style={{ color: "var(--text-muted)" }}>Layout:</span>
+              <select
+                className="select-field"
+                value={layoutName}
+                onChange={(e) => setLayoutName(e.target.value)}
+                style={{ padding: "6px 12px", fontSize: 13 }}
+              >
+                <option value="cose">Force-Directed (COSE)</option>
+                <option value="concentric">Concentric Circles</option>
+                <option value="circle">Circular</option>
+                <option value="grid">Grid Matrix</option>
+              </select>
+            </div>
+
+            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, cursor: "pointer", color: "var(--text-secondary)" }}>
+              <input
+                type="checkbox"
+                checked={highRiskOnly}
+                onChange={(e) => setHighRiskOnly(e.target.checked)}
+              />
+              <span>High Risk Only (CRS ≥ 70)</span>
+            </label>
+
+            <div style={{ display: "flex", gap: 4 }}>
+              <button className="btn btn-outline" onClick={() => handleZoom(1.25)} style={{ padding: "6px 10px" }} title="Zoom In">+</button>
+              <button className="btn btn-outline" onClick={() => handleZoom(0.8)} style={{ padding: "6px 10px" }} title="Zoom Out">-</button>
+              <button className="btn btn-outline" onClick={handleFit} style={{ padding: "6px 12px", fontSize: 13 }}>Fit View</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {loading ? (
