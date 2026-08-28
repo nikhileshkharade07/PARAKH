@@ -1,7 +1,10 @@
 import os
 import sys
 
-# Add repository root directory to sys.path
+# Add repository root and backend directories to sys.path
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-if root_dir not in sys.path:
-    sys.path.insert(0, root_dir)
+backend_dir = os.path.join(root_dir, "backend")
+
+for p in [backend_dir, root_dir]:
+    if p not in sys.path:
+        sys.path.insert(0, p)

@@ -37,6 +37,14 @@ def test_rf1_multiple_bids_not_flagged():
     rf1 = next(f for f in flags if f["flag_id"] == "RF-1")
     assert rf1["detected"] is False
 
+def test_rf2_vendor_lockin():
+    # Peer contracts where vendor_id=1 has 8 out of 10 wins (80% > 60% threshold)
+    contract = _make_mock_contract(vendor_id=1)
+    peers = [_make_mock_contract(vendor_id=1) for _ in range(8)] + [_make_mock_contract(vendor_id=2) for _ in range(2)]
+    flags = evaluate_rules(contract, peers, settings)
+    rf2 = next(f for f in flags if f["flag_id"] == "RF-2")
+    assert rf2["detected"] is True
+
 def test_rf3_threshold_pattern():
     # settings.approval_threshold is 5,000,000 -> 90% is 4,500,000
     contract = _make_mock_contract(award=4750000)
@@ -57,6 +65,14 @@ def test_rf5_price_deviation():
     flags = evaluate_rules(contract, [], settings)
     rf5 = next(f for f in flags if f["flag_id"] == "RF-5")
     assert rf5["detected"] is True
+
+def test_rf6_repeat_winner():
+    # Vendor has 4 wins in department (>= 3 threshold)
+    contract = _make_mock_contract(vendor_id=1)
+    peers = [_make_mock_contract(vendor_id=1) for _ in range(4)]
+    flags = evaluate_rules(contract, peers, settings)
+    rf6 = next(f for f in flags if f["flag_id"] == "RF-6")
+    assert rf6["detected"] is True
 
 def test_rf8_unusual_extensions():
     contract = _make_mock_contract(ext_count=2)
