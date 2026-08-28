@@ -36,6 +36,13 @@ export default function DashboardPage() {
 
   const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
 
+  const SHOWCASE_CASES = [
+    { id: 7, number: "GEM-DEMO-000007", name: "Specification Tailoring & Single Bidder", crs: 90, desc: "High NLP overlap with Apex Systems product catalog" },
+    { id: 77, number: "GEM-DEMO-000077", name: "Threshold Proximity & Fast-Track Window", crs: 85, desc: "4-day tender window awarded right below 50 Lakhs threshold" },
+    { id: 777, number: "GEM-DEMO-000777", name: "Repeated Winner & Long Extension", crs: 88, desc: "240 days of uncompetitive contract extensions" },
+    { id: 1777, number: "GEM-DEMO-001777", name: "High Price Estimate Deviation", crs: 82, desc: "Award price 33% above government sanctioned estimate" }
+  ];
+
   return (
     <div>
       <div style={{ marginBottom: 28 }}>
@@ -44,6 +51,33 @@ export default function DashboardPage() {
         <p style={{ color: "var(--text-secondary)" }}>
           Screening synthetic public procurement contracts for red flags, price deviations, single-bidder patterns, and specification tailoring.
         </p>
+      </div>
+
+      {/* Showcase Demo Anomaly Shortcuts */}
+      <div className="card" style={{ background: "linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9))", borderColor: "var(--accent-cyan)", marginBottom: 28 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ fontSize: 18 }}>🔍</span>
+            <strong style={{ fontSize: 15, color: "var(--accent-cyan)" }}>Forensic Demo Showcase Cases</strong>
+            <span style={{ fontSize: 11, background: "rgba(56, 189, 248, 0.15)", color: "var(--accent-cyan)", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>SHOWCASE</span>
+          </div>
+          <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Instant deep-dive into seeded procurement anomalies</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
+          {SHOWCASE_CASES.map((sc) => (
+            <Link key={sc.id} to={`/contracts/${sc.id}`} style={{ background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 8, padding: 14, display: "flex", flexDirection: "column", justifyContent: "space-between", transition: "all 0.2s ease" }}>
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                  <span className="font-mono" style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{sc.number}</span>
+                  <span className="risk-badge high" style={{ fontSize: 11, padding: "2px 8px" }}>CRS {sc.crs}</span>
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>{sc.name}</div>
+                <div style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.4 }}>{sc.desc}</div>
+              </div>
+              <div style={{ marginTop: 10, fontSize: 12, color: "var(--accent-cyan)", fontWeight: 600 }}>Investigate Audit File →</div>
+            </Link>
+          ))}
+        </div>
       </div>
 
       <div className="kpi-grid">

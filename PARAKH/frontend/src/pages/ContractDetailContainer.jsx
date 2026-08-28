@@ -221,6 +221,75 @@ export default function ContractDetailContainer() {
         </div>
       </div>
 
+      {/* Participating Bidders & Price Competition */}
+      <div className="grid-2" style={{ marginBottom: 24 }}>
+        <div className="card">
+          <div className="card-title">
+            <span>Participating Bidders Competition</span>
+            <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{contract.bidder_count} Bidder(s)</span>
+          </div>
+          <div className="table-container">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Bidder Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {contract.bids?.length === 0 ? (
+                  <tr>
+                    <td colSpan="2" style={{ color: "var(--text-muted)" }}>No bid records found.</td>
+                  </tr>
+                ) : (
+                  contract.bids?.map((b, idx) => (
+                    <tr key={b.id || idx}>
+                      <td style={{ fontWeight: b.vendor_name === contract.vendor_name ? 700 : 400 }}>
+                        {b.vendor_name}
+                      </td>
+                      <td>
+                        {b.vendor_name === contract.vendor_name ? (
+                          <span style={{ background: "rgba(16, 185, 129, 0.15)", color: "var(--risk-low)", padding: "2px 8px", borderRadius: 4, fontSize: 12, fontWeight: 700 }}>
+                            🏆 Awarded
+                          </span>
+                        ) : (
+                          <span style={{ color: "var(--text-muted)", fontSize: 12 }}>Participated</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Contract Extension History */}
+        <div className="card">
+          <div className="card-title">
+            <span>Contract Extensions History (RF-8)</span>
+            <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{contract.extensions?.length || 0} Extension(s)</span>
+          </div>
+          {(!contract.extensions || contract.extensions.length === 0) ? (
+            <div style={{ color: "var(--risk-low)", fontSize: 13, padding: "12px 0" }}>
+              ✓ No contract extensions were granted. Completed on original schedule.
+            </div>
+          ) : (
+            <div style={{ display: "grid", gap: 10 }}>
+              {contract.extensions.map((ext, idx) => (
+                <div key={ext.id || idx} style={{ background: "rgba(245, 158, 11, 0.08)", border: "1px solid rgba(245, 158, 11, 0.25)", borderRadius: 8, padding: 12 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <strong style={{ color: "var(--risk-med)", fontSize: 13 }}>Extension #{idx + 1}: +{ext.extension_days} Days</strong>
+                    <span className="risk-badge medium" style={{ fontSize: 11, padding: "2px 6px" }}>Prolonged</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>{ext.reason || "Extension granted under standard clause."}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* NLP Specification Similarity Analysis */}
       <div className="card" style={{ marginBottom: 24 }}>
         <div className="card-title">
