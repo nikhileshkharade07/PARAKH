@@ -19,6 +19,7 @@ dist/
 Thumbs.db
 
 *.log
+*.db
 data/processed/*
 !data/processed/.gitkeep
 

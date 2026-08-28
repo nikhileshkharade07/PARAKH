@@ -1,25 +1,52 @@
-import {Link, Route, Routes} from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Contracts from "./pages/Contracts";
-import Network from "./pages/Network";
+import { Link, NavLink, Route, Routes } from "react-router-dom";
+import DashboardPage from "./pages/DashboardPage";
+import ContractsPage from "./pages/ContractsPage";
+import ContractDetailContainer from "./pages/ContractDetailContainer";
+import VendorProfilePage from "./pages/VendorProfilePage";
+import DepartmentProfilePage from "./pages/DepartmentProfilePage";
+import NetworkPage from "./pages/NetworkPage";
 
-function Shell({children}) {
-  return <div className="app">
-    <header className="topbar">
-      <Link to="/" className="brand">PARAKH</Link>
-      <nav><Link to="/">Dashboard</Link><Link to="/contracts">Contracts</Link><Link to="/network">Network</Link></nav>
-    </header>
-    <main>{children}</main>
-  </div>;
+function Shell({ children }) {
+  return (
+    <div className="app-container">
+      <header className="topbar">
+        <div className="brand-container">
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div className="brand-logo">P</div>
+            <div>
+              <div className="brand-title">PARAKH</div>
+              <div className="brand-subtitle">Procurement Risk Auditor</div>
+            </div>
+          </Link>
+        </div>
+        <nav className="nav-menu">
+          <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`} end>
+            Dashboard
+          </NavLink>
+          <NavLink to="/contracts" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            Contracts Registry
+          </NavLink>
+          <NavLink to="/network" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            Cytoscape Network Graph
+          </NavLink>
+        </nav>
+      </header>
+      <main className="main-content">{children}</main>
+    </div>
+  );
 }
 
 export default function App() {
-  return <Shell><Routes>
-    <Route path="/" element={<Dashboard />}/>
-    <Route path="/contracts" element={<Contracts />}/>
-    <Route path="/contracts/:id" element={<section className="card"><div className="eyebrow">FOUNDATION SCAFFOLD</div><h1>Contract Investigation</h1><p>CRS, risk flags, evidence, NLP and optional blockchain record.</p></section>}/>
-    <Route path="/vendors/:id" element={<section className="card"><div className="eyebrow">FOUNDATION SCAFFOLD</div><h1>Vendor Profile</h1><p>Contracts, total value, departments, average CRS and network connections.</p></section>}/>
-    <Route path="/departments/:id" element={<section className="card"><div className="eyebrow">FOUNDATION SCAFFOLD</div><h1>Department Profile</h1><p>Vendor concentration, risk trend and network.</p></section>}/>
-    <Route path="/network" element={<Network />}/>
-  </Routes></Shell>;
+  return (
+    <Shell>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/contracts" element={<ContractsPage />} />
+        <Route path="/contracts/:id" element={<ContractDetailContainer />} />
+        <Route path="/vendors/:id" element={<VendorProfilePage />} />
+        <Route path="/departments/:id" element={<DepartmentProfilePage />} />
+        <Route path="/network" element={<NetworkPage />} />
+      </Routes>
+    </Shell>
+  );
 }
