@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from backend.app.api.routes import contracts, vendors, departments, dashboard, network, risk, nlp, blockchain
+from app.api.routes import contracts, vendors, departments, dashboard, network, risk, nlp, blockchain
 
 api_router = APIRouter()
 api_router.include_router(contracts.router, prefix="/contracts", tags=["contracts"])

@@ -1,8 +1,8 @@
-from backend.app.core.config import settings
-from backend.app.models import RiskAssessment, RiskFlag
-from backend.ml.risk_engine.rules import evaluate_rules
-from backend.ml.anomaly_detection.isolation_forest import anomaly_for_contract
-from backend.ml.nlp.similarity import specification_similarity
+from app.core.config import settings
+from app.models import RiskAssessment, RiskFlag
+from ml.risk_engine.rules import evaluate_rules
+from ml.anomaly_detection.isolation_forest import anomaly_for_contract
+from ml.nlp.similarity import specification_similarity
 
 class RiskEngine:
     def __init__(self):

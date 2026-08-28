@@ -25,6 +25,7 @@ class ContractSummary(BaseModel):
     vendor_id: int
     estimate_value: Decimal
     award_value: Decimal
+    risk_level: str
 
 class ContractDetail(ContractSummary):
     specification: str
