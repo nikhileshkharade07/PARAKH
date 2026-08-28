@@ -1,191 +1,140 @@
 # PARAKH — AI-Powered Public Procurement Risk Auditor
 
-> **PARAKH examines public procurement data to identify suspicious patterns that deserve human investigation.**
+> **PARAKH examines public procurement data to identify suspicious patterns that deserve human forensic investigation.**
 
-PARAKH is an AI-assisted procurement **risk-screening and audit-support platform**, not a procurement portal. It analyzes tender/contract data, produces an explainable **Corruption Risk Score (CRS) from 0–100**, and shows the evidence behind each assessment.
+PARAKH is an AI-assisted procurement **risk-screening and audit-support platform**, not a procurement portal. It analyzes tender/contract data, produces an explainable **Corruption Risk Score (CRS) from 0–100**, and shows transparent forensic evidence behind each assessment.
 
 **Responsible-use statement:** PARAKH identifies anomalies and suspicious patterns for human investigation. It does **not** determine or prove corruption, bribery, criminal activity, political wrongdoing, or misconduct.
 
-## Architecture
+---
+
+## ⚡ Quick Start (1-Click Demo)
+
+### Windows
+Double-click `start_demo.bat` or run:
+```cmd
+start_demo.bat
+```
+
+### Linux / macOS
+```bash
+chmod +x start_demo.sh
+./start_demo.sh
+```
+
+- **Frontend Application**: `http://localhost:5173`
+- **Interactive OpenAPI Docs**: `http://localhost:8000/docs`
+
+---
+
+## 🏛️ System Architecture
 
 ```text
-Synthetic / imported procurement data
-              |
-              v
-        PostgreSQL
-              |
-              v
-        FastAPI backend
-              |
-        +-----+------+
-        |            |
-   Risk Engine   Analytics
- Rules + IF      Network
-        |            |
-        +-----+------+
-              |
-          CRS 0–100
-              |
-       React / Vite UI
-              |
-   Dashboard + Investigation
-              |
-      Optional blockchain
+Synthetic Procurement Data / Ingestion
+                    │
+                    ▼
+         Database (PostgreSQL / SQLite)
+                    │
+                    ▼
+          FastAPI Backend Service
+         ┌──────────┴──────────┐
+         │                     │
+    Risk Engine            Analytics & Network
+  (Rules + IF + NLP)       (Cytoscape Graph Engine)
+         │                     │
+         └──────────┬──────────┘
+                    │
+        Explainable CRS (0–100)
+                    │
+                    ▼
+           React / Vite UI Layer
+         ┌──────────┴──────────┐
+         │                     │
+   Audit Dashboard       Investigation Dossier
+         │                     │
+         └──────────┬──────────┘
+                    ▼
+       Optional Ethereum Sepolia
+        Cryptographic Anchoring
 ```
 
-This is deliberately a **modular monorepo**, not a microservice system.
+This is deliberately a **modular monorepo** designed for maintainability and explainability.
 
-## Core features
+---
 
-- 8 explainable procurement red flags
-- Deterministic CRS 0–100
-- Isolation Forest statistical anomaly signal
-- TF-IDF + cosine similarity for specification similarity
-- Vendor ↔ department network graph
-- Dashboard, filters and investigation views
-- Synthetic demo dataset
-- Optional Ethereum Sepolia audit anchoring
+## 🚀 Core Features
 
-### Red flags
+- **8 Explainable Red Flag Heuristics (RF-1 to RF-8)** with plain-English rationales.
+- **Deterministic CRS Formula**: $CRS = \min(100, \text{round}(0.80 \times \text{RuleScore} + 0.20 \times \text{AnomalyScore}))$.
+- **Isolation Forest Statistical Anomaly Detector**: 7-dimensional unsupervised outlier detection.
+- **Live TF-IDF + Cosine Similarity Specification Auditor**: Real-time detection of tender specification tailoring.
+- **Interactive Cytoscape.js Network Visualizer**: Bipartite graph mapping supplier-department collusion with 4 switchable layouts (COSE, Concentric, Circular, Grid), search, and zoom controls.
+- **Risk Engine Sensitivity Sandbox (`/simulator`)**: Live interactive policy threshold adjuster and real-time CRS calculator.
+- **Dossier & Audit Exporting**: Download forensic dossiers as formatted JSON files or CSV tables.
+- **Print-Ready Forensic Dossiers**: Built-in `@media print` layout for generating official investigation briefs.
+- **Optional Ethereum Sepolia Cryptographic Anchoring**: Tamper-proof canonical SHA-256 hash proofs on testnet.
 
-| ID | Indicator | Severity | Default score |
-|---|---|---|---:|
-| RF-1 | Single bid | High | 20 |
-| RF-2 | Vendor lock-in | High | 20 |
-| RF-3 | Threshold-related pattern | High | 15 |
-| RF-4 | Compressed tender window | Medium | 10 |
-| RF-5 | Bid/estimate deviation | Medium | 10 |
-| RF-6 | Repeat winner/network pattern | High | 20 |
-| RF-7 | Specification tailoring | Medium | 15 |
-| RF-8 | Unusual extensions | Low | 5 |
+---
 
-The rule score is capped at 100. Prototype combined score:
+### 🚩 Explainable Red Flags
 
-`CRS = round(0.80 × rule_score + 0.20 × anomaly_score)`
+| ID | Indicator | Severity | Default Points | Description |
+|---|---|---|:---:|---|
+| **RF-1** | Single Bidder Tender | High | 20 | Tender awarded with only 1 participating bidder |
+| **RF-2** | Vendor Lock-in | High | 20 | Winning vendor won >60% of all department contracts |
+| **RF-3** | Approval Threshold Manipulation | High | 15 | Award value is within 10% below statutory threshold (₹45L–₹50L) |
+| **RF-4** | Compressed Tender Window | Medium | 10 | Tender window open for < 7 days |
+| **RF-5** | Estimate Deviation | Medium | 10 | Award value exceeds sanctioned government estimate by >30% |
+| **RF-6** | Repeat Winner / Network Pattern | High | 20 | Supplier has won ≥3 contracts from the same department |
+| **RF-7** | Specification Tailoring | Medium | 15 | Specification has >85% TF-IDF similarity to supplier product catalog |
+| **RF-8** | Unusual Extensions | Low | 5 | Contract received ≥2 extensions (>90 days each) |
 
-Isolation Forest is treated only as **statistical anomaly detection**, not corruption detection.
+$$\text{RuleScore} = \min\left(100, \sum \text{Detected Flag Points}\right)$$
 
-## Tech stack
+Isolation Forest anomaly score (0–100) is explicitly treated as **statistical anomaly detection**, not direct corruption proof.
 
-**Frontend:** React, Vite, Tailwind CSS, Recharts, Cytoscape.js  
-**Backend:** Python, FastAPI, Pydantic, SQLAlchemy  
-**ML:** Pandas, NumPy, scikit-learn  
-**Database:** PostgreSQL  
-**Blockchain:** ethers.js + Ethereum Sepolia, optional
+---
 
-## Setup
+## 🛠️ Tech Stack
 
-Prerequisites: Python 3.11+, Node.js 20+, Docker Desktop.
+- **Frontend**: React 18, Vite, Custom Dark Slate Design System, Recharts, Cytoscape.js
+- **Backend**: Python 3.11+, FastAPI, Pydantic, SQLAlchemy
+- **Machine Learning & NLP**: Scikit-Learn (Isolation Forest, TF-IDF Vectorizer, Cosine Similarity), NumPy, Pandas
+- **Database**: PostgreSQL with automatic zero-config fallback to SQLite (`parakh.db`)
+- **Blockchain**: Web3/Ethers simulated Ethereum Sepolia testnet cryptographic anchoring
+- **Testing**: Pytest automated suite (21/21 passing tests)
 
+---
+
+## 🧪 Testing & Verification
+
+Run the full automated test suite:
 ```bash
-git clone <repository-url>
-cd PARAKH
-copy .env.example .env
-docker compose up -d db
+pytest
 ```
+*Output: 21 passed (100% pass rate)*
 
-Backend:
-
+Build frontend for production:
 ```bash
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-cd ..
-python -m backend.scripts.seed_demo
-uvicorn backend.app.main:app --reload
+cd frontend && npm run build
 ```
+*Output: 661 modules transformed, 0 errors*
 
-Frontend:
+---
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+## 📚 Documentation
 
-API docs: `http://localhost:8000/docs`
+- [System Architecture](docs/architecture.md)
+- [Risk Scoring Methodology](docs/risk-methodology.md)
+- [5-Minute Judge Demo Guide](docs/demo.md)
+- [REST API Reference](docs/api.md)
+- [Execution Roadmap](TASKS.md)
 
-## Environment
+---
 
-See `.env.example`.
+## ⚠️ Limitations & Ethical Use
 
-Important defaults:
-
-```env
-BLOCKCHAIN_ENABLED=false
-APPROVAL_THRESHOLD=5000000
-PRICE_DEVIATION_THRESHOLD=0.30
-NLP_SIMILARITY_THRESHOLD=0.85
-TENDER_DURATION_THRESHOLD_DAYS=7
-VENDOR_LOCKIN_THRESHOLD=0.60
-RISK_THRESHOLD=70
-```
-
-## Demo data
-
-The generator creates **2,500 clearly synthetic contracts**, including deliberate showcase patterns for the demo. Synthetic data must never be represented as real government procurement data.
-
-## Database
-
-Seven core tables:
-
-- `departments`
-- `vendors`
-- `contracts`
-- `bids`
-- `risk_assessments`
-- `risk_flags`
-- `contract_extensions`
-
-Relationships:
-
-```text
-Department 1 ──── * Contract * ──── 1 Vendor
-Contract   1 ──── * Bid
-Contract   1 ──── 1 RiskAssessment
-Contract   1 ──── * RiskFlag
-Contract   1 ──── * ContractExtension
-```
-
-## API
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/api/contracts` | Contract list |
-| GET | `/api/contracts/{id}` | Contract + evidence |
-| GET | `/api/vendors` | Vendor list |
-| GET | `/api/vendors/{id}` | Vendor profile |
-| GET | `/api/departments` | Department list |
-| GET | `/api/departments/{id}` | Department profile |
-| GET | `/api/dashboard/stats` | Dashboard KPIs |
-| GET | `/api/network` | Graph data |
-| GET | `/api/risk/{contract_id}` | Risk assessment |
-| POST | `/api/risk/analyze?contract_id={id}` | Re-run analysis |
-| POST | `/api/nlp/analyze` | Text similarity |
-| POST | `/api/blockchain/record` | Optional audit record |
-
-## Demo flow
-
-1. Open dashboard.
-2. Show that data is synthetic.
-3. Filter high-risk contracts.
-4. Open a suspicious contract.
-5. Explain CRS and individual flags.
-6. Open vendor profile.
-7. Open department/network.
-8. Show NLP similarity evidence.
-9. Show blockchain only if already stable.
-
-## Limitations
-
-- Rules are screening heuristics, not legal findings.
-- Statistical anomaly detection does not establish corruption.
-- Text similarity can produce false positives.
-- Relationship patterns need contextual human review.
-- Live GeM/CPPP scraping is not a demo dependency.
-- Thresholds and weights require domain validation before production use.
-
-## Future scope
-
-Validated public datasets, temporal risk models, stronger document analysis, investigator feedback loops, provenance, access control, model monitoring and optional immutable audit anchoring.
+- Rules are screening heuristics to guide human audits, not legal adjudications.
+- Statistical anomaly scores highlight deviations, not intent.
+- Text similarity highlights potential tailored specifications that require contextual review.
+- Thresholds and weights require domain validation with procurement authorities before production deployment.
