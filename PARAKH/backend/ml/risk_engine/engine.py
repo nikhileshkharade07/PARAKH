@@ -1,3 +1,4 @@
+import json
 from app.core.config import settings
 from app.models import RiskAssessment, RiskFlag
 from ml.risk_engine.rules import evaluate_rules
@@ -21,6 +22,11 @@ class RiskEngine:
             if flag["flag_id"] == "RF-7":
                 flag["detected"] = nlp["flagged"]
                 flag["explanation"] = nlp["explanation"]
+                # Update evidence for RF-7 with NLP results
+                flag["evidence"] = {
+                    "similarity_score": nlp["similarity_score"],
+                    "threshold": self.settings.nlp_similarity_threshold
+                }
 
         rule_score = min(100, sum(f["score"] for f in flags if f["detected"]))
         if anomaly_score is None:
@@ -37,7 +43,13 @@ class RiskEngine:
 
         contract.risk_flags.clear()
         for flag in flags:
-            contract.risk_flags.append(RiskFlag(**flag))
+            # Extract evidence and create RiskFlag without evidence field
+            evidence = flag.pop("evidence", None)
+            risk_flag = RiskFlag(**flag)
+            # Store evidence as JSON string if present
+            if evidence is not None:
+                risk_flag.evidence = json.dumps(evidence)
+            contract.risk_flags.append(risk_flag)
         db.add(contract)
         db.commit()
 
