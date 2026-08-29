@@ -1,12 +1,19 @@
+import sys
+from pathlib import Path
+# Add the backend directory to the sys.path so we can import from app and ml
+backend_dir = Path(__file__).resolve().parent.parent
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
 from datetime import datetime, timedelta
 from decimal import Decimal
 import random
 
-from backend.app.database.session import SessionLocal, engine
-from backend.app.models.base import Base
-from backend.app.models import Department, Vendor, Contract, Bid, ContractExtension
-from backend.ml.risk_engine.engine import RiskEngine
-from backend.ml.anomaly_detection.isolation_forest import anomaly_scores_for_contracts
+from app.database.session import SessionLocal, engine
+from app.models.base import Base
+from app.models import Department, Vendor, Contract, Bid, ContractExtension
+from ml.risk_engine.engine import RiskEngine
+from ml.anomaly_detection.isolation_forest import anomaly_scores_for_contracts
 
 random.seed(42)
 

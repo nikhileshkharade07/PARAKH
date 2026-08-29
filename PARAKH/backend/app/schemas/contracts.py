@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 
 class RiskFlagOut(BaseModel):
@@ -15,6 +16,26 @@ class RiskOut(BaseModel):
     rule_score: float
     anomaly_score: float
     flags: list[RiskFlagOut]
+
+
+class RuleEvidenceOut(BaseModel):
+    rule_id: str
+    rule_name: str
+    triggered: bool
+    severity: str
+    contribution: Optional[float] = None
+    explanation: str
+    evidence: Optional[Dict[str, Any]] = None
+
+
+class RiskEvidenceOut(BaseModel):
+    contract_id: int
+    risk_score: int
+    risk_level: str
+    rule_score: float
+    anomaly_score: float
+    triggered_rules: List[RuleEvidenceOut]
+    generated_at: datetime
 
 class BidOut(BaseModel):
     id: int

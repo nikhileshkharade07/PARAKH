@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Optional
 from sqlalchemy import Date, DateTime, ForeignKey, Numeric, String, Text, Integer, Float, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
@@ -64,6 +65,7 @@ class RiskFlag(Base):
     severity: Mapped[str] = mapped_column(String(20))
     score: Mapped[float] = mapped_column(Float)
     explanation: Mapped[str] = mapped_column(Text)
+    evidence: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     contract: Mapped["Contract"] = relationship(back_populates="risk_flags")
 
 class ContractExtension(Base):
