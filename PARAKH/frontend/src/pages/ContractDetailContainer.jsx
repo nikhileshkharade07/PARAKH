@@ -8,6 +8,10 @@ export default function ContractDetailContainer() {
   const [contract, setContract] = useState(null);
   const [loading, setLoading] = useState(true);
   
+  // Similar tenders state
+  const [similarTenders, setSimilarTenders] = useState([]);
+  const [similarLoading, setSimilarLoading] = useState(false);
+
   // NLP state
   const [nlpSpec, setNlpSpec] = useState("");
   const [nlpVendorDesc, setNlpVendorDesc] = useState("");
@@ -34,6 +38,14 @@ export default function ContractDetailContainer() {
         setContract(res.data);
         setNlpSpec(res.data.specification || "");
         setNlpVendorDesc(res.data.vendor_product_description || "");
+
+        // Fetch similar / recycled tenders
+        try {
+          const simRes = await api.get(`/contracts/${id}/similar-tenders`);
+          setSimilarTenders(simRes.data || []);
+        } catch (sErr) {
+          console.warn("Could not load similar tenders:", sErr);
+        }
       } catch (err) {
         console.error("Error loading contract details:", err);
       } finally {
@@ -288,6 +300,48 @@ export default function ContractDetailContainer() {
         </div>
       </div>
 
+      {/* Peer-Group Benchmark Anomaly Detection Card */}
+      {contract.peer_comparison && (
+        <div className="card" style={{ marginBottom: 24, borderColor: contract.peer_comparison.is_value_outlier || contract.peer_comparison.is_duration_outlier ? "var(--risk-med-border)" : "var(--border-color)" }}>
+          <div className="card-title">
+            <span>Peer-Group Statistical Benchmark Comparison</span>
+            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
+              Compared against {contract.peer_comparison.department_total_contracts} peer contracts in {contract.department_name}
+            </span>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 12 }}>
+            <div style={{ background: "rgba(0,0,0,0.2)", padding: 10, borderRadius: 6 }}>
+              <div style={{ fontSize: 11, color: "var(--text-muted)" }}>Peer Median Award Value</div>
+              <div className="font-mono" style={{ fontSize: 15, fontWeight: 700 }}>{formatINR(contract.peer_comparison.peer_median_award_value)}</div>
+              <div style={{ fontSize: 11, color: contract.peer_comparison.value_deviation_percent > 30 ? "var(--risk-high)" : "var(--text-secondary)" }}>
+                {contract.peer_comparison.value_deviation_percent > 0 ? "+" : ""}{contract.peer_comparison.value_deviation_percent}% deviation
+              </div>
+            </div>
+
+            <div style={{ background: "rgba(0,0,0,0.2)", padding: 10, borderRadius: 6 }}>
+              <div style={{ fontSize: 11, color: "var(--text-muted)" }}>Peer Median Tender Window</div>
+              <div style={{ fontSize: 15, fontWeight: 700 }}>{contract.peer_comparison.peer_median_tender_days} Days</div>
+              <div style={{ fontSize: 11, color: contract.peer_comparison.is_duration_outlier ? "var(--risk-high)" : "var(--text-secondary)" }}>
+                {contract.peer_comparison.duration_deviation_percent > 0 ? "+" : ""}{contract.peer_comparison.duration_deviation_percent}% vs median
+              </div>
+            </div>
+
+            <div style={{ background: "rgba(0,0,0,0.2)", padding: 10, borderRadius: 6 }}>
+              <div style={{ fontSize: 11, color: "var(--text-muted)" }}>Peer Average Bidders</div>
+              <div style={{ fontSize: 15, fontWeight: 700 }}>{contract.peer_comparison.peer_average_bidders} Bidders</div>
+              <div style={{ fontSize: 11, color: contract.bidder_count === 1 ? "var(--risk-high)" : "var(--text-secondary)" }}>
+                This tender: {contract.bidder_count} bidder
+              </div>
+            </div>
+          </div>
+
+          <div style={{ fontSize: 12, color: "var(--text-secondary)", background: "rgba(255,255,255,0.02)", padding: "8px 12px", borderRadius: 6 }}>
+            💡 <strong>Forensic Peer Insight:</strong> {contract.peer_comparison.explanation}
+          </div>
+        </div>
+      )}
+
       {/* Red Flags Forensic Breakdown */}
       <div className="card" style={{ marginBottom: 24 }}>
         <div className="card-title">
@@ -430,6 +484,47 @@ export default function ContractDetailContainer() {
           </div>
         )}
       </div>
+
+      {/* Near-Duplicate / Recycled Specifications Detection */}
+      {similarTenders && similarTenders.length > 0 && (
+        <div className="card" style={{ marginBottom: 24 }}>
+          <div className="card-title">
+            <span>Near-Duplicate & Recycled Specification Detector</span>
+            <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{similarTenders.length} similar tender(s) found</span>
+          </div>
+          <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>
+            Detects potential copy-pasted or recycled specifications across other government departments using cross-corpus TF-IDF analysis.
+          </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {similarTenders.map((st) => (
+              <div key={st.contract_id} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--border-color)", borderRadius: 6, padding: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                  <Link to={`/contracts/${st.contract_id}`} style={{ fontWeight: 700, color: "var(--accent-cyan)", fontSize: 13 }} className="font-mono">
+                    {st.contract_number} — {st.title}
+                  </Link>
+                  <span style={{ fontSize: 11, background: "rgba(56, 189, 248, 0.15)", color: "var(--accent-cyan)", padding: "2px 8px", borderRadius: 10, fontWeight: 700 }}>
+                    {(st.similarity_score * 100).toFixed(0)}% Text Overlap
+                  </span>
+                </div>
+                <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+                  Department: <strong>{st.department_name}</strong> | Awarded to: <strong>{st.vendor_name}</strong> ({formatINR(st.award_value)})
+                </div>
+                {st.matched_terms && st.matched_terms.length > 0 && (
+                  <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 10, color: "var(--text-muted)", alignSelf: "center" }}>Overlapping terms:</span>
+                    {st.matched_terms.map((term, tIdx) => (
+                      <span key={tIdx} style={{ fontSize: 10, background: "rgba(255,255,255,0.05)", padding: "1px 6px", borderRadius: 4, color: "#fff" }}>
+                        {term}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Blockchain Anchoring & Real Integrity Verification */}
       <div className="card">

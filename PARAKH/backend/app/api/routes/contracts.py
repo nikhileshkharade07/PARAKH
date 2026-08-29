@@ -1,12 +1,15 @@
 from datetime import datetime
+import statistics
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, joinedload, selectinload
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from app.database.session import get_db
 from app.models import Contract, RiskAssessment
 from app.schemas.contracts import (
     ContractSummary, ContractDetail, RiskOut, RiskFlagOut, BidOut, ExtensionOut,
-    RuleEvidenceOut, RiskEvidenceOut
+    RuleEvidenceOut, RiskEvidenceOut, PeerComparisonOut, SimilarTenderOut
 )
 from ml.risk_engine.rules import evaluate_rules
 from ml.risk_engine.engine import RiskEngine
@@ -102,6 +105,51 @@ def get_contract(contract_id: int, db: Session = Depends(get_db)):
                 score=f.score, explanation=f.explanation
             ) for f in c.risk_flags if f.detected],
         )
+
+    # Compute Peer Group Comparison
+    peer_comparison = None
+    if c.department_id:
+        peer_contracts = db.query(Contract).filter(Contract.department_id == c.department_id).all()
+        if len(peer_contracts) > 1:
+            peer_values = [float(p.award_value) for p in peer_contracts]
+            peer_durations = [(p.tender_end - p.tender_start).total_seconds() / 86400 for p in peer_contracts]
+            peer_bidders = [len(p.bids) if p.bids else 1 for p in peer_contracts]
+
+            med_val = statistics.median(peer_values)
+            mean_val = statistics.mean(peer_values)
+            c_val = float(c.award_value)
+            val_dev_pct = round(((c_val - med_val) / med_val) * 100, 1) if med_val > 0 else 0.0
+
+            med_dur = statistics.median(peer_durations)
+            c_dur = (c.tender_end - c.tender_start).total_seconds() / 86400
+            dur_dev_pct = round(((c_dur - med_dur) / med_dur) * 100, 1) if med_dur > 0 else 0.0
+
+            avg_bidders = round(statistics.mean(peer_bidders), 1)
+
+            is_val_outlier = c_val > (med_val * 1.5) or c_val < (med_val * 0.5)
+            is_dur_outlier = c_dur < 7.0 and med_dur >= 14.0
+
+            explanations = []
+            if is_val_outlier:
+                explanations.append(f"Award value is {abs(val_dev_pct):.0f}% {'higher' if val_dev_pct > 0 else 'lower'} than department peer median.")
+            if is_dur_outlier:
+                explanations.append(f"Tender window ({c_dur:.0f} days) is significantly shorter than peer median ({med_dur:.0f} days).")
+            if not explanations:
+                explanations.append("Procurement parameters align with typical department peer distributions.")
+
+            peer_comparison = PeerComparisonOut(
+                department_total_contracts=len(peer_contracts),
+                peer_median_award_value=round(med_val, 2),
+                peer_mean_award_value=round(mean_val, 2),
+                value_deviation_percent=val_dev_pct,
+                peer_median_tender_days=round(med_dur, 1),
+                duration_deviation_percent=dur_dev_pct,
+                peer_average_bidders=avg_bidders,
+                is_value_outlier=is_val_outlier,
+                is_duration_outlier=is_dur_outlier,
+                explanation=" ".join(explanations)
+            )
+
     return ContractDetail(
         id=c.id, contract_number=c.contract_number, title=c.title,
         contract_date=c.contract_date, department_id=c.department_id,
@@ -115,8 +163,52 @@ def get_contract(contract_id: int, db: Session = Depends(get_db)):
         bidder_count=len(c.bids),
         bids=[BidOut(id=b.id, vendor_name=b.vendor_name, bid_value=b.bid_value) for b in c.bids],
         extensions=[ExtensionOut(id=e.id, extension_days=e.extension_days, reason=e.reason) for e in c.extensions],
-        crs=crs, risk_level=lvl, risk=risk
+        crs=crs, risk_level=lvl, risk=risk,
+        peer_comparison=peer_comparison
     )
+
+@router.get("/{contract_id}/similar-tenders", response_model=List[SimilarTenderOut])
+def get_similar_tenders(contract_id: int, db: Session = Depends(get_db), limit: int = 5):
+    """Find tenders across the registry with similar/recycled specifications using TF-IDF Cosine Similarity."""
+    target = db.get(Contract, contract_id)
+    if not target or not target.specification:
+        return []
+
+    # Get sample contracts with non-empty specs
+    pool = db.query(Contract).filter(Contract.id != contract_id, Contract.specification != "").limit(200).all()
+    if not pool:
+        return []
+
+    corpus = [target.specification] + [p.specification for p in pool]
+    try:
+        vec = TfidfVectorizer(stop_words="english", max_features=500)
+        tfidf_matrix = vec.fit_transform(corpus)
+        sim_scores = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:]).flatten()
+
+        results = []
+        for idx, score in enumerate(sim_scores):
+            if score > 0.35: # Noticeable textual overlap threshold
+                p = pool[idx]
+                # Find common overlapping terms
+                target_tokens = set(target.specification.lower().split())
+                p_tokens = set(p.specification.lower().split())
+                common = list(target_tokens & p_tokens)[:6]
+
+                results.append(SimilarTenderOut(
+                    contract_id=p.id,
+                    contract_number=p.contract_number,
+                    title=p.title,
+                    department_name=p.department.name if p.department else "General",
+                    vendor_name=p.vendor.name if p.vendor else "Unknown",
+                    award_value=float(p.award_value),
+                    similarity_score=round(float(score), 3),
+                    matched_terms=common
+                ))
+
+        results.sort(key=lambda x: x.similarity_score, reverse=True)
+        return results[:limit]
+    except Exception as err:
+        return []
 
 @router.get("/{contract_id}/risk-evidence", response_model=RiskEvidenceOut)
 def get_contract_risk_evidence(contract_id: int, db: Session = Depends(get_db)):
@@ -137,7 +229,8 @@ def get_contract_risk_evidence(contract_id: int, db: Session = Depends(get_db)):
                          "medium" if contract.risk_assessment.crs >= 40 else "low"
         }
 
-    raw_eval = evaluate_rules(contract, db)
+    peers = db.query(Contract).filter(Contract.department_id == contract.department_id).all() if contract.department_id else []
+    raw_eval = evaluate_rules(contract, peers)
     
     triggered_rules = []
     for r in raw_eval:

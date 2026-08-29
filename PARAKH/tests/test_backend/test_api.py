@@ -30,6 +30,15 @@ def test_contract_detail():
         assert "contract_number" in data
         assert "bids" in data
         assert "extensions" in data
+        if "peer_comparison" in data and data["peer_comparison"]:
+            assert "peer_median_award_value" in data["peer_comparison"]
+            assert "explanation" in data["peer_comparison"]
+
+def test_similar_tenders_endpoint():
+    r = client.get("/api/contracts/1/similar-tenders")
+    assert r.status_code == 200
+    data = r.json()
+    assert isinstance(data, list)
 
 def test_departments_list():
     r = client.get("/api/departments")
@@ -58,6 +67,8 @@ def test_vendor_detail():
         data = r.json()
         assert "id" in data
         assert "name" in data
+        assert "win_rate" in data
+        assert "yearly_trends" in data
 
 def test_network_graph():
     r = client.get("/api/network")
@@ -90,21 +101,15 @@ def test_blockchain_record():
     assert "tx_hash" in data
 
 def test_risk_evidence_endpoint():
-    # First, get a contract that exists
     r = client.get("/api/contracts?limit=1")
     assert r.status_code == 200
     contracts = r.json()
     if len(contracts) > 0:
         contract_id = contracts[0]["id"]
-
-        # Test the risk evidence endpoint
         r = client.get(f"/api/contracts/{contract_id}/risk-evidence")
-        # This might return 200 or 404 depending on whether risk assessment exists
-        # In our seeded data, risk assessments should exist
         assert r.status_code == 200
         data = r.json()
 
-        # Check required fields are present
         assert "contract_id" in data
         assert "risk_score" in data
         assert "risk_level" in data
@@ -112,20 +117,11 @@ def test_risk_evidence_endpoint():
         assert "anomaly_score" in data
         assert "triggered_rules" in data
         assert "generated_at" in data
-
-        # Check that contract_id matches
         assert data["contract_id"] == contract_id
-
-        # Check that risk_score is an integer
         assert isinstance(data["risk_score"], int)
-
-        # Check that risk_level is one of the expected values
         assert data["risk_level"] in ["low", "medium", "high"]
-
-        # Check that triggered_rules is a list
         assert isinstance(data["triggered_rules"], list)
 
-        # If there are triggered rules, check their structure
         if len(data["triggered_rules"]) > 0:
             rule = data["triggered_rules"][0]
             assert "rule_id" in rule
@@ -135,15 +131,6 @@ def test_risk_evidence_endpoint():
             assert "contribution" in rule
             assert "explanation" in rule
             assert "evidence" in rule
-
-            # Check that triggered is boolean
             assert isinstance(rule["triggered"], bool)
-
-            # Check that contribution is a number (or null)
             assert rule["contribution"] is None or isinstance(rule["contribution"], (int, float))
-
-            # Check that evidence is a dict (or null)
             assert rule["evidence"] is None or isinstance(rule["evidence"], dict)
-    else:
-        # If no contracts exist, that's okay for this test
-        pass
