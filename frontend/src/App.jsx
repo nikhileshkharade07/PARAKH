@@ -1,10 +1,12 @@
 import { Link, Route, Routes, useLocation } from "react-router-dom";
+import { useState } from "react";
 import Dashboard from "./pages/Dashboard";
 import Contracts from "./pages/Contracts";
 import Network from "./pages/Network";
 
 function Shell({ children }) {
   const location = useLocation();
+  const [showAlerts, setShowAlerts] = useState(false);
 
   return (
     <div className="app-shell">
@@ -31,7 +33,7 @@ function Shell({ children }) {
               location.pathname === "/" ? "active" : ""
             }`}
           >
-            <span>▦</span>
+            <span>▪</span>
             Dashboard
           </Link>
 
@@ -108,10 +110,76 @@ function Shell({ children }) {
               ◔
             </button>
 
-            <button className="icon-button notification">
-              ♢
-              <span></span>
-            </button>
+            {/* RISK ALERTS */}
+            <div className="notification-wrapper">
+
+              <button
+                className="icon-button notification"
+                onClick={() => setShowAlerts(!showAlerts)}
+                aria-label="Open risk alerts"
+              >
+                🔔
+                <span></span>
+              </button>
+
+              {showAlerts && (
+                <div className="notification-panel">
+
+                  <div className="notification-panel-header">
+                    <div>
+                      <strong>Risk Alerts</strong>
+                      <small>Recent activity</small>
+                    </div>
+
+                    <button
+                      className="notification-close"
+                      onClick={() => setShowAlerts(false)}
+                      aria-label="Close alerts"
+                    >
+                      ×
+                    </button>
+                  </div>
+
+                  <div className="notification-item high-risk">
+                    <div className="notification-icon">🔴</div>
+
+                    <div>
+                      <strong>High Risk Detected</strong>
+                      <p>
+                        ABC Infrastructure risk score increased to 91.
+                      </p>
+                      <small>10 minutes ago</small>
+                    </div>
+                  </div>
+
+                  <div className="notification-item medium-risk">
+                    <div className="notification-icon">🟡</div>
+
+                    <div>
+                      <strong>Review Required</strong>
+                      <p>
+                        Contract CNT-1042 requires manual review.
+                      </p>
+                      <small>32 minutes ago</small>
+                    </div>
+                  </div>
+
+                  <div className="notification-item resolved">
+                    <div className="notification-icon">🟢</div>
+
+                    <div>
+                      <strong>Verification Completed</strong>
+                      <p>
+                        Vendor verification was successfully completed.
+                      </p>
+                      <small>1 hour ago</small>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+
+            </div>
 
             <div className="header-user">
               <div className="user-avatar">A</div>
@@ -139,6 +207,7 @@ function Shell({ children }) {
 export default function App() {
   return (
     <Shell>
+
       <Routes>
 
         <Route
@@ -211,6 +280,7 @@ export default function App() {
         />
 
       </Routes>
+
     </Shell>
   );
 }
