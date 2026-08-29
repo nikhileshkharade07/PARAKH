@@ -9,24 +9,22 @@ class RiskEngine:
     def __init__(self):
         self.settings = settings
 
-    def analyze_contract(self, contract, db, anomaly_score=None):
-        peers = contract.department.contracts
+    def analyze_contract(self, contract, db, anomaly_score=None, peers=None, auto_commit=True):
+        if peers is None:
+            peers = contract.department.contracts if (contract.department and hasattr(contract.department, 'contracts')) else [contract]
+        
         flags = evaluate_rules(contract, peers, self.settings)
 
         nlp = specification_similarity(
-            contract.specification,
-            contract.vendor.product_description,
+            contract.specification or "",
+            contract.vendor.product_description if contract.vendor else "",
             self.settings.nlp_similarity_threshold,
         )
         for flag in flags:
             if flag["flag_id"] == "RF-7":
                 flag["detected"] = nlp["flagged"]
                 flag["explanation"] = nlp["explanation"]
-                # Update evidence for RF-7 with NLP results
-                flag["evidence"] = {
-                    "similarity_score": nlp["similarity_score"],
-                    "threshold": self.settings.nlp_similarity_threshold
-                }
+                flag["evidence"] = {"similarity_score": nlp["similarity_score"], "threshold": nlp.get("threshold", self.settings.nlp_similarity_threshold)}
 
         rule_score = min(100, sum(f["score"] for f in flags if f["detected"]))
         if anomaly_score is None:
@@ -38,20 +36,26 @@ class RiskEngine:
             ra.crs, ra.rule_score, ra.anomaly_score = crs, rule_score, anomaly_score
         else:
             contract.risk_assessment = RiskAssessment(
-                crs=crs, rule_score=rule_score, anomaly_score=anomaly_score, model_version="0.1"
+                crs=crs, rule_score=rule_score, anomaly_score=anomaly_score, model_version="1.0"
             )
 
         contract.risk_flags.clear()
         for flag in flags:
-            # Extract evidence and create RiskFlag without evidence field
-            evidence = flag.pop("evidence", None)
-            risk_flag = RiskFlag(**flag)
-            # Store evidence as JSON string if present
-            if evidence is not None:
-                risk_flag.evidence = json.dumps(evidence)
-            contract.risk_flags.append(risk_flag)
+            evidence_str = json.dumps(flag.get("evidence", {}))
+            contract.risk_flags.append(
+                RiskFlag(
+                    flag_id=flag["flag_id"],
+                    detected=flag["detected"],
+                    severity=flag["severity"],
+                    score=flag["score"],
+                    explanation=flag["explanation"],
+                    evidence=evidence_str,
+                    evidence_json=evidence_str
+                )
+            )
         db.add(contract)
-        db.commit()
+        if auto_commit:
+            db.commit()
 
         return {
             "crs": crs,

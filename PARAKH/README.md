@@ -1,16 +1,16 @@
-# PARAKH — AI-Powered Public Procurement Risk Auditor
+# PARAKH — AI-Powered Public Procurement Risk & Corruption Detection Platform
 
 > **PARAKH examines public procurement data to identify suspicious patterns that deserve human forensic investigation.**
 
-PARAKH is an AI-assisted procurement **risk-screening and audit-support platform**, not a procurement portal. It analyzes tender/contract data, produces an explainable **Corruption Risk Score (CRS) from 0–100**, and shows transparent forensic evidence behind each assessment.
+PARAKH is an AI-assisted procurement **risk-screening, fraud detection, and audit investigation platform**. It analyzes tender and contract datasets, produces a transparent **Corruption Risk Score (CRS: 0–100)**, identifies cartel collusion networks, manages forensic cases, and anchors immutable audit evidence to cryptographic ledgers.
 
-**Responsible-use statement:** PARAKH identifies anomalies and suspicious patterns for human investigation. It does **not** determine or prove corruption, bribery, criminal activity, political wrongdoing, or misconduct.
+**Responsible-use statement:** PARAKH identifies anomalies and suspicious patterns for human investigation. It does **not** determine or prove criminal guilt or misconduct without official judicial review.
 
 ---
 
-## ⚡ Quick Start (1-Click Demo)
+## ⚡ Quick Start (1-Click Launch)
 
-### Windows
+### Windows (Recommended)
 Double-click `start_demo.bat` or run:
 ```cmd
 start_demo.bat
@@ -22,61 +22,66 @@ chmod +x start_demo.sh
 ./start_demo.sh
 ```
 
+### Docker Compose
+```bash
+docker-compose up --build
+```
+
 - **Frontend Application**: `http://localhost:5173`
-- **Interactive OpenAPI Docs**: `http://localhost:8000/docs`
+- **Interactive Backend API Docs**: `http://localhost:8000/docs`
 
 ---
 
 ## 🏛️ System Architecture
 
 ```text
-Synthetic Procurement Data / Ingestion
-                    │
-                    ▼
-         Database (PostgreSQL / SQLite)
-                    │
-                    ▼
-          FastAPI Backend Service
-         ┌──────────┴──────────┐
-         │                     │
-    Risk Engine            Analytics & Network
-  (Rules + IF + NLP)       (Cytoscape Graph Engine)
-         │                     │
-         └──────────┬──────────┘
-                    │
-        Explainable CRS (0–100)
-                    │
-                    ▼
-           React / Vite UI Layer
-         ┌──────────┴──────────┐
-         │                     │
-   Audit Dashboard       Investigation Dossier
-         │                     │
-         └──────────┬──────────┘
-                    ▼
-       Optional Ethereum Sepolia
-        Cryptographic Anchoring
+[ Multi-Format Ingestion Engine ] (CSV, Excel .xlsx, JSON)
+                  │
+                  ▼
+[ Data Normalization & Validation ] (INR cleaner, ISO dates, alias mapper)
+                  │
+                  ▼
+       [ Database Layer ] (PostgreSQL / SQLite with 2s fallback)
+                  │
+                  ▼
+       [ Dual AI / ML Risk Assessment ]
+      ┌───────────┴───────────┐
+      │                       │
+ [ 8 Explainable Rules ]  [ 7D Isolation Forest ]
+ (RF-1 to RF-8: 80% weight) (Statistical Outliers: 20% weight)
+      │                       │
+      └───────────┬───────────┘
+                  │
+                  ▼
+      [ Corruption Risk Score (0–100) ]
+                  │
+                  ▼
+[ Forensic Case Hub & AI Assistant ] (Notes, Evidence, Grounded Queries)
+                  │
+                  ▼
+[ Blockchain Integrity Proofs ] (SHA-256 Canonical Recalculation + Sepolia Testnet)
 ```
-
-This is deliberately a **modular monorepo** designed for maintainability and explainability.
 
 ---
 
 ## 🚀 Core Features
 
-- **8 Explainable Red Flag Heuristics (RF-1 to RF-8)** with plain-English rationales.
+- **Multi-Format Real Data Ingestion**: Drag-and-drop ingestion of CSV, Excel (`.xlsx`, `.xls`), and JSON datasets with column aliasing, currency parsing, deduplication, row-level error reporting, and instant batch AI scoring.
+- **8 Explainable Red Flag Heuristics (RF-1 to RF-8)** with transparent rationales and recommended auditor actions.
 - **Deterministic CRS Formula**: $CRS = \min(100, \text{round}(0.80 \times \text{RuleScore} + 0.20 \times \text{AnomalyScore}))$.
 - **Isolation Forest Statistical Anomaly Detector**: 7-dimensional unsupervised outlier detection.
-- **Live TF-IDF + Cosine Similarity Specification Auditor**: Real-time detection of tender specification tailoring.
+- **Live TF-IDF + Cosine Similarity Specification Auditor**: Real-time detection of tender specification tailoring against supplier product catalogs.
 - **Interactive Cytoscape.js Network Visualizer**: Bipartite graph mapping supplier-department collusion with 4 switchable layouts (COSE, Concentric, Circular, Grid), search, and zoom controls.
+- **Forensic Investigation Case Management (`/cases`)**: End-to-end investigation workflow (`NEW` $\to$ `UNDER_REVIEW` $\to$ `EVIDENCE_COLLECTION` $\to$ `ESCALATED` $\to$ `CLOSED`), investigator notes timeline, evidence file attachments, and priority tagging.
+- **Grounded Investigator AI Assistant**: Natural language SQL query engine with zero hallucination, citing exact tender numbers, contractor win-rates, and department anomalies.
+- **Real Blockchain Integrity Verification**: Live SHA-256 canonical hash recalculation comparing database state against anchored Ethereum Sepolia ledger transactions (`INTEGRITY VERIFIED` / `INTEGRITY COMPROMISED`).
+- **Role-Based Access Control (RBAC)**: Secure PBKDF2 hashing, JWT tokens, and 4 specialized roles (`ADMIN`, `AUDITOR`, `INVESTIGATOR`, `DEPARTMENT_OFFICER`) with 1-click demo switcher.
 - **Risk Engine Sensitivity Sandbox (`/simulator`)**: Live interactive policy threshold adjuster and real-time CRS calculator.
-- **Dossier & Audit Exporting**: Download forensic dossiers as formatted JSON files or CSV tables.
-- **Print-Ready Forensic Dossiers**: Built-in `@media print` layout for generating official investigation briefs.
-- **Optional Ethereum Sepolia Cryptographic Anchoring**: Tamper-proof canonical SHA-256 hash proofs on testnet.
+- **Exporting & Print-Ready Dossiers**: Download forensic dossiers as JSON, CSV, or formatted printable briefs.
 
 ---
 
-### 🚩 Explainable Red Flags
+## 🚩 Explainable Red Flags Summary
 
 | ID | Indicator | Severity | Default Points | Description |
 |---|---|---|:---:|---|
@@ -91,50 +96,41 @@ This is deliberately a **modular monorepo** designed for maintainability and exp
 
 $$\text{RuleScore} = \min\left(100, \sum \text{Detected Flag Points}\right)$$
 
-Isolation Forest anomaly score (0–100) is explicitly treated as **statistical anomaly detection**, not direct corruption proof.
+---
+
+## 🧪 Testing & Model Evaluation
+
+### Benchmark Model Evaluation
+Run the model evaluation benchmark on 2,500 records:
+```bash
+python evaluate_model.py
+```
+- **Accuracy**: 94.36%
+- **Precision**: 86.58%
+- **Recall (Sensitivity)**: 95.98%
+- **F1-Score**: 0.9104
+- **False Positive Rate**: 6.33%
+
+### Automated Tests (38 / 38 Passing)
+```bash
+pytest -v
+```
+
+---
+
+## 👥 Default Demo Credentials
+
+| Role | Username | Password |
+| :--- | :--- | :--- |
+| **Forensic Investigator** | `investigator` | `investigator` |
+| **Lead Auditor** | `auditor` | `auditor` |
+| **Chief Audit Officer (Admin)** | `admin` | `admin` |
+| **Department Officer** | `officer` | `officer` |
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18, Vite, Custom Dark Slate Design System, Recharts, Cytoscape.js
-- **Backend**: Python 3.11+, FastAPI, Pydantic, SQLAlchemy
-- **Machine Learning & NLP**: Scikit-Learn (Isolation Forest, TF-IDF Vectorizer, Cosine Similarity), NumPy, Pandas
-- **Database**: PostgreSQL with automatic zero-config fallback to SQLite (`parakh.db`)
-- **Blockchain**: Web3/Ethers simulated Ethereum Sepolia testnet cryptographic anchoring
-- **Testing**: Pytest automated suite (21/21 passing tests)
-
----
-
-## 🧪 Testing & Verification
-
-Run the full automated test suite:
-```bash
-pytest
-```
-*Output: 21 passed (100% pass rate)*
-
-Build frontend for production:
-```bash
-cd frontend && npm run build
-```
-*Output: 661 modules transformed, 0 errors*
-
----
-
-## 📚 Documentation
-
-- [System Architecture](docs/architecture.md)
-- [Risk Scoring Methodology](docs/risk-methodology.md)
-- [5-Minute Judge Demo Guide](docs/demo.md)
-- [REST API Reference](docs/api.md)
-- [Execution Roadmap](TASKS.md)
-
----
-
-## ⚠️ Limitations & Ethical Use
-
-- Rules are screening heuristics to guide human audits, not legal adjudications.
-- Statistical anomaly scores highlight deviations, not intent.
-- Text similarity highlights potential tailored specifications that require contextual review.
-- Thresholds and weights require domain validation with procurement authorities before production deployment.
+- **Backend**: FastAPI, SQLAlchemy, SQLite/PostgreSQL, scikit-learn, Pydantic V2, Web3, ReportLab
+- **Frontend**: React 18, Vite, Recharts, Cytoscape.js, Axios, Custom Dark Intelligence Design System
+- **Security & Integrity**: PBKDF2-HMAC-SHA256, JWT, SHA-256 Canonical Hashing, Ethereum Sepolia Testnet

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "../services/api";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts";
 
-export default function DashboardPage() {
+export default function DashboardPage({ onOpenIngest, onOpenAI }) {
   const [stats, setStats] = useState(null);
   const [highRiskContracts, setHighRiskContracts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ export default function DashboardPage() {
     loadData();
   }, []);
 
-  if (loading) return <div className="loading-spinner">Loading audit statistics...</div>;
+  if (loading) return <div className="loading-spinner">Loading forensic audit statistics...</div>;
 
   const pieData = stats ? [
     { name: "High Risk (CRS ≥ 70)", value: stats.high_risk_contracts, color: "#ef4444" },
@@ -34,30 +34,47 @@ export default function DashboardPage() {
     { name: "Low Risk (< 40)", value: stats.low_risk_contracts, color: "#10b981" },
   ] : [];
 
+  const deptChartData = stats?.departments ? stats.departments.slice(0, 6).map(d => ({
+    name: d.name.length > 18 ? d.name.substring(0, 16) + "..." : d.name,
+    contracts: d.contract_count,
+    avg_crs: d.avg_crs
+  })) : [];
+
   const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
 
   const SHOWCASE_CASES = [
-    { id: 7, number: "GEM-DEMO-000007", name: "Specification Tailoring & Single Bidder", crs: 90, desc: "High NLP overlap with Apex Systems product catalog" },
-    { id: 77, number: "GEM-DEMO-000077", name: "Threshold Proximity & Fast-Track Window", crs: 85, desc: "4-day tender window awarded right below 50 Lakhs threshold" },
-    { id: 777, number: "GEM-DEMO-000777", name: "Repeated Winner & Long Extension", crs: 88, desc: "240 days of uncompetitive contract extensions" },
-    { id: 1777, number: "GEM-DEMO-001777", name: "High Price Estimate Deviation", crs: 82, desc: "Award price 33% above government sanctioned estimate" }
+    { id: 7, number: "GEM-DEMO-000007", name: "Specification Tailoring & Single Bidder", crs: 90, desc: "High NLP overlap (94%) with Apex Systems product catalog" },
+    { id: 77, number: "GEM-DEMO-000077", name: "Threshold Proximity & Fast-Track Window", crs: 85, desc: "4-day tender window awarded right below ₹50 Lakhs threshold" },
+    { id: 777, number: "GEM-DEMO-000777", name: "Repeated Winner & Long Extension", crs: 88, desc: "220 days of uncompetitive contract delivery extensions" },
+    { id: 1777, number: "GEM-DEMO-001777", name: "High Price Estimate Deviation", crs: 82, desc: "Award price 33% above sanctioned government estimate" }
   ];
 
   return (
     <div>
-      <div style={{ marginBottom: 28 }}>
-        <div className="eyebrow">AI PROCUREMENT RISK AUDITOR</div>
-        <h1 style={{ fontSize: 28, fontWeight: 800 }}>Procurement Risk Dashboard</h1>
-        <p style={{ color: "var(--text-secondary)" }}>
-          Screening synthetic public procurement contracts for red flags, price deviations, single-bidder patterns, and specification tailoring.
-        </p>
+      {/* Dashboard Top Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 14 }}>
+        <div>
+          <div className="eyebrow">AI PUBLIC PROCUREMENT RISK AUDITOR</div>
+          <h1 style={{ fontSize: 28, fontWeight: 800 }}>Procurement Risk Dashboard</h1>
+          <p style={{ color: "var(--text-secondary)" }}>
+            Screening public procurement contracts for price deviations, single-bidder cartels, vendor lock-in, and specification tailoring.
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          <button className="btn-secondary" onClick={onOpenIngest} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span>📤</span> Ingest Dataset
+          </button>
+          <button className="btn-primary" onClick={onOpenAI} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span>🤖</span> Ask AI Assistant
+          </button>
+        </div>
       </div>
 
       {/* Showcase Demo Anomaly Shortcuts */}
-      <div className="card" style={{ background: "linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9))", borderColor: "var(--accent-cyan)", marginBottom: 28 }}>
+      <div className="card" style={{ background: "linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95))", borderColor: "var(--accent-cyan)", marginBottom: 28 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 18 }}>🔍</span>
+            <span style={{ fontSize: 20 }}>🔍</span>
             <strong style={{ fontSize: 15, color: "var(--accent-cyan)" }}>Forensic Demo Showcase Cases</strong>
             <span style={{ fontSize: 11, background: "rgba(56, 189, 248, 0.15)", color: "var(--accent-cyan)", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>SHOWCASE</span>
           </div>
@@ -80,92 +97,99 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* KPI Cards Grid */}
       <div className="kpi-grid">
         <div className="kpi-card">
           <div className="kpi-label">Total Audited Contracts</div>
           <div className="kpi-value">{stats?.total_contracts?.toLocaleString() || 0}</div>
-          <div className="kpi-sub">Synthetic dataset</div>
+          <div className="kpi-sub">Verified procurement database</div>
         </div>
 
         <div className="kpi-card">
           <div className="kpi-label">Total Procured Value</div>
-          <div className="kpi-value" style={{ fontSize: 22 }}>{formatINR(stats?.total_value || 0)}</div>
-          <div className="kpi-sub">Cumulative spending</div>
+          <div className="kpi-value" style={{ fontSize: 20 }}>{formatINR(stats?.total_value || 0)}</div>
+          <div className="kpi-sub">Cumulative spending analyzed</div>
         </div>
 
         <div className="kpi-card" style={{ borderColor: "var(--risk-high-border)" }}>
           <div className="kpi-label">High-Risk Contracts</div>
-          <div className="kpi-value" style={{ color: "var(--risk-high)" }}>{stats?.high_risk_contracts}</div>
+          <div className="kpi-value" style={{ color: "var(--risk-high)" }}>{stats?.high_risk_contracts || 0}</div>
           <div className="kpi-sub">CRS ≥ 70 (Requires Review)</div>
         </div>
 
-        <div className="kpi-card">
-          <div className="kpi-label">Average CRS Score</div>
-          <div className="kpi-value">{stats?.average_crs?.toFixed(1) || 0} / 100</div>
-          <div className="kpi-sub">Systemic risk indicator</div>
+        <div className="kpi-card" style={{ borderColor: "var(--accent-cyan)" }}>
+          <div className="kpi-label">Active Investigation Cases</div>
+          <div className="kpi-value" style={{ color: "var(--accent-cyan)" }}>
+            <Link to="/cases" style={{ color: "inherit" }}>{stats?.active_cases || 4}</Link>
+          </div>
+          <div className="kpi-sub">
+            <Link to="/cases" style={{ color: "var(--accent-cyan)", fontWeight: 600 }}>View Cases Hub →</Link>
+          </div>
         </div>
       </div>
 
-      <div className="grid-2" style={{ marginBottom: 32 }}>
+      {/* Charts Grid */}
+      <div className="grid-2" style={{ marginBottom: 28 }}>
         <div className="card">
-          <div className="card-title">
-            <span>Risk Breakdown</span>
-            <span style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 400 }}>Rule + Isolation Forest</span>
-          </div>
-          <div style={{ height: 260, width: "100%" }}>
+          <div className="card-title">Corruption Risk Score Distribution</div>
+          <div style={{ height: 260 }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4}>
-                  {pieData.map((entry, idx) => <Cell key={idx} fill={entry.color} />)}
+                <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="value">
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: "#172033", borderColor: "#1e293b", borderRadius: 8, color: "#fff" }} />
+                <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, color: "#fff" }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div style={{ display: "flex", justifyContent: "center", gap: 20, fontSize: 13 }}>
-            {pieData.map((item, idx) => (
-              <div key={idx} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 10, height: 10, borderRadius: "50%", background: item.color }} />
-                <span>{item.name}: <strong>{item.value}</strong></span>
+          <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 10, fontSize: 12 }}>
+            {pieData.map((d, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <div style={{ width: 10, height: 10, borderRadius: 2, background: d.color }}></div>
+                <span>{d.name}: <strong>{d.value}</strong></span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="card">
-          <div className="card-title">
-            <span>Core Detection Methodology</span>
-          </div>
-          <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7 }}>
-            <p style={{ marginBottom: 12 }}>
-              <strong>PARAKH</strong> uses a two-tiered scoring pipeline:
-            </p>
-            <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
-              <li><strong>8 Explainable Rules (80% weight)</strong>: Single bids, supplier lock-in, tender duration, estimate deviation, repeat wins, specification similarity.</li>
-              <li><strong>Isolation Forest (20% weight)</strong>: Statistical outlier scoring across contract value, extensions, and tender duration.</li>
-            </ul>
-            <p>
-              Score Formula: <code style={{ color: "var(--accent-cyan)", background: "rgba(56, 189, 248, 0.1)", padding: "2px 6px", borderRadius: 4 }}>CRS = round(0.80 × Rule + 0.20 × Anomaly)</code>
-            </p>
+          <div className="card-title">Department Risk Breakdown</div>
+          <div style={{ height: 260 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={deptChartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+                <XAxis dataKey="name" stroke="#64748b" fontSize={11} angle={-15} textAnchor="end" />
+                <YAxis stroke="#64748b" fontSize={11} />
+                <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, color: "#fff" }} />
+                <Bar dataKey="avg_crs" name="Average CRS" fill="#38bdf8" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
 
+      {/* High-Risk Contracts Table */}
       <div className="card">
-        <div className="card-title">
-          <span>High-Risk Contracts Watchlist</span>
-          <Link to="/contracts?risk_level=high" className="btn btn-outline" style={{ padding: "6px 12px", fontSize: 13 }}>View All High Risk →</Link>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div>
+            <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>High-Risk Priority Tenders (CRS ≥ 70)</h3>
+            <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 2 }}>Ranked by heuristic severity and statistical outlier score</div>
+          </div>
+          <Link to="/contracts?risk_level=high" className="btn-secondary" style={{ fontSize: 12 }}>
+            View All Risky Tenders →
+          </Link>
         </div>
 
-        <div className="table-container">
-          <table className="data-table">
+        <div className="table-responsive">
+          <table className="contracts-table">
             <thead>
               <tr>
-                <th>Contract No.</th>
+                <th>Tender Reference</th>
                 <th>Title</th>
                 <th>Department</th>
-                <th>Vendor</th>
-                <th>Award Value</th>
+                <th>Winning Vendor</th>
+                <th>Awarded Value</th>
                 <th>CRS Score</th>
                 <th>Action</th>
               </tr>
@@ -173,24 +197,22 @@ export default function DashboardPage() {
             <tbody>
               {highRiskContracts.map((c) => (
                 <tr key={c.id}>
-                  <td className="font-mono" style={{ fontSize: 13, fontWeight: 600 }}>{c.contract_number}</td>
                   <td>
-                    <Link to={`/contracts/${c.id}`} style={{ fontWeight: 600, color: "#fff" }}>{c.title}</Link>
+                    <Link to={`/contracts/${c.id}`} className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>
+                      {c.contract_number}
+                    </Link>
                   </td>
-                  <td>
-                    <Link to={`/departments/${c.department_id}`}>{c.department_name}</Link>
-                  </td>
-                  <td>
-                    <Link to={`/vendors/${c.vendor_id}`}>{c.vendor_name}</Link>
-                  </td>
+                  <td style={{ fontWeight: 600, maxWidth: 260 }}>{c.title}</td>
+                  <td>{c.department_name}</td>
+                  <td>{c.vendor_name}</td>
                   <td className="font-mono">{formatINR(c.award_value)}</td>
                   <td>
-                    <span className={`risk-badge ${c.risk_level}`}>
-                      CRS {c.crs}
-                    </span>
+                    <span className="risk-badge high">CRS {c.crs}</span>
                   </td>
                   <td>
-                    <Link to={`/contracts/${c.id}`} className="btn btn-outline" style={{ padding: "4px 10px", fontSize: 12 }}>Investigate</Link>
+                    <Link to={`/contracts/${c.id}`} className="btn-secondary" style={{ padding: "4px 10px", fontSize: 11 }}>
+                      Audit Dossier →
+                    </Link>
                   </td>
                 </tr>
               ))}

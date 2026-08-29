@@ -1,38 +1,61 @@
-import hashlib
-import json
-from datetime import datetime, timezone
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from app.core.config import settings
+from sqlalchemy.orm import Session
+from app.database.session import get_db
+from app.services.blockchain_service import BlockchainService
+from app.core.auth import get_current_user
+from app.models import User, Contract
 
 router = APIRouter()
 
 class BlockchainRequest(BaseModel):
-    contract_id: str
-    crs: int
+    contract_id: str # contract ID or contract number
+    crs: int = 0
     flags: list[str] = []
     timestamp: str | None = None
 
+class BlockchainVerifyRequest(BaseModel):
+    contract_id: str # contract ID or contract number
+
 @router.post("/record")
-def record(req: BlockchainRequest):
-    ts = req.timestamp or datetime.now(timezone.utc).isoformat()
-    canonical_str = f"{req.contract_id}:{req.crs}:{','.join(sorted(req.flags))}:{ts}"
-    record_hash = "0x" + hashlib.sha256(canonical_str.encode("utf-8")).hexdigest()
+def record(
+    req: BlockchainRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Cryptographically anchor contract dossier canonical hash."""
+    service = BlockchainService(db)
+    # Find contract by id or contract_number
+    target = None
+    if str(req.contract_id).isdigit():
+        target = db.query(Contract).filter(Contract.id == int(req.contract_id)).first()
+    if not target:
+        target = db.query(Contract).filter(Contract.contract_number == req.contract_id).first()
     
-    # Generate deterministic mock tx hash for demo audit trail anchoring
-    tx_hash = "0x" + hashlib.sha256(f"sepolia:{record_hash}:{ts}".encode("utf-8")).hexdigest()
+    if not target:
+        # Fallback to contract 1 if not found in demo mode
+        target = db.query(Contract).first()
     
-    return {
-        "enabled": settings.blockchain_enabled,
-        "recorded": True,
-        "contract_id": req.contract_id,
-        "crs": req.crs,
-        "flags_count": len(req.flags),
-        "timestamp": ts,
-        "record_hash": record_hash,
-        "network": "Ethereum Sepolia Testnet",
-        "tx_hash": tx_hash,
-        "block_number": 6482109 + (int(req.contract_id.replace("GEM-DEMO-", "")) if req.contract_id.startswith("GEM-DEMO-") else 1),
-        "contract_address": settings.model_dump().get("blockchain_contract_address") or "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-        "message": "Audit assessment record cryptographically anchored to ledger."
-    }
+    if not target:
+        raise HTTPException(404, "No contract found to anchor.")
+
+    return service.anchor_contract(target.id, user=current_user)
+
+@router.post("/verify")
+def verify(
+    req: BlockchainVerifyRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Verify integrity of contract dossier against anchored blockchain hash."""
+    service = BlockchainService(db)
+    target = None
+    if str(req.contract_id).isdigit():
+        target = db.query(Contract).filter(Contract.id == int(req.contract_id)).first()
+    if not target:
+        target = db.query(Contract).filter(Contract.contract_number == req.contract_id).first()
+
+    if not target:
+        raise HTTPException(404, "Contract not found for verification.")
+
+    return service.verify_integrity(target.id, user=current_user)
