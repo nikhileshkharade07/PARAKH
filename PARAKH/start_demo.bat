@@ -20,13 +20,13 @@ if not exist "parakh.db" (
 )
 
 echo [3/3] Launching Backend & Frontend Services...
-start "PARAKH Backend API" cmd /k "call .venv\Scripts\activate.bat && uvicorn app.main:app --app-dir backend --reload --port 8000"
+start "PARAKH Backend API" cmd /k "call .venv\Scripts\activate.bat && python -m uvicorn backend.app.main:app --reload --port 8000"
 start "PARAKH Frontend UI" cmd /k "cd frontend && npm run dev"
 
 echo.
 echo ===================================================
 echo   PARAKH Services Launched!
-echo   Frontend: http://localhost:5173
+echo   Frontend:    http://localhost:5173
 echo   Backend API: http://localhost:8000/docs
 echo ===================================================
 echo.
