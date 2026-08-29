@@ -5,9 +5,13 @@ export const api = axios.create({
   timeout: 30000
 });
 
+export const getStoredToken = () => localStorage.getItem("parakh_token");
+export const setStoredToken = (token) => localStorage.setItem("parakh_token", token);
+export const clearStoredToken = () => localStorage.removeItem("parakh_token");
+
 // Attach JWT token automatically if logged in
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("parakh_token");
+  const token = getStoredToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

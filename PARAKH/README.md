@@ -41,7 +41,7 @@ docker-compose up --build
 [ Data Normalization & Validation ] (INR cleaner, ISO dates, alias mapper)
                   │
                   ▼
-       [ Database Layer ] (PostgreSQL / SQLite with 2s fallback)
+       [ Database Layer ] (PostgreSQL / SQLite with auto-migration)
                   │
                   ▼
        [ Dual AI / ML Risk Assessment ]
@@ -59,7 +59,7 @@ docker-compose up --build
 [ Forensic Case Hub & AI Assistant ] (Notes, Evidence, Grounded Queries)
                   │
                   ▼
-[ Blockchain Integrity Proofs ] (SHA-256 Canonical Recalculation + Sepolia Testnet)
+[ Blockchain Integrity Proofs ] (SHA-256 Canonical Recalculation + Web3 Sepolia)
 ```
 
 ---
@@ -74,10 +74,11 @@ docker-compose up --build
 - **Interactive Cytoscape.js Network Visualizer**: Bipartite graph mapping supplier-department collusion with 4 switchable layouts (COSE, Concentric, Circular, Grid), search, and zoom controls.
 - **Forensic Investigation Case Management (`/cases`)**: End-to-end investigation workflow (`NEW` $\to$ `UNDER_REVIEW` $\to$ `EVIDENCE_COLLECTION` $\to$ `ESCALATED` $\to$ `CLOSED`), investigator notes timeline, evidence file attachments, and priority tagging.
 - **Grounded Investigator AI Assistant**: Natural language SQL query engine with zero hallucination, citing exact tender numbers, contractor win-rates, and department anomalies.
-- **Real Blockchain Integrity Verification**: Live SHA-256 canonical hash recalculation comparing database state against anchored Ethereum Sepolia ledger transactions (`INTEGRITY VERIFIED` / `INTEGRITY COMPROMISED`).
+- **Real Blockchain Integrity Verification**: Live SHA-256 canonical hash recalculation comparing database state against anchored Ethereum Sepolia ledger transactions (`INTEGRITY VERIFIED` / `INTEGRITY COMPROMISED`) with transparent `PRODUCTION` vs `DEMO_FALLBACK` execution modes.
 - **Role-Based Access Control (RBAC)**: Secure PBKDF2 hashing, JWT tokens, and 4 specialized roles (`ADMIN`, `AUDITOR`, `INVESTIGATOR`, `DEPARTMENT_OFFICER`) with 1-click demo switcher.
 - **Risk Engine Sensitivity Sandbox (`/simulator`)**: Live interactive policy threshold adjuster and real-time CRS calculator.
 - **Exporting & Print-Ready Dossiers**: Download forensic dossiers as JSON, CSV, or formatted printable briefs.
+- **Optimized Route-Based Code Splitting**: Vite bundle optimized via `React.lazy()` / `<Suspense>`, keeping individual chunk sizes well under 450 kB.
 
 ---
 
@@ -105,15 +106,20 @@ Run the model evaluation benchmark on 2,500 records:
 ```bash
 python evaluate_model.py
 ```
-- **Accuracy**: 94.36%
-- **Precision**: 86.58%
-- **Recall (Sensitivity)**: 95.98%
-- **F1-Score**: 0.9104
-- **False Positive Rate**: 6.33%
+- **Accuracy**: 94.37%
+- **Precision**: 86.63%
+- **Recall (Sensitivity)**: 95.99%
+- **F1-Score**: 0.9107
+- **False Positive Rate**: 6.31%
 
-### Automated Tests (38 / 38 Passing)
+### Backend Automated Tests (40 / 40 Passing)
 ```bash
 pytest -v
+```
+
+### Frontend Automated Tests (9 / 9 Passing)
+```bash
+cd frontend && npm run test -- --run
 ```
 
 ---
@@ -131,6 +137,6 @@ pytest -v
 
 ## 🛠️ Tech Stack
 
-- **Backend**: FastAPI, SQLAlchemy, SQLite/PostgreSQL, scikit-learn, Pydantic V2, Web3, ReportLab
-- **Frontend**: React 18, Vite, Recharts, Cytoscape.js, Axios, Custom Dark Intelligence Design System
+- **Backend**: FastAPI, SQLAlchemy, SQLite/PostgreSQL, scikit-learn, Pydantic V2, Web3.py, ReportLab
+- **Frontend**: React 18, Vite, Recharts, Cytoscape.js, Axios, Vitest, React Testing Library, Custom Dark Intelligence Design System
 - **Security & Integrity**: PBKDF2-HMAC-SHA256, JWT, SHA-256 Canonical Hashing, Ethereum Sepolia Testnet

@@ -1,11 +1,14 @@
 import hashlib
 import json
+import logging
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models import Contract, BlockchainAnchor, User
 from app.services.audit_service import log_audit
+
+logger = logging.getLogger(__name__)
 
 def generate_canonical_dossier(contract: Contract) -> Dict[str, Any]:
     """Generate deterministic, canonical JSON representation of contract dossier."""
@@ -41,6 +44,58 @@ def calculate_canonical_hash(payload: Dict[str, Any]) -> str:
     canonical_json = json.dumps(payload, sort_keys=True, separators=(',', ':'))
     return "0x" + hashlib.sha256(canonical_json.encode("utf-8")).hexdigest()
 
+def _broadcast_to_blockchain(canonical_hash: str) -> Optional[Dict[str, Any]]:
+    """Broadcast hash to Ethereum Sepolia / live blockchain via Web3.py if configured."""
+    if not (settings.blockchain_enabled and settings.sepolia_rpc_url and settings.blockchain_private_key):
+        return None
+
+    try:
+        from web3 import Web3
+        from eth_account import Account
+
+        w3 = Web3(Web3.HTTPProvider(settings.sepolia_rpc_url))
+        if not w3.is_connected():
+            logger.warning("Could not connect to Sepolia RPC endpoint")
+            return None
+
+        account = Account.from_key(settings.blockchain_private_key)
+        chain_id = w3.eth.chain_id
+        nonce = w3.eth.get_transaction_count(account.address)
+        gas_price = w3.eth.gas_price
+
+        data_payload = bytes.fromhex(canonical_hash[2:]) if canonical_hash.startswith("0x") else canonical_hash.encode("utf-8")
+        target_addr = settings.blockchain_contract_address or account.address
+        target_addr_checksum = Web3.to_checksum_address(target_addr)
+
+        tx = {
+            'to': target_addr_checksum,
+            'value': 0,
+            'gas': 100000,
+            'gasPrice': gas_price,
+            'nonce': nonce,
+            'chainId': chain_id,
+            'data': data_payload
+        }
+
+        signed_tx = account.sign_transaction(tx)
+        tx_hash_bytes = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash_bytes, timeout=45)
+
+        tx_hex = tx_receipt.transactionHash.hex()
+        if not tx_hex.startswith("0x"):
+            tx_hex = "0x" + tx_hex
+
+        return {
+            "tx_hash": tx_hex,
+            "block_number": tx_receipt.blockNumber,
+            "network": f"Ethereum Sepolia (Chain ID {chain_id})",
+            "contract_address": target_addr_checksum,
+            "mode": "PRODUCTION"
+        }
+    except Exception as exc:
+        logger.error(f"Live blockchain broadcast failed, using demo fallback: {exc}")
+        return None
+
 class BlockchainService:
     def __init__(self, db: Session):
         self.db = db
@@ -53,16 +108,27 @@ class BlockchainService:
 
         payload = generate_canonical_dossier(contract)
         canonical_hash = calculate_canonical_hash(payload)
-        
         now = datetime.now(timezone.utc)
         ts_str = now.isoformat()
-        
-        # Deterministic tx hash from canonical hash + timestamp
-        tx_hash = "0x" + hashlib.sha256(f"sepolia:{canonical_hash}:{ts_str}".encode("utf-8")).hexdigest()
-        block_num = 6482100 + (contract.id % 50000)
-        contract_addr = settings.blockchain_contract_address or "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
 
-        # Check existing anchor
+        # Try genuine Web3 production broadcast first
+        on_chain_result = _broadcast_to_blockchain(canonical_hash)
+        
+        if on_chain_result:
+            tx_hash = on_chain_result["tx_hash"]
+            block_num = on_chain_result["block_number"]
+            network_name = on_chain_result["network"]
+            contract_addr = on_chain_result["contract_address"]
+            mode_str = "PRODUCTION"
+        else:
+            # Deterministic fallback mode for local evaluation & demos
+            tx_hash = "0x" + hashlib.sha256(f"sepolia:{canonical_hash}:{ts_str}".encode("utf-8")).hexdigest()
+            block_num = 6482100 + (contract.id % 50000)
+            network_name = "Ethereum Sepolia (Local Fallback)"
+            contract_addr = settings.blockchain_contract_address or "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+            mode_str = "DEMO_FALLBACK"
+
+        # Save to database
         anchor = self.db.query(BlockchainAnchor).filter(BlockchainAnchor.contract_id == contract.id).first()
         if not anchor:
             anchor = BlockchainAnchor(
@@ -71,7 +137,7 @@ class BlockchainService:
                 canonical_hash=canonical_hash,
                 tx_hash=tx_hash,
                 block_number=block_num,
-                network="Ethereum Sepolia Testnet",
+                network=network_name,
                 contract_address=contract_addr,
                 status="ANCHORED",
                 anchored_by=user.username if user else "auditor",
@@ -83,6 +149,8 @@ class BlockchainService:
             anchor.canonical_hash = canonical_hash
             anchor.tx_hash = tx_hash
             anchor.block_number = block_num
+            anchor.network = network_name
+            anchor.contract_address = contract_addr
             anchor.anchored_at = now
             anchor.raw_payload = json.dumps(payload, sort_keys=True)
             anchor.status = "ANCHORED"
@@ -95,13 +163,13 @@ class BlockchainService:
             action="BLOCKCHAIN_ANCHOR",
             resource_type="BLOCKCHAIN",
             resource_id=contract.contract_number,
-            details={"canonical_hash": canonical_hash, "tx_hash": tx_hash, "block": block_num},
+            details={"canonical_hash": canonical_hash, "tx_hash": tx_hash, "block": block_num, "mode": mode_str},
             user=user
         )
 
         return {
             "enabled": settings.blockchain_enabled,
-            "mode": "PRODUCTION" if settings.blockchain_enabled else "DEMO / TESTNET",
+            "mode": mode_str,
             "recorded": True,
             "contract_id": contract.contract_number,
             "crs": payload["crs"],
@@ -111,12 +179,11 @@ class BlockchainService:
             "tx_hash": tx_hash,
             "block_number": block_num,
             "contract_address": contract_addr,
-            "network": "Ethereum Sepolia Testnet",
+            "network": network_name,
             "timestamp": ts_str,
             "status": "ANCHORED",
-            "message": "Audit assessment record cryptographically anchored to ledger."
+            "message": "Audit assessment record cryptographically anchored."
         }
-
 
     def verify_integrity(self, contract_id: int, user: Optional[User] = None) -> Dict[str, Any]:
         """Verify database integrity by recalculating canonical hash and comparing against anchored ledger record."""
@@ -130,7 +197,6 @@ class BlockchainService:
         current_hash = calculate_canonical_hash(current_payload)
 
         if not anchor:
-            # Anchor first if not anchored yet for instant demo verification
             self.anchor_contract(contract_id, user)
             anchor = self.db.query(BlockchainAnchor).filter(BlockchainAnchor.contract_id == contract.id).first()
 
@@ -138,6 +204,23 @@ class BlockchainService:
         is_verified = (current_hash == anchored_hash)
         
         status_text = "INTEGRITY VERIFIED" if is_verified else "INTEGRITY COMPROMISED"
+
+        # If on-chain mode, verify transaction calldata matches
+        on_chain_confirmed = False
+        if settings.blockchain_enabled and settings.sepolia_rpc_url:
+            try:
+                from web3 import Web3
+                w3 = Web3(Web3.HTTPProvider(settings.sepolia_rpc_url))
+                if w3.is_connected() and anchor.tx_hash:
+                    tx = w3.eth.get_transaction(anchor.tx_hash)
+                    if tx and tx.input:
+                        input_hex = tx.input.hex()
+                        if current_hash.lower().replace("0x", "") in input_hex.lower():
+                            on_chain_confirmed = True
+            except Exception as e:
+                logger.debug(f"Web3 verify check: {e}")
+
+        mode_str = "PRODUCTION" if on_chain_confirmed else ("PRODUCTION" if "Chain ID" in (anchor.network or "") else "DEMO_FALLBACK")
 
         log_audit(
             db=self.db,
@@ -147,7 +230,8 @@ class BlockchainService:
             details={
                 "current_hash": current_hash,
                 "anchored_hash": anchored_hash,
-                "status": status_text
+                "status": status_text,
+                "mode": mode_str
             },
             user=user,
             result="SUCCESS" if is_verified else "FAILURE"
@@ -165,7 +249,7 @@ class BlockchainService:
             "contract_address": anchor.contract_address,
             "anchored_at": anchor.anchored_at.isoformat() if anchor.anchored_at else "",
             "verified_at": datetime.now(timezone.utc).isoformat(),
-            "mode": "PRODUCTION" if settings.blockchain_enabled else "DEMO / TESTNET",
+            "mode": mode_str,
             "message": (
                 "Cryptographic hash match confirmed. Tender records and forensic evidence are pristine and unaltered since ledger timestamp."
                 if is_verified else "HASH MISMATCH: Database records have been modified since ledger anchor timestamp!"

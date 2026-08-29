@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Link, NavLink, Route, Routes } from "react-router-dom";
-import DashboardPage from "./pages/DashboardPage";
-import ContractsPage from "./pages/ContractsPage";
-import ContractDetailContainer from "./pages/ContractDetailContainer";
-import VendorProfilePage from "./pages/VendorProfilePage";
-import DepartmentProfilePage from "./pages/DepartmentProfilePage";
-import NetworkPage from "./pages/NetworkPage";
-import SimulatorPage from "./pages/SimulatorPage";
-import CasesPage from "./pages/CasesPage";
 import DataIngestionModal from "./components/DataIngestionModal";
 import AIAssistantDrawer from "./components/AIAssistantDrawer";
 import AuthModal from "./components/AuthModal";
 import { api } from "./services/api";
+
+// Route-based code splitting
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const ContractsPage = lazy(() => import("./pages/ContractsPage"));
+const ContractDetailContainer = lazy(() => import("./pages/ContractDetailContainer"));
+const VendorProfilePage = lazy(() => import("./pages/VendorProfilePage"));
+const DepartmentProfilePage = lazy(() => import("./pages/DepartmentProfilePage"));
+const NetworkPage = lazy(() => import("./pages/NetworkPage"));
+const SimulatorPage = lazy(() => import("./pages/SimulatorPage"));
+const CasesPage = lazy(() => import("./pages/CasesPage"));
 
 function Shell({ children, onOpenIngest, onOpenAI, onOpenAuth, currentUser }) {
   return (
@@ -123,24 +125,24 @@ export default function App() {
         onOpenAuth={() => setAuthOpen(true)}
         currentUser={currentUser}
       >
-        <Routes>
-          <Route path="/" element={<DashboardPage onOpenIngest={() => setIngestOpen(true)} onOpenAI={() => setAiOpen(true)} />} />
-          <Route path="/contracts" element={<ContractsPage />} />
-          <Route path="/contracts/:id" element={<ContractDetailContainer />} />
-          <Route path="/cases" element={<CasesPage />} />
-          <Route path="/vendors/:id" element={<VendorProfilePage />} />
-          <Route path="/departments/:id" element={<DepartmentProfilePage />} />
-          <Route path="/network" element={<NetworkPage />} />
-          <Route path="/simulator" element={<SimulatorPage />} />
-        </Routes>
+        <Suspense fallback={<div className="loading-spinner">Loading intelligence view...</div>}>
+          <Routes>
+            <Route path="/" element={<DashboardPage onOpenIngest={() => setIngestOpen(true)} onOpenAI={() => setAiOpen(true)} />} />
+            <Route path="/contracts" element={<ContractsPage />} />
+            <Route path="/contracts/:id" element={<ContractDetailContainer />} />
+            <Route path="/cases" element={<CasesPage />} />
+            <Route path="/vendors/:id" element={<VendorProfilePage />} />
+            <Route path="/departments/:id" element={<DepartmentProfilePage />} />
+            <Route path="/network" element={<NetworkPage />} />
+            <Route path="/simulator" element={<SimulatorPage />} />
+          </Routes>
+        </Suspense>
       </Shell>
 
       <DataIngestionModal
         isOpen={ingestOpen}
         onClose={() => setIngestOpen(false)}
-        onIngestSuccess={() => {
-          // Trigger reload if on dashboard
-        }}
+        onIngestSuccess={() => {}}
       />
 
       <AIAssistantDrawer

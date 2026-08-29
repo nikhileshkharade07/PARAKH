@@ -10,3 +10,6 @@ scikit-learn
 python-dotenv
 pytest
 httpx
+python-multipart
+web3
+openpyxl
