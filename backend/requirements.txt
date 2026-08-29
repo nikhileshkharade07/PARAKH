@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+sqlalchemy
+psycopg[binary]
+pandas
+numpy
+scikit-learn
+python-dotenv
+pytest
+httpx
