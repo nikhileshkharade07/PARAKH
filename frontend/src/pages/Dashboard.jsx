@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   BarChart,
   Bar,
@@ -82,12 +83,15 @@ export default function Dashboard() {
     "#ef4444",
   ];
 
+  const riskAlerts = contracts
+    .filter((contract) => contract.crs >= 70)
+    .sort((a, b) => b.crs - a.crs);
+
   return (
     <div className="dashboard">
 
       {/* PAGE INTRO */}
       <div className="page-intro">
-
         <div>
           <div className="breadcrumb">
             OVERVIEW / DASHBOARD
@@ -107,7 +111,6 @@ export default function Dashboard() {
           <span>◷</span>
           Last updated today
         </div>
-
       </div>
 
       {/* KPI CARDS */}
@@ -129,7 +132,7 @@ export default function Dashboard() {
           </div>
 
           <div className="stat-value">
-            {stats.totalContracts?.toLocaleString()}
+            {stats.totalContracts?.toLocaleString() ?? "—"}
           </div>
 
           <div className="stat-footer">
@@ -153,7 +156,7 @@ export default function Dashboard() {
           </div>
 
           <div className="stat-value">
-            {stats.highRiskContracts}
+            {stats.highRiskContracts ?? "—"}
           </div>
 
           <div className="stat-footer">
@@ -177,7 +180,7 @@ export default function Dashboard() {
           </div>
 
           <div className="stat-value">
-            {stats.avgCRS}
+            {stats.avgCRS ?? "—"}
           </div>
 
           <div className="stat-footer">
@@ -201,7 +204,7 @@ export default function Dashboard() {
           </div>
 
           <div className="stat-value">
-            {stats.totalVendors?.toLocaleString()}
+            {stats.totalVendors?.toLocaleString() ?? "—"}
           </div>
 
           <div className="stat-footer">
@@ -214,7 +217,7 @@ export default function Dashboard() {
       {/* ANALYTICS */}
       <div className="analytics-grid">
 
-        {/* RISK DONUT */}
+        {/* RISK DISTRIBUTION */}
         <div className="dashboard-card">
 
           <div className="card-heading">
@@ -223,7 +226,10 @@ export default function Dashboard() {
               <p>Contract risk breakdown</p>
             </div>
 
-            <button className="more-button">
+            <button
+              className="more-button"
+              aria-label="More risk distribution options"
+            >
               •••
             </button>
           </div>
@@ -285,7 +291,7 @@ export default function Dashboard() {
 
         </div>
 
-        {/* BAR CHART */}
+        {/* RISK OVERVIEW */}
         <div className="dashboard-card">
 
           <div className="card-heading">
@@ -338,29 +344,242 @@ export default function Dashboard() {
 
       </div>
 
-      {/* HIGH RISK TABLE */}
+      {/* NEW FEATURE: RISK ALERTS */}
+      <div
+        className="dashboard-card"
+        style={{
+          marginTop: "24px",
+          border: "1px solid #fee2e2",
+        }}
+      >
+
+        <div className="card-heading">
+
+          <div className="title-with-icon">
+
+            <div
+              className="danger-icon"
+              style={{
+                background: "#fee2e2",
+                color: "#dc2626",
+              }}
+            >
+              !
+            </div>
+
+            <div>
+              <h2>Risk Alerts</h2>
+
+              <p>
+                High-priority contracts requiring attention
+              </p>
+            </div>
+
+          </div>
+
+          <span
+            style={{
+              background: "#fef2f2",
+              color: "#dc2626",
+              padding: "7px 12px",
+              borderRadius: "20px",
+              fontSize: "12px",
+              fontWeight: "700",
+            }}
+          >
+            {riskAlerts.length} Alerts
+          </span>
+
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            marginTop: "10px",
+          }}
+        >
+
+          {riskAlerts.length > 0 ? (
+            riskAlerts.map((contract) => {
+
+              const isCritical = contract.crs >= 80;
+
+              return (
+                <Link
+                  key={contract.id}
+                  to={`/contracts/${contract.id}`}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "16px",
+                      padding: "14px 16px",
+                      borderRadius: "10px",
+                      background: isCritical
+                        ? "#fff7f7"
+                        : "#fffbeb",
+                      border: isCritical
+                        ? "1px solid #fecaca"
+                        : "1px solid #fde68a",
+                      cursor: "pointer",
+                    }}
+                  >
+
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                      }}
+                    >
+
+                      <div
+                        style={{
+                          width: "36px",
+                          height: "36px",
+                          borderRadius: "50%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: isCritical
+                            ? "#fee2e2"
+                            : "#fef3c7",
+                          color: isCritical
+                            ? "#dc2626"
+                            : "#d97706",
+                          fontWeight: "800",
+                        }}
+                      >
+                        !
+                      </div>
+
+                      <div>
+                        <strong
+                          style={{
+                            display: "block",
+                            marginBottom: "3px",
+                          }}
+                        >
+                          {contract.vendor}
+                        </strong>
+
+                        <span
+                          style={{
+                            fontSize: "12px",
+                            color: "#64748b",
+                          }}
+                        >
+                          {contract.id} •{" "}
+                          {contract.department}
+                        </span>
+                      </div>
+
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "14px",
+                      }}
+                    >
+
+                      <div
+                        style={{
+                          textAlign: "right",
+                        }}
+                      >
+                        <strong
+                          style={{
+                            display: "block",
+                            color: isCritical
+                              ? "#dc2626"
+                              : "#d97706",
+                          }}
+                        >
+                          CRS {contract.crs}
+                        </strong>
+
+                        <span
+                          style={{
+                            fontSize: "11px",
+                            color: "#64748b",
+                          }}
+                        >
+                          {isCritical
+                            ? "Critical Risk"
+                            : "High Risk"}
+                        </span>
+                      </div>
+
+                      <span
+                        style={{
+                          fontSize: "20px",
+                          color: "#64748b",
+                        }}
+                      >
+                        →
+                      </span>
+
+                    </div>
+
+                  </div>
+                </Link>
+              );
+            })
+          ) : (
+            <div
+              style={{
+                padding: "20px",
+                textAlign: "center",
+                color: "#64748b",
+              }}
+            >
+              No active risk alerts.
+            </div>
+          )}
+
+        </div>
+
+      </div>
+
+      {/* HIGH RISK CONTRACTS */}
       <div className="dashboard-card contracts-card">
 
         <div className="card-heading">
 
           <div>
             <div className="title-with-icon">
+
               <div className="danger-icon">
                 !
               </div>
 
               <div>
                 <h2>High-Risk Contracts</h2>
+
                 <p>
                   Contracts requiring immediate attention
                 </p>
               </div>
+
             </div>
           </div>
 
-          <button className="view-button">
+          <Link
+            to="/contracts"
+            className="view-button"
+          >
             View all →
-          </button>
+          </Link>
 
         </div>
 
@@ -382,88 +601,99 @@ export default function Dashboard() {
 
             <tbody>
 
-              {contracts.map((contract) => (
+              {contracts.length > 0 ? (
+                contracts.map((contract) => (
 
-                <tr key={contract.id}>
+                  <tr key={contract.id}>
 
-                  <td>
-                    <span className="contract-id">
-                      {contract.id}
-                    </span>
-                  </td>
+                    <td>
+                      <span className="contract-id">
+                        {contract.id}
+                      </span>
+                    </td>
 
-                  <td>
-                    <div className="vendor-cell">
+                    <td>
+                      <div className="vendor-cell">
 
-                      <div className="vendor-avatar">
-                        {contract.vendor
-                          .charAt(0)}
+                        <div className="vendor-avatar">
+                          {contract.vendor.charAt(0)}
+                        </div>
+
+                        <strong>
+                          {contract.vendor}
+                        </strong>
+
                       </div>
+                    </td>
 
+                    <td>
+                      <span className="department">
+                        {contract.department}
+                      </span>
+                    </td>
+
+                    <td>
                       <strong>
-                        {contract.vendor}
+                        ₹
+                        {contract.value.toLocaleString(
+                          "en-IN"
+                        )}
                       </strong>
+                    </td>
 
-                    </div>
-                  </td>
+                    <td>
+                      <div className="score-wrapper">
 
-                  <td>
-                    <span className="department">
-                      {contract.department}
-                    </span>
-                  </td>
+                        <div className="score-number">
+                          {contract.crs}
+                        </div>
 
-                  <td>
-                    <strong>
-                      ₹
-                      {contract.value.toLocaleString(
-                        "en-IN"
-                      )}
-                    </strong>
-                  </td>
+                        <div className="score-bar">
+                          <div
+                            className="score-fill"
+                            style={{
+                              width: `${contract.crs}%`,
+                            }}
+                          ></div>
+                        </div>
 
-                  <td>
-                    <div className="score-wrapper">
-
-                      <div className="score-number">
-                        {contract.crs}
                       </div>
+                    </td>
 
-                      <div className="score-bar">
-                        <div
-                          className="score-fill"
-                          style={{
-                            width: `${contract.crs}%`,
-                          }}
-                        ></div>
-                      </div>
+                    <td>
+                      <span
+                        className={`risk-badge ${
+                          contract.crs >= 70
+                            ? "high"
+                            : "medium"
+                        }`}
+                      >
+                        {contract.crs >= 70
+                          ? "High Risk"
+                          : "Medium"}
+                      </span>
+                    </td>
 
-                    </div>
+                    <td>
+                      <Link
+                        to={`/contracts/${contract.id}`}
+                        className="arrow-button"
+                        aria-label={`Open ${contract.id}`}
+                      >
+                        →
+                      </Link>
+                    </td>
+
+                  </tr>
+
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7">
+                    No high-risk contracts available.
                   </td>
-
-                  <td>
-                    <span
-                      className={`risk-badge ${
-                        contract.crs >= 70
-                          ? "high"
-                          : "medium"
-                      }`}
-                    >
-                      {contract.crs >= 70
-                        ? "High Risk"
-                        : "Medium"}
-                    </span>
-                  </td>
-
-                  <td>
-                    <button className="arrow-button">
-                      →
-                    </button>
-                  </td>
-
                 </tr>
-
-              ))}
+              )}
 
             </tbody>
 
@@ -476,7 +706,10 @@ export default function Dashboard() {
       {/* QUICK ACTIONS */}
       <div className="quick-grid">
 
-        <div className="quick-card blue-action">
+        <Link
+          to="/contracts"
+          className="quick-card blue-action"
+        >
           <div className="quick-icon">⌕</div>
 
           <div>
@@ -487,9 +720,12 @@ export default function Dashboard() {
           </div>
 
           <span>→</span>
-        </div>
+        </Link>
 
-        <div className="quick-card purple-action">
+        <Link
+          to="/network"
+          className="quick-card purple-action"
+        >
           <div className="quick-icon">◎</div>
 
           <div>
@@ -500,9 +736,12 @@ export default function Dashboard() {
           </div>
 
           <span>→</span>
-        </div>
+        </Link>
 
-        <div className="quick-card green-action">
+        <Link
+          to="/network"
+          className="quick-card green-action"
+        >
           <div className="quick-icon">◌</div>
 
           <div>
@@ -513,7 +752,7 @@ export default function Dashboard() {
           </div>
 
           <span>→</span>
-        </div>
+        </Link>
 
       </div>
 
