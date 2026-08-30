@@ -849,7 +849,9 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .content-area {
+  .content-area { 
+
+    background:  #7985de;
     padding: 15px;
   }
 }
