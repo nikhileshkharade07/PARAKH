@@ -37,12 +37,10 @@ VENDORS = [
 ]
 
 def main():
+    # Drop all tables and recreate them to ensure we have the latest schema
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     db = SessionLocal()
-
-    for table in reversed(Base.metadata.sorted_tables):
-        db.execute(table.delete())
-    db.commit()
 
     departments = [Department(name=x) for x in DEPARTMENTS]
     vendors = [Vendor(name=n, product_description=d) for n,d in VENDORS]
@@ -50,7 +48,8 @@ def main():
     db.commit()
 
     contracts = []
-    for i in range(1, 2501):
+    # Start with a smaller dataset for testing
+    for i in range(1, 101):
         dept = departments[(i * 7) % len(departments)]
         if dept.name == "Public Works Department" and i % 5 != 0:
             vendor = vendors[1]
@@ -79,7 +78,13 @@ def main():
                 "Procurement of computers, peripherals and implementation support",
                 "Supply of medical equipment meeting applicable technical standards",
             ]),
-            contract_date=start.date(), department_id=dept.id, vendor_id=vendor.id,
+            award_date=start.date(),
+            category=None,
+            location=None,
+            procurement_method=None,
+            contract_start_date=start.date(),
+            contract_end_date=end.date(),
+            department_id=dept.id, vendor_id=vendor.id,
             estimate_value=estimate, award_value=award, tender_start=start, tender_end=end
         )
         db.add(c); db.flush()

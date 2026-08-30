@@ -38,21 +38,26 @@ def list_contracts(
     for c in contracts:
         crs = c.risk_assessment.crs if c.risk_assessment else None
         lvl = "high" if crs and crs >= 70 else "medium" if crs and crs >= 40 else "low" if crs is not None else None
-        
+
         if risk_level and lvl != risk_level.lower():
             continue
-            
+
         results.append(ContractSummary(
             id=c.id,
             contract_number=c.contract_number,
             title=c.title,
-            contract_date=c.contract_date,
+            award_date=c.award_date,
             department_id=c.department_id,
             department_name=c.department.name if c.department else None,
             vendor_id=c.vendor_id,
             vendor_name=c.vendor.name if c.vendor else None,
             estimate_value=c.estimate_value,
             award_value=c.award_value,
+            category=c.category,
+            location=c.location,
+            procurement_method=c.procurement_method,
+            contract_start_date=c.contract_start_date,
+            contract_end_date=c.contract_end_date,
             crs=crs,
             risk_level=lvl,
         ))
@@ -80,11 +85,17 @@ def get_contract(contract_id: int, db: Session = Depends(get_db)):
         )
     return ContractDetail(
         id=c.id, contract_number=c.contract_number, title=c.title,
-        contract_date=c.contract_date, department_id=c.department_id,
+        award_date=c.award_date,
+        department_id=c.department_id,
         department_name=c.department.name if c.department else None,
         vendor_id=c.vendor_id,
         vendor_name=c.vendor.name if c.vendor else None,
         estimate_value=c.estimate_value, award_value=c.award_value,
+        category=c.category,
+        location=c.location,
+        procurement_method=c.procurement_method,
+        contract_start_date=c.contract_start_date,
+        contract_end_date=c.contract_end_date,
         specification=c.specification,
         vendor_product_description=c.vendor.product_description if c.vendor else None,
         tender_start=c.tender_start, tender_end=c.tender_end,

@@ -51,13 +51,18 @@ class ContractSummary(BaseModel):
     id: int
     contract_number: str
     title: str
-    contract_date: date
+    award_date: date | None = None
     department_id: int
     department_name: str | None = None
     vendor_id: int
     vendor_name: str | None = None
     estimate_value: Decimal
     award_value: Decimal
+    category: str | None = None
+    location: str | None = None
+    procurement_method: str | None = None
+    contract_start_date: date | None = None
+    contract_end_date: date | None = None
     crs: int | None = None
     risk_level: str | None = None
 
