@@ -54,6 +54,8 @@ class Contract(Base):
     tender_end: Mapped[datetime] = mapped_column(DateTime)
     procurement_category: Mapped[str] = mapped_column(String(100), default="Goods & Services")
     location: Mapped[str] = mapped_column(String(150), default="National")
+    provenance_ocid: Mapped[Optional[str]] = mapped_column(String(150), nullable=True, default=None)
+    provenance_source: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, default="Synthetic/Demo Dataset")
     
     department: Mapped["Department"] = relationship(back_populates="contracts")
     vendor: Mapped["Vendor"] = relationship(back_populates="contracts")

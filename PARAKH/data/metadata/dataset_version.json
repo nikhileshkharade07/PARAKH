@@ -1,0 +1,14 @@
+{
+  "dataset_name": "india_procurement_himachal_ocds",
+  "version": "1.2.0",
+  "release_tag": "FY2017_2021_OCDS_V1",
+  "source": "https://raw.githubusercontent.com/CivicDataLab/himachal-pradesh-health-procurement-OCDS/master/HP%20Health%20Procurements(FY%202017-18%20to%202020-21%20July).xlsx",
+  "download_date": "2026-08-30T22:25:53Z",
+  "raw_file": "data/raw/hp_procurement_raw.xlsx",
+  "raw_checksum_sha256": "0744e24693c73eb84ff9071a8cef6ba5120b77c19cbc442a2c89b56d8460edcf",
+  "normalized_file": "data/processed/india_procurement_normalized.csv",
+  "schema_version": "parakh-canonical-v1.0",
+  "processing_pipeline_version": "2.0.0",
+  "licensing": "ODC-By v1.0",
+  "benchmark_compatible": true
+}

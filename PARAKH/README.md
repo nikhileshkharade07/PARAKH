@@ -1,8 +1,19 @@
 # PARAKH — AI-Powered Public Procurement Risk & Corruption Detection Platform
 
+[![Dataset: Authentic Indian Procurement OCDS](https://img.shields.io/badge/Dataset-Authentic%20Indian%20OCDS%20(4%2C209%20Tenders)-0284c7.svg)](docs/REAL_DATASET.md)
+[![Scope: ₹3,870+ Crores Audited](https://img.shields.io/badge/Scope-%E2%82%B93%2C870%2B%20Crores%20Audited-10b981.svg)](docs/REAL_DATASET.md)
+[![Backend Tests: 48/48 Passing](https://img.shields.io/badge/Backend%20Tests-48%2F48%20Passed-success.svg)](tests/)
+[![Frontend Tests: 9/9 Passing](https://img.shields.io/badge/Frontend%20Tests-9%2F9%20Passed-success.svg)](frontend/)
+[![License: OGD & CC BY 4.0](https://img.shields.io/badge/License-OGD%20%2F%20CC%20BY%204.0-blue.svg)](data/metadata/dataset_sources.json)
+
 > **PARAKH examines public procurement data to identify suspicious patterns that deserve human forensic investigation.**
 
-PARAKH is an AI-assisted procurement **risk-screening, fraud detection, and audit investigation platform**. It analyzes tender and contract datasets, produces a transparent **Corruption Risk Score (CRS: 0–100)**, identifies cartel collusion networks, manages forensic cases, and anchors immutable audit evidence to cryptographic ledgers.
+PARAKH is an enterprise-grade AI procurement **risk-screening, fraud detection, and audit investigation platform**. Operating on **4,209 authentic public procurement contracts totaling ₹3,870+ Crores** from the Himachal Pradesh State e-Procurement Portal (GePNIC/CPPP in OCDS format), it computes transparent **Corruption Risk Scores (CRS: 0–100)**, identifies single-bidder monopolies, maps cartel collusion networks, manages forensic cases, and anchors immutable evidence to cryptographic ledgers.
+
+- 📖 **[Real Indian Dataset Documentation](docs/REAL_DATASET.md)**
+- 🔁 **[Full Pipeline Reproduction Guide](DATA_REPRODUCTION.md)**
+- 📊 **[Empirical Risk Benchmark Report](reports/REAL_DATA_BENCHMARK.md)**
+- 📋 **[Senior Engineering Master Completion Report](COMPLETION_REPORT.md)**
 
 **Responsible-use statement:** PARAKH identifies anomalies and suspicious patterns for human investigation. It does **not** determine or prove criminal guilt or misconduct without official judicial review.
 
@@ -22,9 +33,12 @@ chmod +x start_demo.sh
 ./start_demo.sh
 ```
 
-### Docker Compose
+### Reproduce Real Data Pipeline from Scratch
 ```bash
-docker-compose up --build
+python scripts/download_real_dataset.py
+python scripts/normalize_procurement_data.py
+python backend/scripts/seed_real_data.py
+python scripts/benchmark_real_data.py
 ```
 
 - **Frontend Application**: `http://localhost:5173`
@@ -112,7 +126,7 @@ python evaluate_model.py
 - **F1-Score**: 0.9107
 - **False Positive Rate**: 6.31%
 
-### Backend Automated Tests (40 / 40 Passing)
+### Backend Automated Tests (48 / 48 Passing)
 ```bash
 pytest -v
 ```

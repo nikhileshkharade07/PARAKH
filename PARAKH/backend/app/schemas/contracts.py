@@ -80,6 +80,8 @@ class ContractSummary(BaseModel):
     award_value: Decimal
     crs: int | None = None
     risk_level: str | None = None
+    provenance_ocid: Optional[str] = None
+    provenance_source: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
 class ContractDetail(ContractSummary):
@@ -88,6 +90,8 @@ class ContractDetail(ContractSummary):
     tender_start: datetime
     tender_end: datetime
     bidder_count: int
+    procurement_category: Optional[str] = None
+    location: Optional[str] = None
     bids: list[BidOut] = []
     extensions: list[ExtensionOut] = []
     risk: RiskOut | None = None

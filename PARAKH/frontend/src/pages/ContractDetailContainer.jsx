@@ -296,6 +296,20 @@ export default function ContractDetailContainer() {
                 {contract.bidder_count} Bidder{contract.bidder_count === 1 ? " (Single Bidder Alert)" : ""}
               </div>
             </div>
+            {contract.provenance_ocid && (
+              <div style={{ gridColumn: "1 / -1", paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                <div>
+                  <span style={{ color: "var(--text-muted)", fontSize: 11, marginRight: 6 }}>DATA PROVENANCE:</span>
+                  <span style={{ fontSize: 12, color: "var(--text-secondary)" }}>{contract.provenance_source || "Himachal Pradesh Government OCDS Dataset"}</span>
+                </div>
+                <div>
+                  <span style={{ color: "var(--text-muted)", fontSize: 11, marginRight: 6 }}>OCID:</span>
+                  <span className="font-mono" style={{ fontSize: 11, color: "var(--accent-cyan)", background: "rgba(56, 189, 248, 0.1)", padding: "2px 6px", borderRadius: 4 }}>
+                    {contract.provenance_ocid}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

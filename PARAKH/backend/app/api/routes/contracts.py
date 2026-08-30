@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import statistics
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -69,6 +69,8 @@ def list_contracts(
             award_value=c.award_value,
             crs=crs,
             risk_level=lvl,
+            provenance_ocid=c.provenance_ocid,
+            provenance_source=c.provenance_source
         ))
     return results
 
@@ -161,6 +163,10 @@ def get_contract(contract_id: int, db: Session = Depends(get_db)):
         vendor_product_description=c.vendor.product_description if c.vendor else None,
         tender_start=c.tender_start, tender_end=c.tender_end,
         bidder_count=len(c.bids),
+        procurement_category=c.procurement_category,
+        location=c.location,
+        provenance_ocid=c.provenance_ocid,
+        provenance_source=c.provenance_source,
         bids=[BidOut(id=b.id, vendor_name=b.vendor_name, bid_value=b.bid_value) for b in c.bids],
         extensions=[ExtensionOut(id=e.id, extension_days=e.extension_days, reason=e.reason) for e in c.extensions],
         crs=crs, risk_level=lvl, risk=risk,
@@ -254,5 +260,5 @@ def get_contract_risk_evidence(contract_id: int, db: Session = Depends(get_db)):
         rule_score=risk_data["rule_score"],
         anomaly_score=risk_data["anomaly_score"],
         triggered_rules=triggered_rules,
-        generated_at=datetime.utcnow()
+        generated_at=datetime.now(timezone.utc)
     )

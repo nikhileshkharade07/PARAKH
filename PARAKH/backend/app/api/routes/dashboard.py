@@ -46,6 +46,14 @@ def stats(db: Session = Depends(get_db)):
         } for r in dept_rows
     ]
 
+    # Data Source & Time Range
+    sample_c = db.query(Contract).first()
+    data_source = sample_c.provenance_source if (sample_c and sample_c.provenance_source) else "Real Indian Government Procurement Data"
+    
+    earliest_date = db.query(func.min(Contract.contract_date)).scalar()
+    latest_date = db.query(func.max(Contract.contract_date)).scalar()
+    time_range = f"{earliest_date.strftime('%b %Y') if earliest_date else '2017'} – {latest_date.strftime('%b %Y') if latest_date else '2021'}"
+
     return {
         "total_contracts": total_contracts,
         "total_value": float(total_val),
@@ -56,5 +64,7 @@ def stats(db: Session = Depends(get_db)):
         "active_cases": active_cases,
         "total_vendors": total_vendors,
         "total_departments": total_departments,
-        "departments": dept_stats
+        "departments": dept_stats,
+        "data_source": data_source,
+        "time_range": time_range
     }

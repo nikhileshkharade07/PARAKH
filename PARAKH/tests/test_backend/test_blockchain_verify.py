@@ -15,8 +15,9 @@ def test_blockchain_anchor_and_verify():
     assert "tx_hash" in data
 
     # 2. Verify integrity
+    contract_num = data.get("contract_number", "GEM-DEMO-000007")
     verify_res = client.post("/api/blockchain/verify", json={
-        "contract_id": "GEM-DEMO-000007"
+        "contract_id": contract_num
     })
     assert verify_res.status_code == 200
     v_data = verify_res.json()

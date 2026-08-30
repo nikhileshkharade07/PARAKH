@@ -1,0 +1,112 @@
+{
+  "profiling_timestamp": "2026-08-30T22:27:16.091220",
+  "dataset_name": "Himachal Pradesh Government Public Procurement Dataset (OCDS)",
+  "source": "hptenders.gov.in / CivicDataLab",
+  "records": {
+    "tenders_sheet_count": 3791,
+    "awards_sheet_count": 4211,
+    "merged_procurement_records": 4211,
+    "total_columns": 68
+  },
+  "critical_missing_values": {
+    "ocid": 0,
+    "tender_id": 0,
+    "title": 0,
+    "vendor": 0,
+    "department": 0,
+    "award_value": 0,
+    "estimate_value": 2,
+    "tender_start": 0,
+    "tender_end": 0,
+    "bidder_count": 20
+  },
+  "duplicates": {
+    "exact_duplicate_rows": 0,
+    "duplicate_ocid": 420,
+    "duplicate_tender_id": 420
+  },
+  "entities": {
+    "unique_vendors": 1858,
+    "unique_departments": 434,
+    "unique_buyers": 114,
+    "unique_locations": 890,
+    "top_10_vendors": {
+      "rajat thakur": 46,
+      "naresh vij govt contractor": 34,
+      "ABTAR SINGH AND COMPANY": 24,
+      "D.S. Thakur": 23,
+      "Kulvinder": 18,
+      "Vijay Kumar": 17,
+      "M/s.Pawan Kumar Sharma": 17,
+      "Dogra Construction Company Pvt Ltd": 16,
+      "sahab singh thakur": 16,
+      "Ms R.K. Mahajan": 16
+    },
+    "top_10_departments": {
+      "Executive Engineer": 1512,
+      "EXECUTIVE ENGINEER": 154,
+      "Executive Officer MC Solan": 126,
+      "EE PWD Paonta Sahib": 92,
+      "EE": 61,
+      "EE IPH Division Barsar": 59,
+      "EE Dhami": 55,
+      "EE Bilaspur Division No. 2 HPPWD Bilaspur": 54,
+      "Executive Engineer IPH Divn No.1 Una HP": 52,
+      "Executive Engineer IPH Division Barsar.": 50
+    }
+  },
+  "financials_inr": {
+    "awards": {
+      "count": 4211,
+      "sum_inr": 38703860370.19,
+      "sum_crores_inr": 3870.39,
+      "min_inr": 0.0,
+      "mean_inr": 9191132.84,
+      "median_inr": 1744999.0,
+      "max_inr": 1219245452.0,
+      "std_inr": 45188313.39,
+      "p25_inr": 888856.0,
+      "p75_inr": 3757931.0,
+      "p95_inr": 29323126.5
+    },
+    "estimates": {
+      "count": 4209,
+      "sum_inr": 40210558031.0,
+      "sum_crores_inr": 4021.06,
+      "min_inr": 0.0,
+      "mean_inr": 9553470.67,
+      "median_inr": 1568700.0,
+      "max_inr": 1450000000.0,
+      "std_inr": 64569520.39
+    }
+  },
+  "temporal": {
+    "date_range": {
+      "earliest_tender_start": "2012-05-02T11:30:00+00:00",
+      "latest_tender_start": "2020-07-02T17:00:00+00:00",
+      "earliest_tender_end": "2012-05-24T16:00:00+00:00",
+      "latest_tender_end": "2020-07-22T11:00:00+00:00"
+    },
+    "tender_duration_days": {
+      "mean_days": 16.3,
+      "median_days": 16.0,
+      "min_days": 3.1,
+      "max_days": 69.2,
+      "under_7_days_count": 345,
+      "under_7_days_pct": 8.19
+    }
+  },
+  "competition": {
+    "available_records": 4191,
+    "mean_bidders": 4.46,
+    "median_bidders": 4.0,
+    "single_bidder_count": 132,
+    "single_bidder_pct": 3.15,
+    "max_bidders": 40
+  },
+  "categories": {
+    "works": 4027,
+    "goods": 132,
+    "services": 52
+  }
+}

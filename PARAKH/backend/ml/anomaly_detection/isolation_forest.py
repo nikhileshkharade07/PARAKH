@@ -19,15 +19,35 @@ def _features(contract, peers):
 
 
 def anomaly_scores_for_contracts(contracts):
-    """Fit one deterministic Isolation Forest for the demo dataset.
-
-    This batch approach is important: fitting a new model for every contract
-    would make a 2,500-record demo unnecessarily slow.
-    """
+    """Fit one deterministic Isolation Forest for the dataset in O(N) feature extraction."""
     if len(contracts) < 2:
         return {id(c): 0.0 for c in contracts}
 
-    X = np.array([_features(c, contracts) for c in contracts], dtype=float)
+    # Pre-count vendor frequencies and department sizes in O(N)
+    vendor_counts = {}
+    dept_counts = {}
+    for c in contracts:
+        vendor_counts[c.vendor_id] = vendor_counts.get(c.vendor_id, 0) + 1
+        dept_counts[c.department_id] = dept_counts.get(c.department_id, 0) + 1
+
+    total_contracts = len(contracts)
+    features_list = []
+    for c in contracts:
+        v_wins = vendor_counts.get(c.vendor_id, 1)
+        ratio = v_wins / total_contracts if total_contracts else 0.0
+        duration = (c.tender_end - c.tender_start).total_seconds() / 86400 if (c.tender_end and c.tender_start) else 14.0
+        est_f = float(c.estimate_value) if c.estimate_value else 0.0
+        awd_f = float(c.award_value) if c.award_value else 0.0
+        dev = (awd_f - est_f) / est_f if est_f > 0 else 0.0
+        ext_count = len(c.extensions) if hasattr(c, "extensions") and c.extensions else 0
+        bids_count = len(c.bids) if hasattr(c, "bids") and c.bids else 1
+        features_list.append([
+            awd_f, bids_count, duration,
+            est_f, dev, v_wins, ratio,
+            ext_count, dept_counts.get(c.department_id, 1)
+        ])
+
+    X = np.array(features_list, dtype=float)
     model = IsolationForest(
         n_estimators=100,
         contamination="auto",

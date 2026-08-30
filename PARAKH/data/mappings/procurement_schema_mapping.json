@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PARAKH Procurement Schema Mapping",
+  "description": "Mapping configuration between Indian OCDS / GePNIC e-Procurement source fields and PARAKH canonical procurement database schema.",
+  "mappings": {
+    "contract_number": {
+      "canonical_field": "contract_number",
+      "target_type": "string",
+      "source_candidates": ["tender/id", "ocid", "awards/0/id", "tender_id", "contract_number"],
+      "transformation": "strip_and_canonicalize_id",
+      "required": true
+    },
+    "title": {
+      "canonical_field": "title",
+      "target_type": "string",
+      "source_candidates": ["tender/title", "title", "tender/description", "work_name"],
+      "transformation": "clean_text",
+      "fallback": "Himachal Pradesh Government Public Procurement Contract",
+      "required": true
+    },
+    "specification": {
+      "canonical_field": "specification",
+      "target_type": "text",
+      "source_candidates": ["tender/description", "tender/items/description", "tender/classification/description", "specification"],
+      "transformation": "clean_text_multiline",
+      "fallback": "Standard technical specifications and requirements under Himachal Pradesh Public Procurement Rules",
+      "required": false
+    },
+    "department": {
+      "canonical_field": "department",
+      "target_type": "string",
+      "source_candidates": ["tender/procuringEntity/name", "buyer/name", "department", "procuring_entity"],
+      "transformation": "clean_department_name",
+      "fallback": "Department of Health & Family Welfare, HP",
+      "required": true
+    },
+    "vendor": {
+      "canonical_field": "vendor",
+      "target_type": "string",
+      "source_candidates": ["awards/0/suppliers/0/name", "vendor", "winning_vendor", "supplier"],
+      "transformation": "clean_vendor_identity",
+      "fallback": "Public Registered Supplier",
+      "required": true
+    },
+    "estimate_value": {
+      "canonical_field": "estimate_value",
+      "target_type": "numeric(18,2)",
+      "source_candidates": ["tender/value/amount", "estimate_value", "sanctioned_amount", "budget"],
+      "transformation": "parse_inr_currency",
+      "unit": "INR",
+      "required": false
+    },
+    "award_value": {
+      "canonical_field": "award_value",
+      "target_type": "numeric(18,2)",
+      "source_candidates": ["awards/0/value/amount", "award_value", "final_cost", "winning_bid"],
+      "transformation": "parse_inr_currency",
+      "unit": "INR",
+      "required": true
+    },
+    "tender_start": {
+      "canonical_field": "tender_start",
+      "target_type": "datetime",
+      "source_candidates": ["tender/tenderPeriod/startDate", "tender/datePublished", "tender_start", "start_date"],
+      "transformation": "parse_iso8601_date",
+      "required": true
+    },
+    "tender_end": {
+      "canonical_field": "tender_end",
+      "target_type": "datetime",
+      "source_candidates": ["tender/tenderPeriod/endDate", "tender/awardPeriod/startDate", "tender_end", "submission_deadline"],
+      "transformation": "parse_iso8601_date",
+      "required": true
+    },
+    "contract_date": {
+      "canonical_field": "contract_date",
+      "target_type": "date",
+      "source_candidates": ["date", "award/date", "contract_date"],
+      "transformation": "parse_iso8601_date",
+      "required": false
+    },
+    "bidder_count": {
+      "canonical_field": "bidder_count",
+      "target_type": "integer",
+      "source_candidates": ["tender/numberOfTenderers", "bidder_count", "bidders"],
+      "transformation": "parse_positive_int",
+      "fallback": 1,
+      "required": false
+    },
+    "procurement_category": {
+      "canonical_field": "procurement_category",
+      "target_type": "string",
+      "source_candidates": ["tender/mainProcurementCategory", "tender/contractType", "procurement_category", "category"],
+      "transformation": "clean_category",
+      "fallback": "Healthcare & Civil Infrastructure",
+      "required": false
+    },
+    "location": {
+      "canonical_field": "location",
+      "target_type": "string",
+      "source_candidates": ["parties/0/address/locality", "location", "city", "district"],
+      "transformation": "clean_location",
+      "fallback": "Himachal Pradesh",
+      "required": false
+    }
+  },
+  "provenance_fields": {
+    "source_dataset": "Himachal Pradesh Public Procurement OCDS Dataset (FY 2017-2021)",
+    "source_url": "https://hptenders.gov.in/nicgep/app",
+    "ocds_package": "CivicDataLab HP Health Procurements",
+    "transformation_version": "2.0.0"
+  }
+}

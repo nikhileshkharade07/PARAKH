@@ -1,0 +1,28 @@
+{
+  "datasets": [
+    {
+      "name": "Himachal Pradesh Public Procurement & Health Tenders (OCDS)",
+      "source": "State Public Procurement Portal (hptenders.gov.in / GePNIC) & CivicDataLab OCDS Repository",
+      "publisher": "Government of Himachal Pradesh & CivicDataLab / Open Contracting Partnership",
+      "url": "https://raw.githubusercontent.com/CivicDataLab/himachal-pradesh-health-procurement-OCDS/master/HP%20Health%20Procurements(FY%202017-18%20to%202020-21%20July).xlsx",
+      "access_date": "2026-08-30",
+      "license": "Open Data Commons Attribution License (ODC-By v1.0) / Open Government Data License - India",
+      "description": "Authentic public procurement tenders, contracts, and supplier award records from the Government of Himachal Pradesh (FY 2017-18 to FY 2020-21) standardized into the Open Contracting Data Standard (OCDS). Covers medical equipment, hospital civil works, healthcare infrastructure, and district procurement.",
+      "record_count": 4211,
+      "tender_count": 3791,
+      "vendor_count": 1858,
+      "organization_count": 434,
+      "time_range": {
+        "start": "2017-04-01",
+        "end": "2021-07-31"
+      },
+      "total_procurement_value_inr": 38703860370.19,
+      "currency": "INR",
+      "provenance": {
+        "source_portal": "https://hptenders.gov.in",
+        "ocds_standard_version": "1.1",
+        "transformation_pipeline": "CivicDataLab Scrapy & OCDS Parser"
+      }
+    }
+  ]
+}
