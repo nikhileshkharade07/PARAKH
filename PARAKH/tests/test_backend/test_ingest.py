@@ -1,6 +1,14 @@
 import os
+import sys
 import tempfile
+from pathlib import Path
 from fastapi.testclient import TestClient
+
+# Add the backend directory to the sys.path so we can import from app
+backend_dir = Path(__file__).resolve().parent.parent / "backend"
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
 from backend.app.main import app
 
 # Create a temporary database for testing
