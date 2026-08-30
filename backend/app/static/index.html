@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEGIS — Zero-Human-Discretion Public Procurement Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <!-- Cytoscape for UBO Graph Forensics -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+</head>
+<body>
+  <div class="aegis-app">
+    <!-- Top Navigation Header -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <div class="logo-badge">
+          <div class="shield-icon">🛡️</div>
+          <div class="brand-text">
+            <span class="brand-name">AEGIS</span>
+            <span class="brand-sub">PROCUREMENT ENGINE</span>
+          </div>
+        </div>
+        <div class="standard-tag">OCDS v1.1 COMPLIANT</div>
+      </div>
+
+      <!-- Role Switcher -->
+      <nav class="role-nav">
+        <button class="role-btn active" data-tab="overview">
+          <span class="btn-icon">⚡</span> System Overview
+        </button>
+        <button class="role-btn" data-tab="vendor">
+          <span class="btn-icon">🔒</span> Vendor (zk-Bidding)
+        </button>
+        <button class="role-btn" data-tab="auditor">
+          <span class="btn-icon">🕸️</span> Auditor (UBO Graph)
+        </button>
+        <button class="role-btn" data-tab="algorithmic">
+          <span class="btn-icon">⚖️</span> Algorithmic Evaluation
+        </button>
+        <button class="role-btn" data-tab="escrow">
+          <span class="btn-icon">🛰️</span> Escrow & Telemetry
+        </button>
+      </nav>
+
+      <div class="nav-right">
+        <div class="live-pulse"></div>
+        <div class="node-status">
+          <span class="status-label">LEDGER STATUS</span>
+          <span class="status-val">IMMUTABLE (SEPOLIA-SIM)</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Viewport Container -->
+    <main class="main-content">
+
+      <!-- ================= 1. OVERVIEW TAB ================= -->
+      <section id="tab-overview" class="view-panel active">
+        <div class="hero-banner">
+          <div class="hero-badge">ZERO-HUMAN-DISCRETION PUBLIC E-PROCUREMENT</div>
+          <h1>Eliminating Procurement Corruption Through Cryptography & Telemetry</h1>
+          <p>
+            Aegis replaces human discretion, subjective scoring sheets, kickback loops, and manual milestone sign-offs 
+            with 4 un-hackable cryptographic pillars built on the Open Contracting Data Standard.
+          </p>
+        </div>
+
+        <!-- 4 Pillars Cards Grid -->
+        <div class="pillars-grid">
+          <div class="pillar-card p1" onclick="switchTab('vendor')">
+            <div class="pillar-num">PILLAR 01</div>
+            <div class="pillar-icon">🔐</div>
+            <h3>Blind zk-Bidding</h3>
+            <p>Poseidon hash commitments & Groth16 zk-SNARK solvency proofs. Bids remain time-lock encrypted until deadline with zero early leak to officials.</p>
+            <div class="pillar-action">Launch Vendor zk-Portal &rarr;</div>
+          </div>
+
+          <div class="pillar-card p2" onclick="switchTab('algorithmic')">
+            <div class="pillar-num">PILLAR 02</div>
+            <div class="pillar-icon">⚖️</div>
+            <h3>Algorithmic Technical Evaluation</h3>
+            <p>Smart contracts lock tender criteria immutably. Deterministic benchmark matching eliminates human scoring committees completely.</p>
+            <div class="pillar-action">Run Algorithmic Engine &rarr;</div>
+          </div>
+
+          <div class="pillar-card p3" onclick="switchTab('auditor')">
+            <div class="pillar-num">PILLAR 03</div>
+            <div class="pillar-icon">🕸️</div>
+            <h3>UBO & Shell Company Forensics</h3>
+            <p>Graph algorithms trace multi-hop beneficial owners, nominee directors, shared IP clusters, and automatically prune collusive bidding rings.</p>
+            <div class="pillar-action">Inspect UBO Forensics Graph &rarr;</div>
+          </div>
+
+          <div class="pillar-card p4" onclick="switchTab('escrow')">
+            <div class="pillar-num">PILLAR 04</div>
+            <div class="pillar-icon">🛰️</div>
+            <h3>Satellite & IoT Smart Escrow</h3>
+            <p>Treasury escrow funds release strictly on multi-temporal SAR satellite / drone LIDAR scans and automated weighbridge telemetry. Zero human sign-offs.</p>
+            <div class="pillar-action">Open Telemetry Escrow &rarr;</div>
+          </div>
+        </div>
+
+        <!-- KPI Metrics Strip -->
+        <div class="kpi-strip">
+          <div class="kpi-card">
+            <div class="kpi-title">TOTAL VALUE UNDER AEGIS ESCROW</div>
+            <div class="kpi-val" id="kpi-budget">$120,500,000</div>
+            <div class="kpi-sub">Locked in Multi-Milestone Smart Contracts</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">HUMAN DISCRETION INDEX</div>
+            <div class="kpi-val accent-green">0.00%</div>
+            <div class="kpi-sub">100% Algorithmic & Telemetry Enforced</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">ZK-COMMITMENTS ON LEDGER</div>
+            <div class="kpi-val accent-cyan" id="kpi-commitments">2 Verified</div>
+            <div class="kpi-sub">Groth16 Range & Solvency SNARKs</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">COLLUSIVE RINGS INTERCEPTED</div>
+            <div class="kpi-val accent-crimson" id="kpi-collusion">1 Auto-Pruned</div>
+            <div class="kpi-sub">3 Shell Entities Disqualified Pre-Bid</div>
+          </div>
+        </div>
+
+        <!-- Active OCDS Tenders Table -->
+        <div class="section-container">
+          <div class="section-header">
+            <h2>Active Open Contracting Data Standard (OCDS) Tenders</h2>
+            <span class="badge-sub">Live Multi-Pillar Showcase</span>
+          </div>
+          <div class="table-wrap">
+            <table class="aegis-table" id="overview-tenders-table">
+              <thead>
+                <tr>
+                  <th>OCID & Title</th>
+                  <th>Procuring Entity</th>
+                  <th>Locked Budget</th>
+                  <th>Enforced Pillar</th>
+                  <th>Smart Contract</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="overview-tenders-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. VENDOR PORTAL (BLIND ZK-BIDDING) ================= -->
+      <section id="tab-vendor" class="view-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-tag">PILLAR 1: BLIND ZK-BIDDING</div>
+            <h2>Vendor zk-SNARK Bid Commitment & Time-Lock Portal</h2>
+            <p>Submit cryptographic blind commitments. Commercial pricing remains hardware & time-lock encrypted until tender expiration.</p>
+          </div>
+          <div class="badge-shield">🛡️ ZERO EARLY LEAK ASSURANCE</div>
+        </div>
+
+        <div class="split-layout">
+          <!-- Submission Form -->
+          <div class="glass-card form-card">
+            <h3>Generate Blind zk-Commitment</h3>
+            <form id="zk-bid-form" onsubmit="handleZkSubmit(event)">
+              <div class="form-group">
+                <label>Target OCDS Tender</label>
+                <select id="zk-tender-select" class="form-control">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Vendor Legal Entity Name</label>
+                <input type="text" id="zk-vendor-name" class="form-control" value="AeroSpace Dynamics Corp" required>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col">
+                  <label>Confidential Bid Amount (USD)</label>
+                  <input type="number" id="zk-bid-amount" class="form-control" value="23850000" required>
+                  <small class="form-hint">Private input &mdash; never sent in plaintext to officials.</small>
+                </div>
+                <div class="form-group col">
+                  <label>Private Secret Salt (Entropy)</label>
+                  <div class="input-with-btn">
+                    <input type="text" id="zk-secret-salt" class="form-control mono" readonly>
+                    <button type="button" class="btn-sm" onclick="generateNewSalt()">🎲 Gen</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Verified Solvency Ratio: <span id="solvency-val" class="accent-cyan">2.4x</span> (Min 1.5x required)</label>
+                <input type="range" id="zk-solvency-slider" min="1.0" max="4.0" step="0.1" value="2.4" class="range-slider" oninput="updateSolvencyDisplay(this.value)">
+              </div>
+
+              <button type="submit" class="btn-primary w-full" id="btn-submit-zk">
+                ⚡ Generate Groth16 zk-SNARK & Submit Blind Commitment
+              </button>
+            </form>
+          </div>
+
+          <!-- Cryptographic Proof Preview -->
+          <div class="glass-card proof-card">
+            <h3>Cryptographic Proof Artifact Matrix</h3>
+            <div id="zk-proof-display" class="proof-box empty">
+              <div class="empty-state">
+                <div class="empty-icon">🔐</div>
+                <p>Generate a blind bid commitment to inspect the Poseidon hash, Groth16 SNARK proof, and time-lock delay envelope.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ledger Commitments -->
+        <div class="section-container mt-8">
+          <div class="section-header">
+            <h3>Immutable Blind Bid Commitments on Ledger</h3>
+            <span class="badge-sub">Permissioned Blockchain Feed</span>
+          </div>
+          <div class="table-wrap">
+            <table class="aegis-table" id="zk-commitments-table">
+              <thead>
+                <tr>
+                  <th>Commitment Hash (Poseidon)</th>
+                  <th>Tender OCID</th>
+                  <th>Vendor Public Key</th>
+                  <th>Block Height</th>
+                  <th>zk-SNARK Status</th>
+                  <th>Time-Lock Envelope</th>
+                </tr>
+              </thead>
+              <tbody id="zk-commitments-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. AUDITOR / PUBLIC PORTAL (UBO GRAPH) ================= -->
+      <section id="tab-auditor" class="view-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-tag">PILLAR 3: UBO & SHELL COMPANY GRAPH FORENSICS</div>
+            <h2>Ultimate Beneficial Ownership (UBO) & Collusion Ring Visualizer</h2>
+            <p>Interactive graph analytics exposing multi-hop offshore holdings, nominee directors, shared IP clusters, and collusive bid rings.</p>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <button class="btn-secondary" onclick="exportOcdsJson()">
+              📥 Export OCDS 1.1 JSON
+            </button>
+            <button class="btn-primary" onclick="runCollusionDetection()">
+              🔍 Re-Scan Collusion Rings
+            </button>
+          </div>
+        </div>
+
+        <div class="graph-layout">
+          <!-- Cytoscape Graph Canvas -->
+          <div class="graph-canvas-wrap glass-card">
+            <div class="graph-toolbar">
+              <div class="legend-strip">
+                <span class="legend-item"><span class="dot company"></span> Company</span>
+                <span class="legend-item"><span class="dot ubo"></span> UBO Person</span>
+                <span class="legend-item"><span class="dot shell"></span> Offshore Shell</span>
+                <span class="legend-item"><span class="dot nominee"></span> Nominee Director</span>
+                <span class="legend-item"><span class="dot ip"></span> IP/Wallet Cluster</span>
+              </div>
+              <button class="btn-sm" onclick="resetGraphLayout()">⟲ Reset View</button>
+            </div>
+            <div id="cy-container" class="cy-canvas"></div>
+          </div>
+
+          <!-- Forensics Inspection Details Panel -->
+          <div class="forensics-sidebar glass-card">
+            <h3>Forensics Intelligence Panel</h3>
+            <div id="forensics-details" class="forensics-content">
+              <div class="alert-box crimson">
+                <div class="alert-title">🚨 COLLUSION RING DETECTED (RING-C01A98)</div>
+                <p>
+                  <strong>Entities:</strong> Apex Infra, Titan Build, Zenith Systems<br>
+                  <strong>Confidence:</strong> 95% (Disqualification Threshold: 70%)<br>
+                  <strong>Evidence Trail:</strong>
+                </p>
+                <ul class="evidence-list">
+                  <li>Common 100% UBO: Vikramaditya Singhania via Mauritius conduit</li>
+                  <li>Shared Nominee Director: Rajesh Kumar Sharma (on 42 shell companies)</li>
+                  <li>Co-located Bidding Subnet: 103.21.144.0/24 (+0.4s bid gap)</li>
+                  <li>Shared Root HD Wallet Seed: 0x4aB1...90F2</li>
+                </ul>
+                <div class="audit-badge">CRIMINAL FORENSICS PROOF ATTACHED TO OCDS LOG</div>
+              </div>
+
+              <div class="node-info-box" id="node-info-box">
+                <h4>Node Inspector</h4>
+                <p class="text-muted">Click any node or edge on the graph to inspect legal registry metadata, shareholding %, and tax filings.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. ALGORITHMIC TECHNICAL EVALUATION ================= -->
+      <section id="tab-algorithmic" class="view-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-tag">PILLAR 2: ALGORITHMIC TECHNICAL EVALUATION</div>
+            <h2>Deterministic Smart Contract Scoring & Award Suite</h2>
+            <p>Evaluates technical specifications against locked benchmarks. Zero human scoring sheets or committee discretion.</p>
+          </div>
+          <button class="btn-primary" onclick="executeAlgorithmicEvaluation()">
+            ⚖️ Trigger Deterministic Evaluation
+          </button>
+        </div>
+
+        <div class="eval-layout">
+          <!-- Benchmark Specs Card -->
+          <div class="glass-card">
+            <h3>Locked Tender Benchmark Requirements</h3>
+            <p class="text-muted text-sm">Metro Transit Automated Train Control (CBTC) &mdash; OCID: <code>ocds-aegis-in-2026-rail</code></p>
+            <div class="specs-grid mt-4">
+              <div class="spec-pill">
+                <div class="spec-name">SIL-4 Safety Integrity Level</div>
+                <div class="spec-val">Target: TRUE (Hard Gate)</div>
+              </div>
+              <div class="spec-pill">
+                <div class="spec-name">Minimum Headway Interval</div>
+                <div class="spec-val">Target: 90s &plusmn; 10%</div>
+              </div>
+              <div class="spec-pill">
+                <div class="spec-name">Warranty Duration</div>
+                <div class="spec-val">Target: 5 Years</div>
+              </div>
+              <div class="spec-pill">
+                <div class="spec-name">ISO 27001 Cyber Certification</div>
+                <div class="spec-val">Target: TRUE (Hard Gate)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evaluation Results -->
+          <div class="glass-card mt-6">
+            <div class="section-header">
+              <h3>Deterministic Evaluation & Disqualification Matrix</h3>
+              <div id="eval-receipt-badge" class="badge-sub mono">Awaiting Execution...</div>
+            </div>
+            <div class="table-wrap">
+              <table class="aegis-table" id="eval-results-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Vendor Entity</th>
+                    <th>Bid Amount</th>
+                    <th>Tech Score</th>
+                    <th>Price Score</th>
+                    <th>Composite Score</th>
+                    <th>Status & Forensics Reason</th>
+                  </tr>
+                </thead>
+                <tbody id="eval-results-body">
+                  <tr>
+                    <td colspan="7" class="text-center py-6 text-muted">Click &ldquo;Trigger Deterministic Evaluation&rdquo; to execute the evaluation engine.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. ESCROW & TELEMETRY ================= -->
+      <section id="tab-escrow" class="view-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-tag">PILLAR 4: SATELLITE & IOT SMART-ESCROW MILESTONES</div>
+            <h2>Multi-Modal Telemetry Smart Escrow Operations</h2>
+            <p>Decentralized milestone releases gated strictly on SAR satellite radar change detection & IoT weighbridge telemetry.</p>
+          </div>
+          <div class="badge-shield accent-green">🛰️ 100% AUTOMATED PAYOUT ORACLES</div>
+        </div>
+
+        <!-- Telemetry Showcase Dual Layout -->
+        <div class="escrow-grid">
+          <!-- SAR Satellite Change Detection Card -->
+          <div class="glass-card telemetry-card">
+            <div class="card-top">
+              <div>
+                <span class="telemetry-tag">TELEMETRY STREAM: SAR RADAR + LIDAR</span>
+                <h3>NH-48 Expressway Sector 4-B Milestone</h3>
+              </div>
+              <div class="status-chip success">ORACLE CONSENSUS 3/3</div>
+            </div>
+
+            <!-- Satellite Change Detection Visualizer -->
+            <div class="sar-visualizer">
+              <div class="sar-box before">
+                <div class="sar-label">BASELINE (T-0 Earthwork)</div>
+                <div class="sar-canvas-mock ground-base">
+                  <div class="radar-scanline"></div>
+                  <div class="radar-points"></div>
+                </div>
+                <div class="sar-stat">Backscatter: 2.10 dB | 0 m³ Bitumen</div>
+              </div>
+
+              <div class="sar-arrow">&rarr;</div>
+
+              <div class="sar-box after">
+                <div class="sar-label">CURRENT (Sentinel-1 SAR + LIDAR)</div>
+                <div class="sar-canvas-mock ground-paved">
+                  <div class="radar-scanline"></div>
+                  <div class="road-paved-overlay"></div>
+                </div>
+                <div class="sar-stat accent-green">Backscatter: 6.45 dB (+4.35 dB) | 621,500 m³ (100%)</div>
+              </div>
+            </div>
+
+            <div class="telemetry-metrics-bar">
+              <div class="metric-item">
+                <span class="m-label">Structural Coherence</span>
+                <span class="m-val accent-green">VERIFIED (100%)</span>
+              </div>
+              <div class="metric-item">
+                <span class="m-label">Allocated Milestone Payout</span>
+                <span class="m-val">$18,000,000 USD</span>
+              </div>
+              <div class="metric-item">
+                <span class="m-label">Human Sign-off Required</span>
+                <span class="m-val accent-cyan">0 (Strictly Blocked)</span>
+              </div>
+            </div>
+
+            <button class="btn-primary w-full mt-4" id="btn-release-sar" onclick="triggerEscrowRelease('ocds-aegis-in-2026-nh48', 'MS-NH48-02')">
+              🛰️ Ingest SAR Satellite Oracle Feed & Auto-Release Escrow ($18M)
+            </button>
+          </div>
+
+          <!-- IoT Weighbridge & RFID Telemetry Card -->
+          <div class="glass-card telemetry-card">
+            <div class="card-top">
+              <div>
+                <span class="telemetry-tag">TELEMETRY STREAM: IOT WEIGHBRIDGE & RFID</span>
+                <h3>National Strategic Cold-Chain API Logistics</h3>
+              </div>
+              <div class="status-chip success">LIVE WEIGH-STATION GATE</div>
+            </div>
+
+            <!-- IoT Stream Gauge -->
+            <div class="iot-stream-box">
+              <div class="iot-gauge-grid">
+                <div class="iot-gauge">
+                  <div class="gauge-title">GROSS TRUCK WEIGHT</div>
+                  <div class="gauge-val mono">54,510 kg</div>
+                </div>
+                <div class="iot-gauge">
+                  <div class="gauge-title">TARE WEIGHT</div>
+                  <div class="gauge-val mono">12,000 kg</div>
+                </div>
+                <div class="iot-gauge highlight">
+                  <div class="gauge-title">VERIFIED NET API PAYLOAD</div>
+                  <div class="gauge-val mono accent-green">42,510 kg</div>
+                  <div class="gauge-sub">&Delta; 0.023% (&le; 0.5% tolerance)</div>
+                </div>
+              </div>
+
+              <div class="rfid-tag-box mono mt-4">
+                <span class="rfid-icon">📡</span>
+                <span>RFID TAG: <strong>VAX-LOT-2026-0824B</strong> (Cryptographic Manifest Match)</span>
+              </div>
+            </div>
+
+            <div class="telemetry-metrics-bar">
+              <div class="metric-item">
+                <span class="m-label">Mass Balance Tolerance</span>
+                <span class="m-val accent-green">PASSED (&plusmn;0.023%)</span>
+              </div>
+              <div class="metric-item">
+                <span class="m-label">Milestone Payout</span>
+                <span class="m-val">$5,900,000 USD</span>
+              </div>
+              <div class="metric-item">
+                <span class="m-label">Human Sign-off Required</span>
+                <span class="m-val accent-cyan">0 (Automated Multi-Sig)</span>
+              </div>
+            </div>
+
+            <button class="btn-primary w-full mt-4" id="btn-release-iot" onclick="triggerEscrowRelease('ocds-aegis-in-2026-vax9', 'MS-VAX-02')">
+              📡 Ingest IoT Weighbridge Stream & Auto-Release Escrow ($5.9M)
+            </button>
+          </div>
+        </div>
+
+        <!-- Release Execution Log -->
+        <div class="section-container mt-8">
+          <div class="section-header">
+            <h3>On-Chain Smart Escrow Execution Log</h3>
+            <span class="badge-sub">Decentralized Oracle Transaction Stream</span>
+          </div>
+          <div class="log-stream-box mono" id="escrow-log-stream">
+            <div class="log-row info">
+              <span class="log-time">[2026-07-16T10:14:22Z]</span>
+              <span class="log-msg">ORACLE_CONSENSUS_VERIFIED: MS-NH48-01 Earthwork stabilized. 0xtx_a94f...1234 released $13.5M to 0x33C1...889A without human intervention.</span>
+            </div>
+            <div class="log-row info">
+              <span class="log-time">[2026-08-12T14:20:00Z]</span>
+              <span class="log-msg">IOT_TELEMETRY_VALIDATED: MS-VAX-01 Cold-chain net weight 42,485kg authenticated. 0xtx_44e9...8471 released $5.9M to 0x55B2...334A.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="aegis-footer">
+      <div><strong>Aegis Procurement Engine</strong> &bull; Zero-Human-Discretion Public Transparency Protocol</div>
+      <div>Open Contracting Data Standard (OCDS v1.1) &bull; Apache 2.0 Open Source</div>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

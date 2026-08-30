@@ -1,7 +1,8 @@
 from fastapi import APIRouter
-from app.api.routes import contracts, vendors, departments, dashboard, network, risk, nlp, blockchain
+from app.api.routes import contracts, vendors, departments, dashboard, network, risk, nlp, blockchain, aegis
 
 api_router = APIRouter()
+api_router.include_router(aegis.router, prefix="/aegis", tags=["aegis"])
 api_router.include_router(contracts.router, prefix="/contracts", tags=["contracts"])
 api_router.include_router(vendors.router, prefix="/vendors", tags=["vendors"])
 api_router.include_router(departments.router, prefix="/departments", tags=["departments"])
