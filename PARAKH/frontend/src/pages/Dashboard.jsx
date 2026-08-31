@@ -3,9 +3,9 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { api } from "@/services/api";
 
-// Mock data - replace with actual API calls
-const useDashboardData = () => {
+export default function Dashboard() {
   const [stats, setStats] = useState({
     totalContracts: 0,
     highRiskContracts: 0,
@@ -14,55 +14,89 @@ const useDashboardData = () => {
   });
   const [riskDistribution, setRiskDistribution] = useState([]);
   const [recentContracts, setRecentContracts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock data - in real app, fetch from /api/dashboard/stats
-    setStats({
-      totalContracts: 2450,
-      highRiskContracts: 342,
-      avgCRS: 45.6,
-      totalVendors: 890,
-    });
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        // Fetch dashboard stats from API
+        const statsResponse = await api.get("/dashboard/stats");
+        setStats(statsResponse.data);
 
-    setRiskDistribution([
-      { name: "Low (0-30)", value: 850 },
-      { name: "Medium (31-70)", value: 1258 },
-      { name: "High (71-100)", value: 342 },
-    ]);
+        // Fetch risk distribution from API
+        const riskResponse = await api.get("/dashboard/risk-distribution");
+        setRiskDistribution(riskResponse.data);
 
-    setRecentContracts([
-      {
-        id: "C001",
-        vendor: "TechCorp Solutions",
-        department: "IT Department",
-        value: 750000,
-        crs: 85,
-        date: "2024-01-15",
-      },
-      {
-        id: "C002",
-        vendor: "BuildRight Inc",
-        department: "Public Works",
-        value: 1200000,
-        crs: 78,
-        date: "2024-01-10",
-      },
-      {
-        id: "C003",
-        vendor: "OfficeSupplies Ltd",
-        department: "Admin Department",
-        value: 45000,
-        crs: 62,
-        date: "2024-01-05",
-      },
-    ]);
+        // Fetch recent contracts from API
+        const recentResponse = await api.get("/dashboard/recent-contracts");
+        setRecentContracts(recentResponse.data);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        // Fallback to mock data on error
+        setStats({
+          totalContracts: 2450,
+          highRiskContracts: 342,
+          avgCRS: 45.6,
+          totalVendors: 890,
+        });
+
+        setRiskDistribution([
+          { name: "Low (0-30)", value: 850 },
+          { name: "Medium (31-70)", value: 1258 },
+          { name: "High (71-100)", value: 342 },
+        ]);
+
+        setRecentContracts([
+          {
+            id: "C001",
+            vendor: "TechCorp Solutions",
+            department: "IT Department",
+            value: 750000,
+            crs: 85,
+            date: "2024-01-15",
+          },
+          {
+            id: "C002",
+            vendor: "BuildRight Inc",
+            department: "Public Works",
+            value: 1200000,
+            crs: 78,
+            date: "2024-01-10",
+          },
+          {
+            id: "C003",
+            vendor: "OfficeSupplies Ltd",
+            department: "Admin Department",
+            value: 45000,
+            crs: 62,
+            date: "2024-01-05",
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
   }, []);
 
-  return { stats, riskDistribution, recentContracts };
-};
-
-export default function Dashboard() {
-  const { stats, riskDistribution, recentContracts } = useDashboardData();
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-2xl font-bold">Procurement Risk Dashboard</h1>
+          <div className="flex space-x-3">
+            <Button variant="outline">Export</Button>
+            <Button>Refresh</Button>
+          </div>
+        </div>
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -193,7 +227,7 @@ export default function Dashboard() {
                 <option>All</option>
                 <option>High (70+)</option>
                 <option>Medium (40-69)</option>
-                <option>Low (<40)</option>
+                <option>Low {'<'} 40</option>
               </select>
             </div>
             <div>

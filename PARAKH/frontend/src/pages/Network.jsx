@@ -6,12 +6,14 @@ import { api } from "@/services/api";
 export default function Network() {
   const [elements, setElements] = useState([]); // Cytoscape elements (nodes + edges)
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [cytoscapeRef, setCytoscapeRef] = useState(null);
 
   useEffect(() => {
     const fetchNetworkData = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await api.get("/network");
         const { nodes, edges } = response.data;
 
@@ -50,15 +52,16 @@ export default function Network() {
         setElements(cyElements);
       } catch (error) {
         console.error("Error fetching network data:", error);
-        // Fallback to mock data
+        setError("Failed to load network data. Using mock data for demonstration.");
+        // Fallback to mock data with correct camelCase structure
         setElements([
-          { data: { id: "vendor-1", label: "TechCorp Solutions", type: "vendor", contract_count: 3, total_value: 1500000, average_crs: 65 } },
-          { data: { id: "vendor-2", label: "BuildRight Inc", type: "vendor", contract_count: 2, total_value: 800000, average_crs: 72 } },
-          { data: { id: "department-1", label: "IT Department", type: "department", contract_count: 2, total_value: 1000000, average_crs: 58 } },
-          { data: { id: "department-2", label: "Public Works", type: "department", contract_count: 2, total_value: 1300000, average_crs: 75 } },
-          { data: { id: "edge-1-2", source: "vendor-1", target: "department-1", label: "Contract #1", contract_count: 1, total_value: 500000, average_crs: 65 } },
-          { data: { id: "edge-1-1", source: "vendor-1", target: "department-2", label: "Contract #2", contract_count: 1, total_value: 1000000, average_crs: 75 } },
-          { data: { id: "edge-2-2", source: "vendor-2", target: "department-2", label: "Contract #3", contract_count: 1, total_value: 300000, average_crs: 70 } },
+          { data: { id: "vendor-1", label: "TechCorp Solutions", type: "vendor", contractCount: 3, totalValue: 1500000, averageCrs: 65 } },
+          { data: { id: "vendor-2", label: "BuildRight Inc", type: "vendor", contractCount: 2, totalValue: 800000, averageCrs: 72 } },
+          { data: { id: "department-1", label: "IT Department", type: "department", contractCount: 2, totalValue: 1000000, averageCrs: 58 } },
+          { data: { id: "department-2", label: "Public Works", type: "department", contractCount: 2, totalValue: 1300000, averageCrs: 75 } },
+          { data: { id: "edge-1-2", source: "vendor-1", target: "department-1", label: "Contract #1", contractCount: 1, totalValue: 500000, averageCrs: 65 } },
+          { data: { id: "edge-1-1", source: "vendor-1", target: "department-2", label: "Contract #2", contractCount: 1, totalValue: 1000000, averageCrs: 75 } },
+          { data: { id: "edge-2-2", source: "vendor-2", target: "department-2", label: "Contract #3", contractCount: 1, totalValue: 300000, averageCrs: 70 } },
         ]);
       } finally {
         setLoading(false);
@@ -152,9 +155,6 @@ export default function Network() {
     };
   };
 
-  // Explicitly use loading and React to satisfy TypeScript checks
-  const hasLoaded = loading;
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -166,13 +166,20 @@ export default function Network() {
         </div>
       </div>
 
+      {/* Error Message */}
+      {error && (
+        <div className="p-4 mb-4 bg-destructive/10 text-destructive rounded">
+          {error}
+        </div>
+      )}
+
       {/* Info Card */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-medium">Network Overview</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {hasLoaded ? (
+          {loading ? (
             <div className="text-center py-4">
               Loading network data...
             </div>
@@ -199,7 +206,7 @@ export default function Network() {
                   <div className="text-muted-foreground text-sm">Total Connections</div>
                   <div className="font-medium">
                     {elements
-                      .filter(el => el.data && !el.data.source)
+                      .filter(el => el.data && el.data.source === undefined)
                       .length}
                   </div>
                 </div>

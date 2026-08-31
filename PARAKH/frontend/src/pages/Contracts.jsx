@@ -51,6 +51,11 @@ export default function Contracts() {
     fetchContracts();
   }, []);
 
+  // Helper function to get CRS value from contract (handles both direct and nested structures)
+  const getCRSValue = (contract) => {
+    return contract.risk_assessment?.crs ?? contract.crs ?? 0;
+  };
+
   // Filter contracts based on search term
   const filteredContracts = contracts.filter(
     (contract) =>
@@ -65,14 +70,14 @@ export default function Contracts() {
                     sortBy === "vendor" ? (a.vendor || "") :
                     sortBy === "department" ? (a.department || "") :
                     sortBy === "value" ? (a.value || 0) :
-                    sortBy === "crs" ? (a.risk_assessment?.crs || 0) :
+                    sortBy === "crs" ? getCRSValue(a) :
                     a.id;
 
     const valueB = sortBy === "id" ? b.id :
                     sortBy === "vendor" ? (b.vendor || "") :
                     sortBy === "department" ? (b.department || "") :
                     sortBy === "value" ? (b.value || 0) :
-                    sortBy === "crs" ? (b.risk_assessment?.crs || 0) :
+                    sortBy === "crs" ? getCRSValue(b) :
                     b.id;
 
     if (valueA < valueB) return sortDirection === "asc" ? -1 : 1;
@@ -116,7 +121,7 @@ export default function Contracts() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
         <div>Total Contracts: {contracts.length}</div>
         <div>Filtered: {filteredContracts.length}</div>
-        <div>High Risk (CRS ≥ 70): {filteredContracts.filter((c) => c.risk_assessment?.crs >= 70).length}</div>
+        <div>High Risk (CRS ≥ 70): {filteredContracts.filter((c) => getCRSValue(c) >= 70).length}</div>
       </div>
 
       {/* Table */}
