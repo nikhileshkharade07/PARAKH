@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.dependencies import get_contract_service
+from app.services.contract_service import ContractService
 
 router = APIRouter()
 
@@ -10,8 +11,8 @@ def get_risk(contract_id: int, service: ContractService = Depends(get_contract_s
         raise HTTPException(404, "Contract not found")
     return {
         "crs": contract_data.risk.crs if contract_data.risk else 0,
-        "rule_score": 0,  # These would need to be added to the schema
-        "anomaly_score": 0,
+        "rule_score": contract_data.risk.rule_score if contract_data.risk else 0,
+        "anomaly_score": contract_data.risk.anomaly_score if contract_data.risk else 0,
         "risk_level": contract_data.risk.risk_level if contract_data.risk else "unknown",
         "flags": contract_data.risk.flags if contract_data.risk else []
     }
