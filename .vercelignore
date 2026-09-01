@@ -1,0 +1,9 @@
+.venv
+PARAKH/.venv
+__pycache__
+PARAKH/__pycache__
+.pytest_cache
+PARAKH/.pytest_cache
+*.db
+PARAKH/parakh.db
+PARAKH/data/raw

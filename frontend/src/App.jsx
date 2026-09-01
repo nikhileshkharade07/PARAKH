@@ -1,286 +1,161 @@
-import { Link, Route, Routes, useLocation } from "react-router-dom";
-import { useState } from "react";
-import Dashboard from "./pages/Dashboard";
-import Contracts from "./pages/Contracts";
-import Network from "./pages/Network";
+import { useState, useEffect, lazy, Suspense } from "react";
+import { Link, NavLink, Route, Routes } from "react-router-dom";
+import DataIngestionModal from "./components/DataIngestionModal";
+import AIAssistantDrawer from "./components/AIAssistantDrawer";
+import AuthModal from "./components/AuthModal";
+import { api } from "./services/api";
 
-function Shell({ children }) {
-  const location = useLocation();
-  const [showAlerts, setShowAlerts] = useState(false);
+// Route-based code splitting
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const ContractsPage = lazy(() => import("./pages/ContractsPage"));
+const ContractDetailContainer = lazy(() => import("./pages/ContractDetailContainer"));
+const VendorProfilePage = lazy(() => import("./pages/VendorProfilePage"));
+const DepartmentProfilePage = lazy(() => import("./pages/DepartmentProfilePage"));
+const NetworkPage = lazy(() => import("./pages/NetworkPage"));
+const SimulatorPage = lazy(() => import("./pages/SimulatorPage"));
+const CasesPage = lazy(() => import("./pages/CasesPage"));
 
+function Shell({ children, onOpenIngest, onOpenAI, onOpenAuth, currentUser }) {
   return (
-    <div className="app-shell">
-
-      {/* SIDEBAR */}
-      <aside className="sidebar">
-
-        <div className="sidebar-logo">
-          <div className="logo-mark">P</div>
-
-          <div>
-            <div className="logo-title">PARAKH</div>
-            <div className="logo-subtitle">Risk Intelligence</div>
-          </div>
+    <div className="app-container">
+      <header className="topbar">
+        <div className="brand-container">
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div className="brand-logo">P</div>
+            <div>
+              <div className="brand-title">PARAKH</div>
+              <div className="brand-subtitle">AI Public Procurement Risk Auditor</div>
+            </div>
+          </Link>
         </div>
 
-        <div className="menu-title">MAIN MENU</div>
-
-        <nav className="sidebar-nav">
-
-          <Link
-            to="/"
-            className={`sidebar-link ${
-              location.pathname === "/" ? "active" : ""
-            }`}
-          >
-            <span>▪</span>
+        <nav className="nav-menu">
+          <NavLink to="/" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`} end>
             Dashboard
-          </Link>
-
-          <Link
-            to="/contracts"
-            className={`sidebar-link ${
-              location.pathname.startsWith("/contracts")
-                ? "active"
-                : ""
-            }`}
-          >
-            <span>▤</span>
-            Contracts
-          </Link>
-
-          <Link
-            to="/network"
-            className={`sidebar-link ${
-              location.pathname.startsWith("/network")
-                ? "active"
-                : ""
-            }`}
-          >
-            <span>◎</span>
-            Network
-          </Link>
-
+          </NavLink>
+          <NavLink to="/contracts" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            Contracts Registry
+          </NavLink>
+          <NavLink to="/cases" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            Investigations
+          </NavLink>
+          <NavLink to="/network" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            Network Graph
+          </NavLink>
+          <NavLink to="/simulator" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            Risk Sandbox
+          </NavLink>
         </nav>
 
-        <div className="sidebar-bottom">
-
-          <div className="system-status">
-            <span className="status-dot"></span>
-
-            <div>
-              <strong>System Online</strong>
-              <small>All services operational</small>
-            </div>
-          </div>
-
-          <div className="user-card">
-            <div className="user-avatar">A</div>
-
-            <div>
-              <strong>Admin</strong>
-              <small>Risk Analyst</small>
-            </div>
-          </div>
-
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={onOpenIngest}
+            style={{ fontSize: 12, display: "flex", alignItems: "center", gap: 6, padding: "6px 12px" }}
+          >
+            <span>📤</span> Ingest Data
+          </button>
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={onOpenAI}
+            style={{ fontSize: 12, display: "flex", alignItems: "center", gap: 6, padding: "6px 12px" }}
+          >
+            <span>🤖</span> AI Assistant
+          </button>
+          <button
+            type="button"
+            onClick={onOpenAuth}
+            style={{
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid var(--border-color)",
+              borderRadius: 20,
+              padding: "4px 12px",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              cursor: "pointer",
+              fontSize: 12,
+              color: "#fff"
+            }}
+          >
+            <span>🛡️</span>
+            <span style={{ fontWeight: 700 }}>{currentUser?.username || "Investigator"}</span>
+            <span style={{ fontSize: 10, background: "rgba(56, 189, 248, 0.2)", color: "var(--accent-cyan)", padding: "1px 6px", borderRadius: 10, fontWeight: 700 }}>
+              {currentUser?.role || "INVESTIGATOR"}
+            </span>
+          </button>
         </div>
+      </header>
 
-      </aside>
-
-      {/* MAIN AREA */}
-      <div className="main-area">
-
-        <header className="top-header">
-
-          <div className="mobile-brand">
-            PARAKH
-          </div>
-
-          <div className="header-search">
-            <span>⌕</span>
-            <input
-              type="text"
-              placeholder="Search contracts, vendors..."
-            />
-          </div>
-
-          <div className="header-actions">
-
-            <button className="icon-button">
-              ◔
-            </button>
-
-            {/* RISK ALERTS */}
-            <div className="notification-wrapper">
-
-              <button
-                className="icon-button notification"
-                onClick={() => setShowAlerts(!showAlerts)}
-                aria-label="Open risk alerts"
-              >
-                🔔
-                <span></span>
-              </button>
-
-              {showAlerts && (
-                <div className="notification-panel">
-
-                  <div className="notification-panel-header">
-                    <div>
-                      <strong>Risk Alerts</strong>
-                      <small>Recent activity</small>
-                    </div>
-
-                    <button
-                      className="notification-close"
-                      onClick={() => setShowAlerts(false)}
-                      aria-label="Close alerts"
-                    >
-                      ×
-                    </button>
-                  </div>
-
-                  <div className="notification-item high-risk">
-                    <div className="notification-icon">🔴</div>
-
-                    <div>
-                      <strong>High Risk Detected</strong>
-                      <p>
-                        ABC Infrastructure risk score increased to 91.
-                      </p>
-                      <small>10 minutes ago</small>
-                    </div>
-                  </div>
-
-                  <div className="notification-item medium-risk">
-                    <div className="notification-icon">🟡</div>
-
-                    <div>
-                      <strong>Review Required</strong>
-                      <p>
-                        Contract CNT-1042 requires manual review.
-                      </p>
-                      <small>32 minutes ago</small>
-                    </div>
-                  </div>
-
-                  <div className="notification-item resolved">
-                    <div className="notification-icon">🟢</div>
-
-                    <div>
-                      <strong>Verification Completed</strong>
-                      <p>
-                        Vendor verification was successfully completed.
-                      </p>
-                      <small>1 hour ago</small>
-                    </div>
-                  </div>
-
-                </div>
-              )}
-
-            </div>
-
-            <div className="header-user">
-              <div className="user-avatar">A</div>
-
-              <div>
-                <strong>Admin</strong>
-                <small>Risk Analyst</small>
-              </div>
-            </div>
-
-          </div>
-
-        </header>
-
-        <main className="content-area">
-          {children}
-        </main>
-
-      </div>
-
+      <main className="main-content">{children}</main>
     </div>
   );
 }
 
 export default function App() {
+  const [ingestOpen, setIngestOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await api.get("/auth/me");
+        setCurrentUser(res.data);
+      } catch (err) {
+        // Default demo investigator
+        setCurrentUser({
+          username: "investigator",
+          full_name: "Priya Sharma (Forensic Investigator)",
+          role: "INVESTIGATOR"
+        });
+      }
+    }
+    checkAuth();
+  }, []);
+
   return (
-    <Shell>
+    <>
+      <Shell
+        onOpenIngest={() => setIngestOpen(true)}
+        onOpenAI={() => setAiOpen(true)}
+        onOpenAuth={() => setAuthOpen(true)}
+        currentUser={currentUser}
+      >
+        <Suspense fallback={<div className="loading-spinner">Loading intelligence view...</div>}>
+          <Routes>
+            <Route path="/" element={<DashboardPage onOpenIngest={() => setIngestOpen(true)} onOpenAI={() => setAiOpen(true)} />} />
+            <Route path="/contracts" element={<ContractsPage />} />
+            <Route path="/contracts/:id" element={<ContractDetailContainer />} />
+            <Route path="/cases" element={<CasesPage />} />
+            <Route path="/vendors/:id" element={<VendorProfilePage />} />
+            <Route path="/departments/:id" element={<DepartmentProfilePage />} />
+            <Route path="/network" element={<NetworkPage />} />
+            <Route path="/simulator" element={<SimulatorPage />} />
+          </Routes>
+        </Suspense>
+      </Shell>
 
-      <Routes>
+      <DataIngestionModal
+        isOpen={ingestOpen}
+        onClose={() => setIngestOpen(false)}
+        onIngestSuccess={() => {}}
+      />
 
-        <Route
-          path="/"
-          element={<Dashboard />}
-        />
+      <AIAssistantDrawer
+        isOpen={aiOpen}
+        onClose={() => setAiOpen(false)}
+      />
 
-        <Route
-          path="/contracts"
-          element={<Contracts />}
-        />
-
-        <Route
-          path="/contracts/:id"
-          element={
-            <section className="page-card">
-              <div className="eyebrow">
-                INVESTIGATION
-              </div>
-
-              <h1>Contract Investigation</h1>
-
-              <p>
-                CRS, risk flags, evidence, NLP and
-                optional blockchain record.
-              </p>
-            </section>
-          }
-        />
-
-        <Route
-          path="/vendors/:id"
-          element={
-            <section className="page-card">
-              <div className="eyebrow">
-                VENDOR PROFILE
-              </div>
-
-              <h1>Vendor Profile</h1>
-
-              <p>
-                Contracts, total value, departments,
-                average CRS and network connections.
-              </p>
-            </section>
-          }
-        />
-
-        <Route
-          path="/departments/:id"
-          element={
-            <section className="page-card">
-              <div className="eyebrow">
-                DEPARTMENT PROFILE
-              </div>
-
-              <h1>Department Profile</h1>
-
-              <p>
-                Vendor concentration, risk trend
-                and network.
-              </p>
-            </section>
-          }
-        />
-
-        <Route
-          path="/network"
-          element={<Network />}
-        />
-
-      </Routes>
-
-    </Shell>
+      <AuthModal
+        isOpen={authOpen}
+        onClose={() => setAuthOpen(false)}
+        currentUser={currentUser}
+        onAuthChange={(user) => setCurrentUser(user)}
+      />
+    </>
   );
 }
