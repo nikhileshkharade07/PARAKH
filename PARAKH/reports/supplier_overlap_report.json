@@ -1,0 +1,84 @@
+{
+  "total_records": 1991,
+  "total_unique_suppliers": 530,
+  "grouped_kfold_splits": [
+    {
+      "fold": 1,
+      "train_samples": 1592,
+      "val_samples": 399,
+      "train_unique_suppliers": 423,
+      "val_unique_suppliers": 107,
+      "shared_suppliers_count": 0,
+      "supplier_leakage_detected": false
+    },
+    {
+      "fold": 2,
+      "train_samples": 1592,
+      "val_samples": 399,
+      "train_unique_suppliers": 420,
+      "val_unique_suppliers": 110,
+      "shared_suppliers_count": 0,
+      "supplier_leakage_detected": false
+    },
+    {
+      "fold": 3,
+      "train_samples": 1594,
+      "val_samples": 397,
+      "train_unique_suppliers": 423,
+      "val_unique_suppliers": 107,
+      "shared_suppliers_count": 0,
+      "supplier_leakage_detected": false
+    },
+    {
+      "fold": 4,
+      "train_samples": 1594,
+      "val_samples": 397,
+      "train_unique_suppliers": 427,
+      "val_unique_suppliers": 103,
+      "shared_suppliers_count": 0,
+      "supplier_leakage_detected": false
+    },
+    {
+      "fold": 5,
+      "train_samples": 1592,
+      "val_samples": 399,
+      "train_unique_suppliers": 427,
+      "val_unique_suppliers": 103,
+      "shared_suppliers_count": 0,
+      "supplier_leakage_detected": false
+    }
+  ],
+  "standard_stratified_splits": [
+    {
+      "fold": 1,
+      "train_samples": 1592,
+      "val_samples": 399,
+      "shared_suppliers_count": 109
+    },
+    {
+      "fold": 2,
+      "train_samples": 1593,
+      "val_samples": 398,
+      "shared_suppliers_count": 115
+    },
+    {
+      "fold": 3,
+      "train_samples": 1593,
+      "val_samples": 398,
+      "shared_suppliers_count": 115
+    },
+    {
+      "fold": 4,
+      "train_samples": 1593,
+      "val_samples": 398,
+      "shared_suppliers_count": 117
+    },
+    {
+      "fold": 5,
+      "train_samples": 1593,
+      "val_samples": 398,
+      "shared_suppliers_count": 125
+    }
+  ],
+  "overall_status": "PASSED_ZERO_SUPPLIER_LEAKAGE_IN_GROUPED_KFOLD"
+}
