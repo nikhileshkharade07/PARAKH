@@ -39,7 +39,7 @@ export default function ContractsPage() {
         if (riskLevel) params.append("risk_level", riskLevel);
         if (deptId) params.append("department_id", deptId);
         if (vendorId) params.append("vendor_id", vendorId);
-        params.append("limit", "100");
+        params.append("limit", "5000");
 
         const res = await api.get(`/contracts?${params.toString()}`);
         setContracts(res.data || []);

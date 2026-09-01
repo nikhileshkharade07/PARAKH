@@ -40,7 +40,7 @@ dept_stats = [
     for r in dept_rows
 ]
 
-# 2. Contracts (complete dataset of 500 representative real tenders)
+# 2. Contracts (all authentic contracts from parakh.db)
 contract_rows = cursor.execute("""
     SELECT c.id, c.contract_number, c.title, c.contract_date, c.department_id, d.name as department_name,
            c.vendor_id, v.name as vendor_name, c.estimate_value, c.award_value, c.procurement_category, c.location,
@@ -50,7 +50,6 @@ contract_rows = cursor.execute("""
     LEFT JOIN vendors v ON c.vendor_id = v.id
     LEFT JOIN risk_assessments ra ON ra.contract_id = c.id
     ORDER BY c.id ASC
-    LIMIT 1000
 """).fetchall()
 
 contracts = [

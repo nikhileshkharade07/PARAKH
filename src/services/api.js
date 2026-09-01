@@ -244,7 +244,7 @@ function handleFallback(url, method = "GET", data = null) {
     const search = params.get("search");
     const deptId = params.get("department_id");
     const vendorId = params.get("vendor_id");
-    const limit = parseInt(params.get("limit") || "100", 10);
+    const limit = parseInt(params.get("limit") || "5000", 10);
 
     if (riskLevel) {
       list = list.filter((c) => c.risk_level === riskLevel.toLowerCase());
