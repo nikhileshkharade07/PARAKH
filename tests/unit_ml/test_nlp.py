@@ -1,4 +1,13 @@
-from backend.ml.nlp.similarity import specification_similarity
+import sys
+from pathlib import Path
+
+root_dir = Path(__file__).resolve().parent.parent.parent
+backend_dir = root_dir / "backend"
+for p in (str(root_dir), str(backend_dir)):
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+from ml.nlp.similarity import specification_similarity
 
 def test_identical_text_flags():
     text = "network switches routers firewall managed network services"

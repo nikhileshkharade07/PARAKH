@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import statistics
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -11,6 +11,7 @@ from app.schemas.contracts import (
     ContractSummary, ContractDetail, RiskOut, RiskFlagOut, BidOut, ExtensionOut,
     RuleEvidenceOut, RiskEvidenceOut, PeerComparisonOut, SimilarTenderOut
 )
+from app.core.config import settings
 from ml.risk_engine.rules import evaluate_rules
 from ml.risk_engine.engine import RiskEngine
 
@@ -112,21 +113,21 @@ def get_contract(contract_id: int, db: Session = Depends(get_db)):
         peer_contracts = db.query(Contract).filter(Contract.department_id == c.department_id).all()
         if len(peer_contracts) > 1:
             peer_values = [float(p.award_value) for p in peer_contracts]
-            peer_durations = [(p.tender_end - p.tender_start).total_seconds() / 86400 for p in peer_contracts]
+            peer_durations = [(p.tender_end - p.tender_start).total_seconds() / 86400 for p in peer_contracts if p.tender_end and p.tender_start] or [14.0]
             peer_bidders = [len(p.bids) if p.bids else 1 for p in peer_contracts]
 
-            med_val = statistics.median(peer_values)
-            mean_val = statistics.mean(peer_values)
-            c_val = float(c.award_value)
+            med_val = statistics.median(peer_values) if peer_values else 0.0
+            mean_val = statistics.mean(peer_values) if peer_values else 0.0
+            c_val = float(c.award_value or 0)
             val_dev_pct = round(((c_val - med_val) / med_val) * 100, 1) if med_val > 0 else 0.0
 
-            med_dur = statistics.median(peer_durations)
-            c_dur = (c.tender_end - c.tender_start).total_seconds() / 86400
+            med_dur = statistics.median(peer_durations) if peer_durations else 14.0
+            c_dur = (c.tender_end - c.tender_start).total_seconds() / 86400 if (c.tender_end and c.tender_start) else 14.0
             dur_dev_pct = round(((c_dur - med_dur) / med_dur) * 100, 1) if med_dur > 0 else 0.0
 
-            avg_bidders = round(statistics.mean(peer_bidders), 1)
+            avg_bidders = round(statistics.mean(peer_bidders), 1) if peer_bidders else 1.0
 
-            is_val_outlier = c_val > (med_val * 1.5) or c_val < (med_val * 0.5)
+            is_val_outlier = c_val > (med_val * 1.5) or (med_val > 0 and c_val < (med_val * 0.5))
             is_dur_outlier = c_dur < 7.0 and med_dur >= 14.0
 
             explanations = []
@@ -189,7 +190,6 @@ def get_similar_tenders(contract_id: int, db: Session = Depends(get_db), limit: 
         for idx, score in enumerate(sim_scores):
             if score > 0.35: # Noticeable textual overlap threshold
                 p = pool[idx]
-                # Find common overlapping terms
                 target_tokens = set(target.specification.lower().split())
                 p_tokens = set(p.specification.lower().split())
                 common = list(target_tokens & p_tokens)[:6]
@@ -207,7 +207,7 @@ def get_similar_tenders(contract_id: int, db: Session = Depends(get_db), limit: 
 
         results.sort(key=lambda x: x.similarity_score, reverse=True)
         return results[:limit]
-    except Exception as err:
+    except Exception:
         return []
 
 @router.get("/{contract_id}/risk-evidence", response_model=RiskEvidenceOut)
@@ -230,7 +230,7 @@ def get_contract_risk_evidence(contract_id: int, db: Session = Depends(get_db)):
         }
 
     peers = db.query(Contract).filter(Contract.department_id == contract.department_id).all() if contract.department_id else []
-    raw_eval = evaluate_rules(contract, peers)
+    raw_eval = evaluate_rules(contract, peers, settings)
     
     triggered_rules = []
     for r in raw_eval:
@@ -254,5 +254,5 @@ def get_contract_risk_evidence(contract_id: int, db: Session = Depends(get_db)):
         rule_score=risk_data["rule_score"],
         anomaly_score=risk_data["anomaly_score"],
         triggered_rules=triggered_rules,
-        generated_at=datetime.utcnow()
+        generated_at=datetime.now(timezone.utc)
     )

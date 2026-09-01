@@ -2,32 +2,38 @@
 __pycache__/
 *.py[cod]
 *$py.class
-.venv/
+*.so
+.Python
+env/
 venv/
+.venv/
+ENV/
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing & Coverage
 .pytest_cache/
 .coverage
 htmlcov/
+*.log
 
-# Environment and Secrets
+# Environment & Secrets
 .env
 !.env.example
 *.key
 *.pem
 secrets/
 
-# Node / Frontend
+# Frontend
 node_modules/
 dist/
+dist-ssr/
+*.local
 .vite/
 
-# IDE / OS
+# Editor & OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-
-# Logs & Databases
-*.log
-*.db
-*.sqlite
-*.sqlite3

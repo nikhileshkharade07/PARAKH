@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 from typing import Optional
 from datetime import datetime
 
@@ -6,7 +6,7 @@ class UserBase(BaseModel):
     username: str
     email: str
     full_name: str = ""
-    role: str = "INVESTIGATOR"
+    role: str = "INVESTIGATOR" # ADMIN, AUDITOR, INVESTIGATOR, DEPARTMENT_OFFICER
     department_id: Optional[int] = None
 
 class UserCreate(UserBase):
@@ -26,3 +26,9 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserOut
+
+class TokenRefreshRequest(BaseModel):
+    token: Optional[str] = None
+
+class LogoutResponse(BaseModel):
+    message: str = "Logged out successfully"

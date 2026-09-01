@@ -10,3 +10,5 @@ scikit-learn
 python-dotenv
 pytest
 httpx
+python-multipart
+
