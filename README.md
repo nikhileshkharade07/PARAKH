@@ -1,6 +1,12 @@
 # PARAKH — AI-Powered Public Procurement Risk Auditor
 
+[![Production Deployment](https://img.shields.io/badge/Vercel-Deployed-success?logo=vercel)](https://parakh2.vercel.app/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/nikhileshkharade07/PARAKH)
+
 > **PARAKH examines public procurement data to identify suspicious patterns that deserve human investigation.**
+
+- **Live Production URL:** [https://parakh2.vercel.app/](https://parakh2.vercel.app/)
+- **Vercel Project:** `shadow-elite/parakh_2`
 
 PARAKH is an AI-assisted procurement **risk-screening and audit-support platform**, not a procurement portal. It analyzes tender/contract data, produces an explainable **Corruption Risk Score (CRS) from 0–100**, and shows the evidence behind each assessment.
 
