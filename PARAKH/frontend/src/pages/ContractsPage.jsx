@@ -21,8 +21,8 @@ export default function ContractsPage() {
           api.get("/departments"),
           api.get("/vendors")
         ]);
-        setDepartments(dRes.data);
-        setVendors(vRes.data);
+        setDepartments(dRes.data || []);
+        setVendors(vRes.data || []);
       } catch (e) {
         console.error(e);
       }
@@ -42,7 +42,7 @@ export default function ContractsPage() {
         params.append("limit", "100");
 
         const res = await api.get(`/contracts?${params.toString()}`);
-        setContracts(res.data);
+        setContracts(res.data || []);
       } catch (err) {
         console.error("Error fetching contracts:", err);
       } finally {
@@ -52,6 +52,22 @@ export default function ContractsPage() {
     loadContracts();
   }, [search, riskLevel, deptId, vendorId]);
 
+  const updateFilter = (key, value) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) {
+      next.set(key, value);
+    } else {
+      next.delete(key);
+    }
+    setSearchParams(next);
+    setPage(1);
+  };
+
+  const clearFilters = () => {
+    setSearchParams({});
+    setPage(1);
+  };
+
   const [page, setPage] = useState(1);
   const pageSize = 25;
 
@@ -60,7 +76,7 @@ export default function ContractsPage() {
     const headers = ["Contract Number", "Title", "Department", "Vendor", "Estimate Value", "Award Value", "CRS Score", "Risk Level"];
     const rows = contracts.map(c => [
       c.contract_number,
-      `"${c.title.replace(/"/g, '""')}"`,
+      `"${(c.title || "").replace(/"/g, '""')}"`,
       `"${c.department_name || ''}"`,
       `"${c.vendor_name || ''}"`,
       c.estimate_value,
@@ -99,7 +115,7 @@ export default function ContractsPage() {
           <input
             type="text"
             className="input-field"
-            placeholder="Search by contract number or title..."
+            placeholder="Search by contract number, title, or supplier..."
             value={search}
             onChange={(e) => updateFilter("search", e.target.value)}
           />
@@ -138,105 +154,123 @@ export default function ContractsPage() {
           </select>
 
           {(search || riskLevel || deptId || vendorId) && (
-            <button className="btn btn-outline" onClick={() => setSearchParams({})}>
-              Reset Filters
+            <button
+              className="btn btn-outline"
+              onClick={clearFilters}
+              style={{ fontSize: 13, padding: "8px 14px", height: "42px" }}
+            >
+              Clear Filters
             </button>
           )}
-        </div>
-      </div>
 
-      <div className="card">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <div style={{ fontSize: 14, color: "var(--text-secondary)" }}>
-            Showing <strong>{contracts.length > 0 ? startIndex + 1 : 0} – {Math.min(startIndex + pageSize, contracts.length)}</strong> of <strong>{contracts.length}</strong> audited contracts
-          </div>
-          <button className="btn btn-outline" onClick={exportCSV} disabled={contracts.length === 0} style={{ padding: "6px 14px", fontSize: 13 }}>
-            📊 Export to CSV
+          <button
+            className="btn btn-primary"
+            onClick={exportCSV}
+            style={{ marginLeft: "auto", fontSize: 13, padding: "8px 16px", height: "42px", display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <span>📥</span> Export CSV ({contracts.length})
           </button>
         </div>
-
-        {loading ? (
-          <div className="loading-spinner">Loading contracts database...</div>
-        ) : (
-          <>
-            <div className="table-container">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Contract No.</th>
-                    <th>Title</th>
-                    <th>Department</th>
-                    <th>Vendor</th>
-                    <th>Estimate Value</th>
-                    <th>Award Value</th>
-                    <th>CRS Score</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginatedContracts.length === 0 ? (
-                    <tr>
-                      <td colSpan="8" style={{ textAlign: "center", padding: 32, color: "var(--text-muted)" }}>
-                        No contracts matching the selected filters.
-                      </td>
-                    </tr>
-                  ) : (
-                    paginatedContracts.map((c) => (
-                      <tr key={c.id}>
-                        <td className="font-mono" style={{ fontSize: 13, fontWeight: 600 }}>{c.contract_number}</td>
-                        <td>
-                          <Link to={`/contracts/${c.id}`} style={{ fontWeight: 600, color: "#fff" }}>{c.title}</Link>
-                        </td>
-                        <td>
-                          <Link to={`/departments/${c.department_id}`}>{c.department_name}</Link>
-                        </td>
-                        <td>
-                          <Link to={`/vendors/${c.vendor_id}`}>{c.vendor_name}</Link>
-                        </td>
-                        <td className="font-mono">{formatINR(c.estimate_value)}</td>
-                        <td className="font-mono">{formatINR(c.award_value)}</td>
-                        <td>
-                          <span className={`risk-badge ${c.risk_level}`}>
-                            CRS {c.crs}
-                          </span>
-                        </td>
-                        <td>
-                          <Link to={`/contracts/${c.id}`} className="btn btn-outline" style={{ padding: "4px 10px", fontSize: 12 }}>Audit</Link>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 20 }}>
-                <button
-                  className="btn btn-outline"
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  style={{ padding: "6px 14px", fontSize: 13 }}
-                >
-                  ← Previous
-                </button>
-                <span style={{ fontSize: 13, color: "var(--text-secondary)" }}>
-                  Page <strong>{page}</strong> of <strong>{totalPages}</strong>
-                </span>
-                <button
-                  className="btn btn-outline"
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                  disabled={page === totalPages}
-                  style={{ padding: "6px 14px", fontSize: 13 }}
-                >
-                  Next →
-                </button>
-              </div>
-            )}
-          </>
-        )}
       </div>
+
+      {loading ? (
+        <div className="loading-spinner">Loading audited procurement contracts...</div>
+      ) : contracts.length === 0 ? (
+        <div className="card" style={{ textAlign: "center", padding: "48px 24px" }}>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>No matching procurement contracts found</h3>
+          <p style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 16 }}>
+            Try broadening your search query or removing active filters.
+          </p>
+          <button className="btn btn-primary" onClick={clearFilters}>
+            Reset All Filters
+          </button>
+        </div>
+      ) : (
+        <div className="card">
+          <div className="table-responsive">
+            <table className="contracts-table">
+              <thead>
+                <tr>
+                  <th>Tender Ref</th>
+                  <th>Title</th>
+                  <th>Department</th>
+                  <th>Winning Vendor</th>
+                  <th>Sanctioned Estimate</th>
+                  <th>Awarded Value</th>
+                  <th>CRS Score</th>
+                  <th>Audit File</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedContracts.map((c) => (
+                  <tr key={c.id}>
+                    <td>
+                      <Link to={`/contracts/${c.id}`} className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>
+                        {c.contract_number}
+                      </Link>
+                    </td>
+                    <td style={{ fontWeight: 600, maxWidth: 280 }}>
+                      <Link to={`/contracts/${c.id}`} style={{ color: "inherit", textDecoration: "none" }}>
+                        {c.title}
+                      </Link>
+                    </td>
+                    <td>
+                      <Link to={`/departments/${c.department_id}`} style={{ color: "var(--text-secondary)" }}>
+                        {c.department_name}
+                      </Link>
+                    </td>
+                    <td>
+                      <Link to={`/vendors/${c.vendor_id}`} style={{ color: "var(--text-secondary)" }}>
+                        {c.vendor_name}
+                      </Link>
+                    </td>
+                    <td className="font-mono">{formatINR(c.estimate_value)}</td>
+                    <td className="font-mono" style={{ fontWeight: 700 }}>{formatINR(c.award_value)}</td>
+                    <td>
+                      <span className={`risk-badge ${c.risk_level || 'low'}`}>
+                        CRS {c.crs || 0}
+                      </span>
+                    </td>
+                    <td>
+                      <Link to={`/contracts/${c.id}`} className="btn-secondary" style={{ padding: "4px 10px", fontSize: 11, whiteSpace: "nowrap" }}>
+                        Audit Dossier →
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="pagination" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 20, paddingTop: 16, borderTop: "1px solid var(--border-color)" }}>
+            <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+              Showing {startIndex + 1}–{Math.min(startIndex + pageSize, contracts.length)} of {contracts.length} contracts
+            </div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <button
+                className="btn btn-outline"
+                disabled={page <= 1}
+                onClick={() => setPage(page - 1)}
+                style={{ fontSize: 12, padding: "4px 12px" }}
+              >
+                ← Previous
+              </button>
+              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                Page {page} of {totalPages}
+              </span>
+              <button
+                className="btn btn-outline"
+                disabled={page >= totalPages}
+                onClick={() => setPage(page + 1)}
+                style={{ fontSize: 12, padding: "4px 12px" }}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

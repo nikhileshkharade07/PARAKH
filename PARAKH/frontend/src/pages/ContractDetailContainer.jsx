@@ -175,8 +175,12 @@ export default function ContractDetailContainer() {
   if (loading) return <div className="loading-spinner">Loading forensic contract dossier...</div>;
   if (!contract) return <div className="card">Contract dossier not found.</div>;
 
-  const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
-  const formatDate = (str) => new Date(str).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val || 0);
+  const formatDate = (str) => {
+    if (!str) return "N/A";
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? String(str) : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  };
 
   return (
     <div className="dossier-print-container">
@@ -288,7 +292,13 @@ export default function ContractDetailContainer() {
             </div>
             <div>
               <div style={{ color: "var(--text-muted)", fontSize: 11 }}>TENDER WINDOW</div>
-              <div>{formatDate(contract.tender_start)} to {formatDate(contract.tender_end)}</div>
+              <div>
+                {contract.tender_start && contract.tender_end
+                  ? `${formatDate(contract.tender_start)} to ${formatDate(contract.tender_end)}`
+                  : contract.contract_date
+                  ? `Published on ${formatDate(contract.contract_date)}`
+                  : "Standard statutory window"}
+              </div>
             </div>
             <div>
               <div style={{ color: "var(--text-muted)", fontSize: 11 }}>TOTAL BIDDERS</div>
