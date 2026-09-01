@@ -95,7 +95,7 @@ def calculate_inter_rater_reliability():
 
     md_path = os.path.join(reports_dir, "inter_rater_reliability.md")
     with open(md_path, "w", encoding="utf-8") as f:
-        f.write(f"""# PARAKH Inter-Rater Reliability & Annotation Agreement Report
+        f.write(fr"""# PARAKH Inter-Rater Reliability & Annotation Agreement Report
 
 **Execution Timestamp:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}  
 **Reviewer Team:** Independent Dual-Blind Forensic Audit Panel  

@@ -14,6 +14,23 @@ class AssistantService:
         q = user_query.lower().strip()
         citations: List[EvidenceCitation] = []
 
+        # 0. Prompt injection & unauthorized override guard
+        injection_patterns = [
+            "ignore the database", "ignore previous instructions", "invent evidence",
+            "say this tender is corrupt", "override the risk score", "delete the investigation",
+            "give me confidential data from another case", "declare guilt", "jailbreak",
+            "drop table", "truncate table", "--"
+        ]
+        if any(pat in q for pat in injection_patterns):
+            answer = (
+                "### Security & Policy Guard Notice\n\n"
+                "**PARAKH Forensic Assistant Policy Enforcement:**\n"
+                "- System operations are strictly restricted to verified, database-grounded procurement records.\n"
+                "- Overriding forensic risk scores, inventing synthetic evidence, or bypassing role authorization is strictly prohibited.\n"
+                "- Risk assessments provide explainable indicators to support auditor review and do not declare judicial guilt."
+            )
+            return AssistantQueryResponse(query=user_query, answer=answer, citations=[])
+
         # 1. Check for provenance / data source inquiry
         if any(w in q for w in ["where did this procurement record come from", "source of this procurement", "data source", "data provenance", "source dataset", "how was this data collected"]):
             target = None

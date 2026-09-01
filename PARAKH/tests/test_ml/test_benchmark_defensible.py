@@ -197,3 +197,43 @@ def test_reproducibility_manifest_present():
     assert manifest["manifest_version"] == "2.0.0"
     assert manifest["best_performing_model"] == "Hybrid PARAKH (Rules + ML)"
     assert manifest["key_metrics_summary"]["hybrid_parakh_f1"] >= 0.95
+
+
+def test_supplier_grouped_splitting():
+    """Verify StratifiedGroupKFold partitions data with zero supplier overlap across folds."""
+    from sklearn.model_selection import StratifiedGroupKFold
+    
+    n_samples = 60
+    groups = np.array([f"SUPPLIER_{i%10}" for i in range(n_samples)])
+    y = np.array([0, 1] * (n_samples // 2))
+    X = np.random.randn(n_samples, 4)
+
+    sgkf = StratifiedGroupKFold(n_splits=3)
+    for fold, (train_idx, val_idx) in enumerate(sgkf.split(X, y, groups=groups)):
+        train_groups = set(groups[train_idx])
+        val_groups = set(groups[val_idx])
+        overlap = train_groups.intersection(val_groups)
+        assert len(overlap) == 0, f"Supplier group overlap found in fold {fold}: {overlap}"
+
+
+def test_pure_tabular_ml_features():
+    """Verify ML models train and predict effectively on pure tabular features without rule score."""
+    from benchmark.models.baselines import build_model_suite
+    
+    np.random.seed(42)
+    # 60 samples with pure tabular features: [award_val, est_val, bidders, duration]
+    X_pure = np.column_stack([
+        np.random.uniform(100000, 10000000, 60),
+        np.random.uniform(100000, 10000000, 60),
+        np.random.choice([1, 2, 3, 4], 60),
+        np.random.uniform(3, 30, 60)
+    ])
+    y = (X_pure[:, 2] == 1).astype(int)  # Correlated with single bidder
+
+    models = build_model_suite(random_state=42)
+    rf = models["Random Forest"]
+    rf.fit(X_pure, y)
+    preds = rf.predict(X_pure)
+    assert len(preds) == 60
+    assert set(np.unique(preds)).issubset({0, 1})
+

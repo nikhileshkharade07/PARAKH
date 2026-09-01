@@ -78,11 +78,7 @@ class CanonicalProcurementRecord(BaseModel):
         val = float(v)
         return round(val, 2)
 
-    class Config:
-        json_encoders = {
-            datetime: lambda v: v.isoformat() if v else None,
-            date: lambda v: v.isoformat() if v else None
-        }
+    model_config = {"extra": "ignore"}
 
 
 def compute_field_availability(records: List[Dict[str, Any]]) -> Dict[str, Any]:
