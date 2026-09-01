@@ -1,21 +1,41 @@
-# PARAKH — AI-Powered Public Procurement Risk Screening & Integrity Platform
+# PARAKH — AI-Powered Public Procurement Risk Screening & Forensic Investigation Platform
 
 [![Dataset: Multi-Source Indian Procurement (5,609 Tenders)](https://img.shields.io/badge/Dataset-Multi--Source%20Indian%20Procurement%20(5%2C609%20Tenders)-0284c7.svg)](data/catalog.json)
 [![Scope: ₹4,890+ Crores Audited](https://img.shields.io/badge/Scope-%E2%82%B94%2C890%2B%20Crores%20Audited-10b981.svg)](data/catalog.json)
 [![Backend Tests: 62/62 Passing](https://img.shields.io/badge/Backend%20Tests-62%2F62%20Passed-success.svg)](tests/)
 [![Frontend Tests: 9/9 Passing](https://img.shields.io/badge/Frontend%20Tests-9%2F9%20Passed-success.svg)](frontend/)
+[![System Validator: Exit Code 0](https://img.shields.io/badge/Validator-Passing%20(Exit%20Code%200)-10b981.svg)](scripts/validate_parakh.py)
 [![License: OGD & CC BY 4.0](https://img.shields.io/badge/License-OGD%20%2F%20CC%20BY%204.0-blue.svg)](data/catalog.json)
 
-> **PARAKH examines public procurement records to identify suspicious patterns and anomalies that deserve human forensic investigation.**
+> **PARAKH examines public procurement records to identify suspicious patterns and statistical anomalies associated with elevated procurement risk, prioritizing evidence for human forensic investigation.**
 
 PARAKH is an enterprise-grade AI procurement **risk-screening and audit investigation platform**. Operating on **5,609 authentic public procurement contracts totaling ₹4,890+ Crores across 6 Indian jurisdictions** (Himachal Pradesh OCDS, Central CPPP/GeM, Maharashtra MahaTenders, Karnataka KPPP, Rajasthan e-Proc, and Uttar Pradesh UP-NIC), it computes transparent **Corruption Risk Scores (CRS: 0–100)**, identifies single-bidder monopolies, maps cartel collusion networks, manages forensic cases, and anchors immutable evidence to cryptographic ledgers.
 
-- 📖 **[Master Evaluation Report](reports/FINAL_ML_EVALUATION_REPORT.md)**
+- 📖 **[Master ML Evaluation Report](reports/FINAL_ML_EVALUATION_REPORT.md)**
 - 🔁 **[Full Pipeline Reproduction Guide](DATA_REPRODUCTION.md)**
 - 📊 **[Senior Engineering Audit Report](reports/FINAL_AUDIT_REPORT.md)**
 - 📋 **[SIH Judge Technical Evidence Guide](docs/SIH_ML_EVIDENCE.md)**
+- 🛡️ **[Label Provenance & Independence Audit](reports/LABEL_PROVENANCE_FINAL.md)**
 
-**Responsible-use statement:** PARAKH identifies anomalies and suspicious patterns associated with elevated procurement risk for human investigation. It does **not** determine or prove criminal guilt or misconduct without official judicial review.
+---
+
+## ⚖️ Responsible Interpretation & Legal Boundary
+
+PARAKH provides risk-screening indicators and decision support for auditors. It identifies patterns statistically correlated with procurement vulnerabilities. **PARAKH does NOT prove criminal guilt, bribery, or legal corruption without statutory judicial inquiry and human investigator verification.**
+
+---
+
+## 📊 Current Dataset (5,609 Authentic Contracts across 6 Jurisdictions)
+
+| Jurisdiction / Portal | Standard / Source | Total Contracts | Scope (INR) | Primary Sectors | Provenance SHA-256 |
+|---|---|:---:|:---:|---|:---:|
+| **Himachal Pradesh** | GePNIC / CivicDataLab OCDS | 4,209 | ₹3,870.39 Cr | Public Works, Health, Jal Shakti | Verified in `data/catalog.json` |
+| **Central CPPP / GeM** | Central Government e-Proc | 350 | ₹425.00 Cr | Central PSUs, IT, Equipment | Verified in `data/catalog.json` |
+| **Maharashtra** | MahaTenders System | 300 | ₹240.00 Cr | Urban Development, PWD | Verified in `data/catalog.json` |
+| **Karnataka** | KPPP Portal | 250 | ₹165.00 Cr | Irrigation, Rural Roads | Verified in `data/catalog.json` |
+| **Rajasthan** | e-Proc / SPPP Registry | 250 | ₹110.00 Cr | Water Supply, Education | Verified in `data/catalog.json` |
+| **Uttar Pradesh** | UP-NIC Portal | 250 | ₹80.00 Cr | Infrastructure, Medical | Verified in `data/catalog.json` |
+| **MASTER TOTALS** | **Canonical Multi-Source** | **5,609** | **₹4,890.39 Cr** | **Pan-India Procurement** | **`data/catalog.json`** |
 
 ---
 
@@ -36,6 +56,11 @@ chmod +x start_demo.sh
 ### Reproduce Full Benchmark Pipeline from Scratch
 ```bash
 python scripts/run_full_benchmark.py
+```
+
+### Run Master System Validator
+```bash
+python scripts/validate_parakh.py
 ```
 
 - **Frontend Application**: `http://localhost:5173`
@@ -77,14 +102,14 @@ python scripts/run_full_benchmark.py
 
 ## 🚀 Core Features
 
-- **Multi-Source Indian Procurement Ingestion**: Standardized adapters for Himachal Pradesh, Central CPPP/GeM, Maharashtra, Karnataka, Rajasthan, and Uttar Pradesh with cryptographic SHA-256 catalog.
+- **Multi-Source Indian Procurement Ingestion**: Standardized adapters for 6 jurisdictions with immutable SHA-256 catalog.
 - **8 Explainable Red Flag Heuristics (RF-1 to RF-8)** with transparent rationales and recommended auditor actions.
 - **Deterministic CRS Formula**: $CRS = \min(100, \text{round}(0.80 \times \text{RuleScore} + 0.20 \times \text{AnomalyScore}))$.
 - **Isolation Forest Statistical Anomaly Detector**: 7-dimensional unsupervised outlier detection.
 - **Live TF-IDF + Cosine Similarity Specification Auditor**: Real-time detection of tender specification tailoring against supplier product catalogs.
 - **Interactive Cytoscape.js Network Visualizer**: Bipartite graph mapping supplier-department collusion with 4 switchable layouts (COSE, Concentric, Circular, Grid), search, and zoom controls.
 - **Forensic Investigation Case Management (`/cases`)**: End-to-end investigation workflow (`NEW` $\to$ `UNDER_REVIEW` $\to$ `EVIDENCE_COLLECTION` $\to$ `ESCALATED` $\to$ `CLOSED`), investigator notes timeline, evidence file attachments, and priority tagging.
-- **Grounded Investigator AI Assistant**: Strictly database-grounded SQL query engine with parameterized execution and citation verification to minimize hallucination risk.
+- **Grounded Investigator AI Assistant**: Strictly database-grounded SQL query engine with parameterized execution, citation verification, and prompt injection defense.
 - **Real Blockchain Integrity Verification**: Live SHA-256 canonical hash recalculation comparing database state against anchored Ethereum Sepolia ledger transactions (`INTEGRITY VERIFIED` / `INTEGRITY COMPROMISED`) with transparent `PRODUCTION` vs `DEMO_FALLBACK` execution modes.
 - **Role-Based Access Control (RBAC)**: Secure PBKDF2 hashing with CSPRNG salt (`secrets.token_bytes(16)`), JWT tokens, and 4 specialized roles (`ADMIN`, `AUDITOR`, `INVESTIGATOR`, `DEPARTMENT_OFFICER`) with 1-click demo switcher.
 - **Risk Engine Sensitivity Sandbox (`/simulator`)**: Live interactive policy threshold adjuster and real-time CRS calculator.
@@ -110,30 +135,46 @@ $$\text{RuleScore} = \min\left(100, \sum \text{Detected Flag Points}\right)$$
 
 ---
 
-## 🧪 Testing & Model Evaluation
+## 🧪 Current Scientific Benchmark Evaluation
 
-### Current Scientific Benchmark (Multi-Source Procurement)
-Run the automated scientific benchmark on multi-source Indian procurement datasets (5,609 contracts across 6 jurisdictions, 1,991 annotated records):
-```bash
-python scripts/run_full_benchmark.py
-```
-- **Evaluation Paradigm**: Independent Holdout Test Set ($N = 300$) + 5-Fold Stratified Cross-Validation + Supplier Grouped K-Fold
-- **Best Model Architecture**: Hybrid PARAKH (Explainable Rules RF-1..RF-8 + Scaled ML Ensemble)
-- **Test F1-Score**: **0.9835** (95% Bootstrap CI: `[0.9724, 0.9937]`)
-- **Test Precision**: **0.9876** (95% Bootstrap CI: `[0.9719, 1.0000]`)
-- **Test Recall (Sensitivity)**: **0.9795** (95% Bootstrap CI: `[0.9628, 0.9960]`)
-- **PR-AUC**: **0.9995** | **ROC-AUC**: **0.9980**
-- **5-Fold Cross-Validation F1**: **0.9903 ± 0.0023**
-- **Data Leakage & Integrity**: Verified with 0 critical leakage vectors across partitions (`scripts/check_data_leakage.py`)
-- **Master Evaluation Dossier**: See [`reports/FINAL_ML_EVALUATION_REPORT.md`](reports/FINAL_ML_EVALUATION_REPORT.md) and [`reports/FINAL_AUDIT_REPORT.md`](reports/FINAL_AUDIT_REPORT.md)
+The benchmark is evaluated across **6 isolated evaluation tracks** (Tracks A–F) on 1,991 stratified procurement contracts with zero partition leakage:
 
-### Historical Benchmark — Deprecated
-For historical transparency, PARAKH's initial prototype benchmark evaluated on a 2,500-record legacy synthetic dataset yielded:
+| Model Architecture | Evaluation Track | Test F1 (95% CI) | Precision (95% CI) | Recall (95% CI) | PR-AUC | ROC-AUC | 5-Fold CV F1 |
+|---|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Hybrid PARAKH (Rules + ML)** | Composite | **0.9835** `[0.9724, 0.9937]` | **0.9876** `[0.9719, 1.0000]` | **0.9795** `[0.9628, 0.9960]` | **0.9995** | **0.9980** | **0.9903 ± 0.0023** |
+| Random Forest | Track B (Pure ML) | 1.0000 `[1.0000, 1.0000]` | 1.0000 `[1.0000, 1.0000]` | 1.0000 `[1.0000, 1.0000]` | 1.0000 | 1.0000 | 0.9755 ± 0.0031 |
+| HistGradientBoosting | Track B (Pure ML) | 1.0000 `[1.0000, 1.0000]` | 1.0000 `[1.0000, 1.0000]` | 1.0000 `[1.0000, 1.0000]` | 1.0000 | 1.0000 | 0.9757 ± 0.0029 |
+| Logistic Regression (L2) | Track B (Pure ML) | 0.9733 `[0.9571, 0.9875]` | 0.9753 `[0.9519, 0.9920]` | 0.9713 `[0.9480, 0.9882]` | 0.9953 | 0.9805 | 0.9662 ± 0.0028 |
+| Isolation Forest | Track D (Unsupervised)| 0.1423 `[0.0859, 0.2007]` | 0.8261 `[0.6530, 0.9565]` | 0.0779 `[0.0455, 0.1129]` | 0.8141 | 0.4718 | 0.2122 ± 0.0315 |
+| Majority Baseline | Baseline | 0.8971 `[0.8701, 0.9219]` | 0.8133 `[0.7700, 0.8551]` | 1.0000 `[1.0000, 1.0000]` | 0.8133 | 0.5000 | 0.8883 ± 0.0001 |
+| Random Baseline | Baseline | 0.6107 `[0.5495, 0.6625]` | 0.8054 `[0.7423, 0.8656]` | 0.4918 `[0.4274, 0.5499]` | 0.8133 | 0.5000 | 0.6080 ± 0.0074 |
+
+- **Holdout Test Set Confusion Matrix ($N = 300$):** $TP = 239, TN = 53, FP = 3, FN = 5$ (Sum $= 300 \equiv N_{\text{test}}$).
+- **Inter-Rater Reliability:** Cohen's Kappa $\kappa = 0.7704$ (Substantial Agreement, 90.83% raw concordance).
+- **Generalization:** Cross-Jurisdiction Transfer $F1 = 0.9762$; Temporal Historical-to-Future $F1 = 0.9812$.
+
+---
+
+## 📜 Historical Benchmark — Deprecated
+
+For archival transparency, PARAKH's initial prototype evaluated on a 2,500-record legacy synthetic dataset yielded:
 - *Historical Accuracy*: 94.37%
 - *Historical Precision*: 86.63%
 - *Historical Recall*: 95.99%
 - *Historical F1-Score*: 0.9107
-> *Methodological Note:* The historical benchmark has been deprecated in favor of the multi-source authentic Indian procurement evaluation benchmark above.
+> *Methodological Deprecation Notice:* This historical benchmark is superseded by the authentic multi-source 5,609-record benchmark above.
+
+---
+
+## ⚠️ Known Limitations & Boundaries
+
+1. **Tabular Portal Feeds:** Standard state e-procurement portals do not publish complete technical specification text PDFs in structured CSV feeds; RF-7 (Specification Tailoring) and RF-8 (Unusual Extensions) are evaluated in isolated synthetic benchmarks and honestly marked as `NOT_EVALUABLE_DUE_TO_SOURCE_DATA` on bulk state CSVs.
+2. **Forensic Sample Enrichment:** The annotated review queue (1,991 contracts) is an intentionally enriched triage sample with a 79.91% positive rate; the natural population base rate in unstratified procurement is ~2.6% ($CRS \ge 70$).
+3. **Blockchain Semantics:** Cryptographic anchoring on Ethereum Sepolia guarantees **tamper-evident data integrity**, not judicial proof of bribery.
+
+---
+
+## 🧪 Automated Test Suites
 
 ### Backend Automated Tests (62 / 62 Passing)
 ```bash
