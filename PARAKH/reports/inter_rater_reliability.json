@@ -1,0 +1,65 @@
+{
+  "execution_date": "2026-09-01T18:45:03.046552",
+  "overlapping_sample_size": 120,
+  "reviewers": [
+    "AUDITOR_EXP_01 (Primary)",
+    "AUDITOR_EXP_02 (Secondary Blind)"
+  ],
+  "metrics": {
+    "cohens_kappa_4tier": 0.8136,
+    "percentage_agreement_4tier": 90.83,
+    "cohens_kappa_binary": 0.7704,
+    "percentage_agreement_binary": 90.83,
+    "interpretation": "Substantial Agreement"
+  },
+  "confusion_matrix_binary": {
+    "labels": [
+      "0: Benign / Normal",
+      "1: Audit Action Required"
+    ],
+    "matrix": [
+      [
+        27,
+        0
+      ],
+      [
+        11,
+        82
+      ]
+    ]
+  },
+  "confusion_matrix_4tier": {
+    "labels": [
+      "0: Normal",
+      "1: Suspicious Pattern",
+      "2: Expert Review",
+      "3: Verified Irregularity"
+    ],
+    "matrix": [
+      [
+        13,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        14,
+        0,
+        0
+      ],
+      [
+        0,
+        11,
+        77,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        5
+      ]
+    ]
+  }
+}

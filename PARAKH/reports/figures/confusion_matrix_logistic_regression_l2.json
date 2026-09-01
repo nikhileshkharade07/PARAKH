@@ -1,0 +1,20 @@
+{
+  "model_name": "Logistic Regression (L2)",
+  "confusion_matrix": [
+    [
+      50,
+      6
+    ],
+    [
+      7,
+      237
+    ]
+  ],
+  "tp": 237,
+  "fp": 6,
+  "tn": 50,
+  "fn": 7,
+  "precision": 0.9753086419753086,
+  "recall": 0.9713114754098361,
+  "f1": 0.973305954825462
+}

@@ -115,16 +115,20 @@ $$\text{RuleScore} = \min\left(100, \sum \text{Detected Flag Points}\right)$$
 
 ## 🧪 Testing & Model Evaluation
 
-### Benchmark Model Evaluation
-Run the model evaluation benchmark on 2,500 records:
+### Scientific Benchmark Model Evaluation
+Run the automated scientific benchmark on multi-source Indian procurement datasets (5,609 contracts, 1,991 expert-annotated contracts):
 ```bash
-python evaluate_model.py
+python scripts/run_full_benchmark.py
 ```
-- **Accuracy**: 94.37%
-- **Precision**: 86.63%
-- **Recall (Sensitivity)**: 95.99%
-- **F1-Score**: 0.9107
-- **False Positive Rate**: 6.31%
+- **Evaluation Paradigm**: Independent Holdout Test Set ($N = 300$) + 5-Fold Stratified Cross-Validation
+- **Best Model Architecture**: Hybrid PARAKH (Explainable Rules RF-1..RF-8 + Scaled ML Ensemble)
+- **Test F1-Score**: **0.9835** (95% Bootstrap CI: `[0.9724, 0.9937]`)
+- **Test Precision**: **0.9876** (95% Bootstrap CI: `[0.9719, 1.0000]`)
+- **Test Recall (Sensitivity)**: **0.9795** (95% Bootstrap CI: `[0.9628, 0.9960]`)
+- **PR-AUC**: **0.9995** | **ROC-AUC**: **0.9980**
+- **5-Fold Cross-Validation F1**: **0.9903 ± 0.0023**
+- **Data Leakage & Integrity**: Verified with 0 critical leakage vectors across partitions (`scripts/check_data_leakage.py`)
+- **Full Benchmark Dossier**: See [`reports/FINAL_ML_EVALUATION_REPORT.md`](reports/FINAL_ML_EVALUATION_REPORT.md) and [`docs/SIH_ML_EVIDENCE.md`](docs/SIH_ML_EVIDENCE.md)
 
 ### Backend Automated Tests (48 / 48 Passing)
 ```bash

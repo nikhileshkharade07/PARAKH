@@ -1,0 +1,723 @@
+{
+  "execution_date": "2026-09-01T18:46:21.472281",
+  "manifest": {
+    "manifest_version": "2.0.0",
+    "benchmark_execution_date": "2026-09-01T18:46:21.471221",
+    "environment": {
+      "os": "Windows",
+      "os_release": "11",
+      "python_version": "3.13.14",
+      "scikit_learn_version": "1.9.0",
+      "numpy_version": "2.5.2",
+      "pandas_version": "3.0.5"
+    },
+    "random_seeds": {
+      "split_seed": 42,
+      "model_seed": 42,
+      "bootstrap_seed": 42
+    },
+    "dataset_metadata": {
+      "total_procurement_records": 5609,
+      "reviewed_ground_truth_records": 1991,
+      "positive_class_ratio": 0.7991,
+      "train_samples": 1393,
+      "val_samples": 298,
+      "test_samples": 300
+    },
+    "best_performing_model": "Hybrid PARAKH (Rules + ML)",
+    "key_metrics_summary": {
+      "hybrid_parakh_f1": 0.9835390946502057,
+      "hybrid_parakh_f1_95_ci": [
+        0.9724,
+        0.9937
+      ],
+      "hybrid_parakh_precision": 0.987603305785124,
+      "hybrid_parakh_recall": 0.9795081967213115,
+      "hybrid_parakh_roc_auc": 0.9979508196721312,
+      "hybrid_parakh_pr_auc": 0.9995275956692203
+    }
+  },
+  "cross_validation": {
+    "Majority Baseline": {
+      "mean_precision": 0.7991,
+      "std_precision": 0.0002,
+      "mean_recall": 1.0,
+      "std_recall": 0.0,
+      "mean_f1": 0.8883,
+      "std_f1": 0.0001,
+      "mean_roc_auc": 0.5,
+      "mean_pr_auc": 0.7991
+    },
+    "Random Baseline": {
+      "mean_precision": 0.7872,
+      "std_precision": 0.0099,
+      "mean_recall": 0.4953,
+      "std_recall": 0.006,
+      "mean_f1": 0.608,
+      "std_f1": 0.0074,
+      "mean_roc_auc": 0.5,
+      "mean_pr_auc": 0.7991
+    },
+    "Logistic Regression (L2)": {
+      "mean_precision": 0.9709,
+      "std_precision": 0.0061,
+      "mean_recall": 0.9617,
+      "std_recall": 0.0061,
+      "mean_f1": 0.9662,
+      "std_f1": 0.0028,
+      "mean_roc_auc": 0.9848,
+      "mean_pr_auc": 0.996
+    },
+    "Random Forest": {
+      "mean_precision": 1.0,
+      "std_precision": 0.0,
+      "mean_recall": 1.0,
+      "std_recall": 0.0,
+      "mean_f1": 1.0,
+      "std_f1": 0.0,
+      "mean_roc_auc": 1.0,
+      "mean_pr_auc": 1.0
+    },
+    "Gradient Boosting (Hist)": {
+      "mean_precision": 1.0,
+      "std_precision": 0.0,
+      "mean_recall": 1.0,
+      "std_recall": 0.0,
+      "mean_f1": 1.0,
+      "std_f1": 0.0,
+      "mean_roc_auc": 1.0,
+      "mean_pr_auc": 1.0
+    },
+    "Isolation Forest (Unsupervised)": {
+      "mean_precision": 0.8363,
+      "std_precision": 0.0377,
+      "mean_recall": 0.1219,
+      "std_recall": 0.0203,
+      "mean_f1": 0.2122,
+      "std_f1": 0.0315,
+      "mean_roc_auc": 0.4582,
+      "mean_pr_auc": 0.7989
+    },
+    "PARAKH Rule-Based Engine": {
+      "mean_precision": 1.0,
+      "std_precision": 0.0,
+      "mean_recall": 1.0,
+      "std_recall": 0.0,
+      "mean_f1": 1.0,
+      "std_f1": 0.0,
+      "mean_roc_auc": 1.0,
+      "mean_pr_auc": 1.0
+    },
+    "Hybrid PARAKH (Rules + ML)": {
+      "mean_precision": 0.99,
+      "std_precision": 0.0023,
+      "mean_recall": 0.9906,
+      "std_recall": 0.0053,
+      "mean_f1": 0.9903,
+      "std_f1": 0.0023,
+      "mean_roc_auc": 0.9989,
+      "mean_pr_auc": 0.9997
+    }
+  },
+  "holdout_test_results": {
+    "Majority Baseline": {
+      "precision": 0.8133333333333334,
+      "recall": 1.0,
+      "f1": 0.8970588235294118,
+      "accuracy": 0.8133333333333334,
+      "roc_auc": 0.5,
+      "pr_auc": 0.8133333333333334,
+      "brier_score": 0.18666666666666668,
+      "tp": 244,
+      "fp": 56,
+      "tn": 0,
+      "fn": 0,
+      "total_samples": 300,
+      "precision_95_ci": [
+        0.77,
+        0.8551
+      ],
+      "recall_95_ci": [
+        1.0,
+        1.0
+      ],
+      "f1_95_ci": [
+        0.8701,
+        0.9219
+      ],
+      "confusion_matrix": [
+        [
+          0,
+          56
+        ],
+        [
+          0,
+          244
+        ]
+      ]
+    },
+    "Random Baseline": {
+      "precision": 0.8053691275167785,
+      "recall": 0.4918032786885246,
+      "f1": 0.6106870229007634,
+      "accuracy": 0.49,
+      "roc_auc": 0.5,
+      "pr_auc": 0.8133333333333334,
+      "brier_score": 0.25,
+      "tp": 120,
+      "fp": 29,
+      "tn": 27,
+      "fn": 124,
+      "total_samples": 300,
+      "precision_95_ci": [
+        0.7423,
+        0.8656
+      ],
+      "recall_95_ci": [
+        0.4274,
+        0.5499
+      ],
+      "f1_95_ci": [
+        0.5495,
+        0.6625
+      ],
+      "confusion_matrix": [
+        [
+          27,
+          29
+        ],
+        [
+          124,
+          120
+        ]
+      ]
+    },
+    "Logistic Regression (L2)": {
+      "precision": 0.9753086419753086,
+      "recall": 0.9713114754098361,
+      "f1": 0.973305954825462,
+      "accuracy": 0.9566666666666667,
+      "roc_auc": 0.9804596018735363,
+      "pr_auc": 0.9952815581772869,
+      "brier_score": 0.03750811312972459,
+      "tp": 237,
+      "fp": 6,
+      "tn": 50,
+      "fn": 7,
+      "total_samples": 300,
+      "precision_95_ci": [
+        0.9519,
+        0.992
+      ],
+      "recall_95_ci": [
+        0.948,
+        0.9882
+      ],
+      "f1_95_ci": [
+        0.9571,
+        0.9875
+      ],
+      "confusion_matrix": [
+        [
+          50,
+          6
+        ],
+        [
+          7,
+          237
+        ]
+      ]
+    },
+    "Random Forest": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0,
+      "brier_score": 0.0005513333333333333,
+      "tp": 244,
+      "fp": 0,
+      "tn": 56,
+      "fn": 0,
+      "total_samples": 300,
+      "precision_95_ci": [
+        1.0,
+        1.0
+      ],
+      "recall_95_ci": [
+        1.0,
+        1.0
+      ],
+      "f1_95_ci": [
+        1.0,
+        1.0
+      ],
+      "confusion_matrix": [
+        [
+          56,
+          0
+        ],
+        [
+          0,
+          244
+        ]
+      ]
+    },
+    "Gradient Boosting (Hist)": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0,
+      "brier_score": 2.746556559478901e-10,
+      "tp": 244,
+      "fp": 0,
+      "tn": 56,
+      "fn": 0,
+      "total_samples": 300,
+      "precision_95_ci": [
+        1.0,
+        1.0
+      ],
+      "recall_95_ci": [
+        1.0,
+        1.0
+      ],
+      "f1_95_ci": [
+        1.0,
+        1.0
+      ],
+      "confusion_matrix": [
+        [
+          56,
+          0
+        ],
+        [
+          0,
+          244
+        ]
+      ]
+    },
+    "Isolation Forest (Unsupervised)": {
+      "precision": 0.8260869565217391,
+      "recall": 0.0778688524590164,
+      "f1": 0.14232209737827714,
+      "accuracy": 0.23666666666666666,
+      "roc_auc": 0.4717505854800937,
+      "pr_auc": 0.8141412745201788,
+      "brier_score": 0.5035550587289898,
+      "tp": 19,
+      "fp": 4,
+      "tn": 52,
+      "fn": 225,
+      "total_samples": 300,
+      "precision_95_ci": [
+        0.653,
+        0.9565
+      ],
+      "recall_95_ci": [
+        0.0455,
+        0.1129
+      ],
+      "f1_95_ci": [
+        0.0859,
+        0.2007
+      ],
+      "confusion_matrix": [
+        [
+          52,
+          4
+        ],
+        [
+          225,
+          19
+        ]
+      ]
+    },
+    "PARAKH Rule-Based Engine": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "roc_auc": 1.0,
+      "pr_auc": 0.9999999999999999,
+      "brier_score": 0.30544999999999994,
+      "tp": 244,
+      "fp": 0,
+      "tn": 56,
+      "fn": 0,
+      "total_samples": 300,
+      "precision_95_ci": [
+        1.0,
+        1.0
+      ],
+      "recall_95_ci": [
+        1.0,
+        1.0
+      ],
+      "f1_95_ci": [
+        1.0,
+        1.0
+      ],
+      "confusion_matrix": [
+        [
+          56,
+          0
+        ],
+        [
+          0,
+          244
+        ]
+      ]
+    },
+    "Hybrid PARAKH (Rules + ML)": {
+      "precision": 0.987603305785124,
+      "recall": 0.9795081967213115,
+      "f1": 0.9835390946502057,
+      "accuracy": 0.9733333333333334,
+      "roc_auc": 0.9979508196721312,
+      "pr_auc": 0.9995275956692203,
+      "brier_score": 0.1911687291666667,
+      "tp": 239,
+      "fp": 3,
+      "tn": 53,
+      "fn": 5,
+      "total_samples": 300,
+      "precision_95_ci": [
+        0.9719,
+        1.0
+      ],
+      "recall_95_ci": [
+        0.9628,
+        0.996
+      ],
+      "f1_95_ci": [
+        0.9724,
+        0.9937
+      ],
+      "confusion_matrix": [
+        [
+          53,
+          3
+        ],
+        [
+          5,
+          239
+        ]
+      ]
+    }
+  },
+  "per_rule_results": [
+    {
+      "rule_id": "RF-1",
+      "indicator_name": "Single Bidder Tender",
+      "tp": 434,
+      "fp": 4,
+      "tn": 396,
+      "fn": 1157,
+      "precision": 0.9909,
+      "recall": 0.2728,
+      "f1": 0.4278,
+      "support": 1591,
+      "trigger_rate_pct": 22.0,
+      "status": "EVALUATED"
+    },
+    {
+      "rule_id": "RF-2",
+      "indicator_name": "Vendor Departmental Dominance (Lock-in >= 60%)",
+      "tp": 15,
+      "fp": 3,
+      "tn": 397,
+      "fn": 1576,
+      "precision": 0.8333,
+      "recall": 0.0094,
+      "f1": 0.0186,
+      "support": 1591,
+      "trigger_rate_pct": 0.9,
+      "status": "EVALUATED"
+    },
+    {
+      "rule_id": "RF-3",
+      "indicator_name": "Approval Threshold Smurfing",
+      "tp": 114,
+      "fp": 4,
+      "tn": 396,
+      "fn": 1477,
+      "precision": 0.9661,
+      "recall": 0.0717,
+      "f1": 0.1334,
+      "support": 1591,
+      "trigger_rate_pct": 5.93,
+      "status": "EVALUATED"
+    },
+    {
+      "rule_id": "RF-4",
+      "indicator_name": "Compressed Tender Window (< 7 days)",
+      "tp": 740,
+      "fp": 15,
+      "tn": 385,
+      "fn": 851,
+      "precision": 0.9801,
+      "recall": 0.4651,
+      "f1": 0.6309,
+      "support": 1591,
+      "trigger_rate_pct": 37.92,
+      "status": "EVALUATED"
+    },
+    {
+      "rule_id": "RF-5",
+      "indicator_name": "Price Estimate Deviation (> 30%)",
+      "tp": 829,
+      "fp": 56,
+      "tn": 344,
+      "fn": 762,
+      "precision": 0.9367,
+      "recall": 0.5211,
+      "f1": 0.6696,
+      "support": 1591,
+      "trigger_rate_pct": 44.45,
+      "status": "EVALUATED"
+    },
+    {
+      "rule_id": "RF-6",
+      "indicator_name": "Repeat Winner Pattern (>= 3 wins)",
+      "tp": 1431,
+      "fp": 138,
+      "tn": 262,
+      "fn": 160,
+      "precision": 0.912,
+      "recall": 0.8994,
+      "f1": 0.9057,
+      "support": 1591,
+      "trigger_rate_pct": 78.8,
+      "status": "EVALUATED"
+    },
+    {
+      "rule_id": "RF-7",
+      "indicator_name": "Specification Tailoring (NLP Similarity)",
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "precision": "NOT_EVALUABLE_DUE_TO_SOURCE_DATA",
+      "recall": "NOT_EVALUABLE_DUE_TO_SOURCE_DATA",
+      "f1": "NOT_EVALUABLE_DUE_TO_SOURCE_DATA",
+      "support": 0,
+      "trigger_rate_pct": 0.0,
+      "status": "NOT_EVALUABLE_DUE_TO_SOURCE_DATA"
+    },
+    {
+      "rule_id": "RF-8",
+      "indicator_name": "Unusual Contract Extensions",
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "precision": "NOT_EVALUABLE_DUE_TO_SOURCE_DATA",
+      "recall": "NOT_EVALUABLE_DUE_TO_SOURCE_DATA",
+      "f1": "NOT_EVALUABLE_DUE_TO_SOURCE_DATA",
+      "support": 0,
+      "trigger_rate_pct": 0.0,
+      "status": "NOT_EVALUABLE_DUE_TO_SOURCE_DATA"
+    }
+  ],
+  "ablation_study": [
+    {
+      "configuration": "Full Hybrid PARAKH (Rules + ML)",
+      "mean_precision": 0.99,
+      "mean_recall": 0.9906,
+      "mean_f1": 0.9903,
+      "f1_delta_vs_hybrid": 0.0
+    },
+    {
+      "configuration": "PARAKH Rules Only (No ML)",
+      "mean_precision": 1.0,
+      "mean_recall": 1.0,
+      "mean_f1": 1.0,
+      "f1_delta_vs_hybrid": 0.0097
+    },
+    {
+      "configuration": "ML Only: Random Forest (No Heuristics)",
+      "mean_precision": 0.9749,
+      "mean_recall": 0.9761,
+      "mean_f1": 0.9755,
+      "f1_delta_vs_hybrid": -0.0147
+    },
+    {
+      "configuration": "ML Only: HistGradientBoosting (No Heuristics)",
+      "mean_precision": 0.9661,
+      "mean_recall": 0.9855,
+      "mean_f1": 0.9757,
+      "f1_delta_vs_hybrid": -0.0145
+    },
+    {
+      "configuration": "Hybrid without RF-1 (Single Bidder)",
+      "mean_precision": 1.0,
+      "mean_recall": 0.3111,
+      "mean_f1": 0.474,
+      "f1_delta_vs_hybrid": -0.5162
+    },
+    {
+      "configuration": "Hybrid without RF-2 (Vendor Lock-in)",
+      "mean_precision": 1.0,
+      "mean_recall": 0.3111,
+      "mean_f1": 0.474,
+      "f1_delta_vs_hybrid": -0.5162
+    },
+    {
+      "configuration": "Hybrid without RF-3 (Threshold Manipulation)",
+      "mean_precision": 1.0,
+      "mean_recall": 0.5707,
+      "mean_f1": 0.7265,
+      "f1_delta_vs_hybrid": -0.2637
+    },
+    {
+      "configuration": "Hybrid without RF-4 (Compressed Window)",
+      "mean_precision": 1.0,
+      "mean_recall": 0.8517,
+      "mean_f1": 0.9198,
+      "f1_delta_vs_hybrid": -0.0705
+    },
+    {
+      "configuration": "Hybrid without RF-5 (Estimate Deviation)",
+      "mean_precision": 1.0,
+      "mean_recall": 0.5707,
+      "mean_f1": 0.7265,
+      "f1_delta_vs_hybrid": -0.2637
+    },
+    {
+      "configuration": "Hybrid without RF-6 (Repeat Winner)",
+      "mean_precision": 1.0,
+      "mean_recall": 0.8517,
+      "mean_f1": 0.9198,
+      "f1_delta_vs_hybrid": -0.0705
+    }
+  ],
+  "threshold_analysis": [
+    {
+      "crs_threshold": 30,
+      "contracts_flagged": 1591,
+      "workload_pct_of_dataset": 79.91,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "tp": 1591,
+      "fp": 0,
+      "tn": 400,
+      "fn": 0
+    },
+    {
+      "crs_threshold": 40,
+      "contracts_flagged": 1587,
+      "workload_pct_of_dataset": 79.71,
+      "precision": 1.0,
+      "recall": 0.9975,
+      "f1_score": 0.9987,
+      "tp": 1587,
+      "fp": 0,
+      "tn": 400,
+      "fn": 4
+    },
+    {
+      "crs_threshold": 50,
+      "contracts_flagged": 1018,
+      "workload_pct_of_dataset": 51.13,
+      "precision": 1.0,
+      "recall": 0.6398,
+      "f1_score": 0.7804,
+      "tp": 1018,
+      "fp": 0,
+      "tn": 400,
+      "fn": 573
+    },
+    {
+      "crs_threshold": 60,
+      "contracts_flagged": 352,
+      "workload_pct_of_dataset": 17.68,
+      "precision": 1.0,
+      "recall": 0.2212,
+      "f1_score": 0.3623,
+      "tp": 352,
+      "fp": 0,
+      "tn": 400,
+      "fn": 1239
+    },
+    {
+      "crs_threshold": 70,
+      "contracts_flagged": 67,
+      "workload_pct_of_dataset": 3.37,
+      "precision": 1.0,
+      "recall": 0.0421,
+      "f1_score": 0.0808,
+      "tp": 67,
+      "fp": 0,
+      "tn": 400,
+      "fn": 1524
+    },
+    {
+      "crs_threshold": 80,
+      "contracts_flagged": 29,
+      "workload_pct_of_dataset": 1.46,
+      "precision": 1.0,
+      "recall": 0.0182,
+      "f1_score": 0.0358,
+      "tp": 29,
+      "fp": 0,
+      "tn": 400,
+      "fn": 1562
+    }
+  ],
+  "generalization_cross_source": {
+    "KARNATAKA": {
+      "held_out_samples": 149,
+      "precision": 0.979,
+      "recall": 1.0,
+      "f1": 0.9894,
+      "roc_auc": 1.0
+    },
+    "RAJASTHAN": {
+      "held_out_samples": 166,
+      "precision": 0.9873,
+      "recall": 1.0,
+      "f1": 0.9936,
+      "roc_auc": 0.9994
+    },
+    "UTTAR PRADESH": {
+      "held_out_samples": 154,
+      "precision": 0.9724,
+      "recall": 1.0,
+      "f1": 0.986,
+      "roc_auc": 1.0
+    },
+    "MAHARASHTRA": {
+      "held_out_samples": 175,
+      "precision": 1.0,
+      "recall": 0.9939,
+      "f1": 0.9969,
+      "roc_auc": 1.0
+    },
+    "HIMACHAL PRADESH": {
+      "held_out_samples": 1117,
+      "precision": 0.9618,
+      "recall": 1.0,
+      "f1": 0.9805,
+      "roc_auc": 0.9993
+    }
+  },
+  "generalization_temporal": {
+    "train_period": "< 2020 (Historical Baseline)",
+    "test_period": ">= 2020 (Deployment Simulation)",
+    "train_samples": 1381,
+    "test_samples": 610,
+    "precision": 0.9875,
+    "recall": 0.9875,
+    "f1": 0.9875,
+    "roc_auc": 0.9981
+  },
+  "error_analysis_summary": {
+    "fp_count": 0,
+    "fn_count": 0
+  }
+}

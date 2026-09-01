@@ -1,0 +1,3902 @@
+{
+  "generated_at": "2026-09-01T18:45:03.315589",
+  "random_seed": 42,
+  "total_synthetic_records": 500,
+  "injected_anomalies_count": 250,
+  "clean_controls_count": 250,
+  "injections": [
+    {
+      "injection_id": "SYNTH-CTRL-00000",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00001",
+      "original_tender_id": "2017_PWD_16549_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00002",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 66.86,
+        "estimated_val": 4419634.0
+      },
+      "injection_id": "SYNTH-INJ-00003",
+      "original_tender_id": "2019_HPIPH_32234_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00004",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00005",
+      "original_tender_id": "UTT-UT-2021-01227"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00006",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00007",
+      "original_tender_id": "2018_PWD_19783_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00008",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4791272.83
+      },
+      "injection_id": "SYNTH-INJ-00009",
+      "original_tender_id": "2017_PWD_15221_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00010",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00011",
+      "original_tender_id": "2017_MC_15003_11"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00012",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00013",
+      "original_tender_id": "2017_PWD_16157_6"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00014",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00015",
+      "original_tender_id": "2018_PWD_20211_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00016",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 58.87,
+        "estimated_val": 759828.0
+      },
+      "injection_id": "SYNTH-INJ-00017",
+      "original_tender_id": "2019_HPIPH_31234_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00018",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00019",
+      "original_tender_id": "MAH-MA-2021-01209"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00020",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00021",
+      "original_tender_id": "2017_PWD_17799_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00022",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4850312.37
+      },
+      "injection_id": "SYNTH-INJ-00023",
+      "original_tender_id": "2017_PWD_18257_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00024",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00025",
+      "original_tender_id": "KAR-KA-2021-01095"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00026",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00027",
+      "original_tender_id": "MAH-MA-2021-01176"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00028",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00029",
+      "original_tender_id": "2018_MC_19440_4"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00030",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 37.32,
+        "estimated_val": 2236325.0
+      },
+      "injection_id": "SYNTH-INJ-00031",
+      "original_tender_id": "2018_HPIPH_20813_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00032",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00033",
+      "original_tender_id": "2017_PWD_15702_5"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00034",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 4,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00035",
+      "original_tender_id": "2020_HPIPH_35658_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00036",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4944889.63
+      },
+      "injection_id": "SYNTH-INJ-00037",
+      "original_tender_id": "2013_HPIPH_1761_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00038",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00039",
+      "original_tender_id": "2018_PWD_19257_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00040",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00041",
+      "original_tender_id": "2019_HPIPH_27950_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00042",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00043",
+      "original_tender_id": "RAJ-RA-2021-01040"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00044",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 35.82,
+        "estimated_val": 328205450.7
+      },
+      "injection_id": "SYNTH-INJ-00045",
+      "original_tender_id": "RAJ-RA-2021-01187"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00046",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00047",
+      "original_tender_id": "2017_PWD_16358_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00048",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00049",
+      "original_tender_id": "2018_PWD_20256_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00050",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4968229.72
+      },
+      "injection_id": "SYNTH-INJ-00051",
+      "original_tender_id": "2017_HPIPH_17964_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00052",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00053",
+      "original_tender_id": "2017_PWD_18174_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00054",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00055",
+      "original_tender_id": "2020_SIDC_34023_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00056",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 3.0
+      },
+      "injection_id": "SYNTH-INJ-00057",
+      "original_tender_id": "2018_PWD_20228_8"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00058",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 43.49,
+        "estimated_val": 2851117.07
+      },
+      "injection_id": "SYNTH-INJ-00059",
+      "original_tender_id": "CEN-CE-2021-01106"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00060",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00061",
+      "original_tender_id": "2018_HPIPH_24670_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00062",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00063",
+      "original_tender_id": "2017_PWD_17553_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00064",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4790910.62
+      },
+      "injection_id": "SYNTH-INJ-00065",
+      "original_tender_id": "2019_HPIPH_32007_1-24"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00066",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00067",
+      "original_tender_id": "2017_PWD_17092_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00068",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00069",
+      "original_tender_id": "2017_HPIPH_14596_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00070",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00071",
+      "original_tender_id": "2017_PWD_17350_2"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00072",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 59.7,
+        "estimated_val": 2159456.0
+      },
+      "injection_id": "SYNTH-INJ-00073",
+      "original_tender_id": "2017_PWD_17824_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00074",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00075",
+      "original_tender_id": "2017_HPIPH_15994_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00076",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 4,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00077",
+      "original_tender_id": "2017_PWD_18888_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00078",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4887621.96
+      },
+      "injection_id": "SYNTH-INJ-00079",
+      "original_tender_id": "2018_PWD_19915_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00080",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00081",
+      "original_tender_id": "KAR-KA-2021-01093"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00082",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00083",
+      "original_tender_id": "2017_PWD_16098_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00084",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00085",
+      "original_tender_id": "2017_PWD_16753_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00086",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 52.28,
+        "estimated_val": 14562226.0
+      },
+      "injection_id": "SYNTH-INJ-00087",
+      "original_tender_id": "2018_PWD_20582_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00088",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00089",
+      "original_tender_id": "2017_PWD_16987_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00090",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 9,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00091",
+      "original_tender_id": "2017_PWD_17092_4"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00092",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4815526.56
+      },
+      "injection_id": "SYNTH-INJ-00093",
+      "original_tender_id": "UTT-UT-2021-01137"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00094",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00095",
+      "original_tender_id": "2018_PWD_19650_2"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00096",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00097",
+      "original_tender_id": "2018_HPIPH_22854_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00098",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00099",
+      "original_tender_id": "2018_HPIPH_23042_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00100",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 50.99,
+        "estimated_val": 1389385.0
+      },
+      "injection_id": "SYNTH-INJ-00101",
+      "original_tender_id": "2018_PWD_20138_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00102",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00103",
+      "original_tender_id": "RAJ-RA-2021-01218"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00104",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 7,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00105",
+      "original_tender_id": "2017_HRTC_16860_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00106",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4760499.77
+      },
+      "injection_id": "SYNTH-INJ-00107",
+      "original_tender_id": "2017_PWD_14269_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00108",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00109",
+      "original_tender_id": "2017_PWD_16283_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00110",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00111",
+      "original_tender_id": "2017_PWD_15938_5"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00112",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00113",
+      "original_tender_id": "2017_HPIPH_17890_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00114",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 53.24,
+        "estimated_val": 3968785.0
+      },
+      "injection_id": "SYNTH-INJ-00115",
+      "original_tender_id": "2018_HPIPH_20943_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00116",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00117",
+      "original_tender_id": "2018_HPIPH_25267_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00118",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00119",
+      "original_tender_id": "CEN-CE-2021-01157"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00120",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4926664.59
+      },
+      "injection_id": "SYNTH-INJ-00121",
+      "original_tender_id": "2019_HPIPH_25819_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00122",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00123",
+      "original_tender_id": "2018_PWD_22502_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00124",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00125",
+      "original_tender_id": "CEN-CE-2021-01146"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00126",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00127",
+      "original_tender_id": "2017_MC_14894_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00128",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 50.3,
+        "estimated_val": 2157078.0
+      },
+      "injection_id": "SYNTH-INJ-00129",
+      "original_tender_id": "2017_PWD_15718_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00130",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00131",
+      "original_tender_id": "2019_HPIPH_29577_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00132",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 31,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00133",
+      "original_tender_id": "2017_PWD_15604_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00134",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4971226.95
+      },
+      "injection_id": "SYNTH-INJ-00135",
+      "original_tender_id": "2018_HPIPH_19456_1-34"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00136",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00137",
+      "original_tender_id": "2017_PWD_17849_14"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00138",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00139",
+      "original_tender_id": "2018_HIMUD_24555_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00140",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00141",
+      "original_tender_id": "UTT-UT-2021-01054"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00142",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 36.86,
+        "estimated_val": 2230996.0
+      },
+      "injection_id": "SYNTH-INJ-00143",
+      "original_tender_id": "2018_PWD_19653_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00144",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00145",
+      "original_tender_id": "2018_PWD_25484_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00146",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00147",
+      "original_tender_id": "2016_MC_10913_6"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00148",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4886697.59
+      },
+      "injection_id": "SYNTH-INJ-00149",
+      "original_tender_id": "2018_PWD_24410_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00150",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00151",
+      "original_tender_id": "2019_PWD_33183_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00152",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00153",
+      "original_tender_id": "CEN-CE-2021-01190"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00154",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00155",
+      "original_tender_id": "MAH-MA-2021-01122"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00156",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 53.02,
+        "estimated_val": 1542423.0
+      },
+      "injection_id": "SYNTH-INJ-00157",
+      "original_tender_id": "2018_PWD_20151_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00158",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00159",
+      "original_tender_id": "UTT-UT-2021-01197"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00160",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00161",
+      "original_tender_id": "2019_HPIPH_26967_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00162",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4752984.62
+      },
+      "injection_id": "SYNTH-INJ-00163",
+      "original_tender_id": "MAH-MA-2021-01106"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00164",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00165",
+      "original_tender_id": "RAJ-RA-2021-01104"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00166",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00167",
+      "original_tender_id": "CEN-CE-2021-01197"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00168",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00169",
+      "original_tender_id": "2017_PWD_16937_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00170",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 73.63,
+        "estimated_val": 2007586.0
+      },
+      "injection_id": "SYNTH-INJ-00171",
+      "original_tender_id": "2018_HPIPH_23132_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00172",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00173",
+      "original_tender_id": "RAJ-RA-2021-01007"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00174",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00175",
+      "original_tender_id": "2017_HPIPH_15980_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00176",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4931889.4
+      },
+      "injection_id": "SYNTH-INJ-00177",
+      "original_tender_id": "2017_PWD_16530_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00178",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00179",
+      "original_tender_id": "UTT-UT-2021-01210"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00180",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00181",
+      "original_tender_id": "2018_HPIPH_22862_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00182",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00183",
+      "original_tender_id": "2018_PWD_20589_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00184",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 35.64,
+        "estimated_val": 640185.0
+      },
+      "injection_id": "SYNTH-INJ-00185",
+      "original_tender_id": "2018_PWD_19627_2"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00186",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00187",
+      "original_tender_id": "2017_PWD_17015_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00188",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 1,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00189",
+      "original_tender_id": "MAH-MA-2021-01047"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00190",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4801951.11
+      },
+      "injection_id": "SYNTH-INJ-00191",
+      "original_tender_id": "2020_HPIPH_36895_1-3760"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00192",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00193",
+      "original_tender_id": "2018_HPIPH_24330_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00194",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00195",
+      "original_tender_id": "2017_PWD_18958_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00196",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00197",
+      "original_tender_id": "KAR-KA-2021-01117"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00198",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 62.33,
+        "estimated_val": 930699.0
+      },
+      "injection_id": "SYNTH-INJ-00199",
+      "original_tender_id": "2018_PWD_19816_2"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00200",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00201",
+      "original_tender_id": "2019_PWD_26367_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00202",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00203",
+      "original_tender_id": "2017_HPIPH_17976_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00204",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4887249.25
+      },
+      "injection_id": "SYNTH-INJ-00205",
+      "original_tender_id": "2018_PWD_19736_4"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00206",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00207",
+      "original_tender_id": "2017_UDDHP_18179_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00208",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00209",
+      "original_tender_id": "2019_HPIPH_31864_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00210",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00211",
+      "original_tender_id": "2017_UDDHP_17922_1-2574"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00212",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 41.93,
+        "estimated_val": 7100373.0
+      },
+      "injection_id": "SYNTH-INJ-00213",
+      "original_tender_id": "2018_MC_21262_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00214",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00215",
+      "original_tender_id": "2019_PWD_27577_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00216",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 6,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00217",
+      "original_tender_id": "2020_HPIPH_34730_4"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00218",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4837988.64
+      },
+      "injection_id": "SYNTH-INJ-00219",
+      "original_tender_id": "2017_PWD_15935_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00220",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00221",
+      "original_tender_id": "2017_UDDHP_17927_1-3670"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00222",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00223",
+      "original_tender_id": "2017_PWD_14218_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00224",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 3.0
+      },
+      "injection_id": "SYNTH-INJ-00225",
+      "original_tender_id": "2017_HPIPH_17003_1-3658"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00226",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 61.5,
+        "estimated_val": 23906456.58
+      },
+      "injection_id": "SYNTH-INJ-00227",
+      "original_tender_id": "MAH-MA-2021-01167"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00228",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00229",
+      "original_tender_id": "2017_HO_16631_1-169"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00230",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00231",
+      "original_tender_id": "2017_PWD_14982_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00232",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4820134.99
+      },
+      "injection_id": "SYNTH-INJ-00233",
+      "original_tender_id": "2018_HPIPH_23060_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00234",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00235",
+      "original_tender_id": "2018_UDDHP_22618_1-658"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00236",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00237",
+      "original_tender_id": "2017_BSMDA_18176_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00238",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 3.0
+      },
+      "injection_id": "SYNTH-INJ-00239",
+      "original_tender_id": "2018_MC_20116_6"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00240",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 43.32,
+        "estimated_val": 251855649.77
+      },
+      "injection_id": "SYNTH-INJ-00241",
+      "original_tender_id": "KAR-KA-2021-01160"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00242",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00243",
+      "original_tender_id": "2018_HPIPH_23767_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00244",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00245",
+      "original_tender_id": "2018_HPIPH_21565_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00246",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4877732.57
+      },
+      "injection_id": "SYNTH-INJ-00247",
+      "original_tender_id": "CEN-CE-2021-01170"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00248",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00249",
+      "original_tender_id": "2018_HPIPH_24781_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00250",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00251",
+      "original_tender_id": "2018_PWD_23039_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00252",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00253",
+      "original_tender_id": "2017_UDDHP_17946_1-2761"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00254",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 73.78,
+        "estimated_val": 9397862.0
+      },
+      "injection_id": "SYNTH-INJ-00255",
+      "original_tender_id": "2018_HPIPH_20016_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00256",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00257",
+      "original_tender_id": "2017_HPIPH_17573_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00258",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00259",
+      "original_tender_id": "2017_PWD_15633_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00260",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4924404.89
+      },
+      "injection_id": "SYNTH-INJ-00261",
+      "original_tender_id": "2018_PWD_19943_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00262",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00263",
+      "original_tender_id": "2018_PWD_19891_7"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00264",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00265",
+      "original_tender_id": "2018_HPIPH_21066_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00266",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 3.0
+      },
+      "injection_id": "SYNTH-INJ-00267",
+      "original_tender_id": "RAJ-RA-2021-01110"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00268",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 50.81,
+        "estimated_val": 43122086.0
+      },
+      "injection_id": "SYNTH-INJ-00269",
+      "original_tender_id": "2018_PWD_19400_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00270",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00271",
+      "original_tender_id": "CEN-CE-2021-01232"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00272",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00273",
+      "original_tender_id": "CEN-CE-2021-01063"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00274",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4958498.24
+      },
+      "injection_id": "SYNTH-INJ-00275",
+      "original_tender_id": "RAJ-RA-2021-01241"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00276",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00277",
+      "original_tender_id": "2017_YSPU_17458_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00278",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00279",
+      "original_tender_id": "2018_HPIPH_20620_1-4006"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00280",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00281",
+      "original_tender_id": "2019_PWD_32033_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00282",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 71.87,
+        "estimated_val": 4903545.92
+      },
+      "injection_id": "SYNTH-INJ-00283",
+      "original_tender_id": "MAH-MA-2021-01200"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00284",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00285",
+      "original_tender_id": "CEN-CE-2021-01147"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00286",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00287",
+      "original_tender_id": "MAH-MA-2021-01180"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00288",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4769910.81
+      },
+      "injection_id": "SYNTH-INJ-00289",
+      "original_tender_id": "2017_NDTT_17684_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00290",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00291",
+      "original_tender_id": "2018_PWD_24341_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00292",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00293",
+      "original_tender_id": "2017_HPIPH_16453_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00294",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00295",
+      "original_tender_id": "CEN-CE-2021-01113"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00296",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 55.83,
+        "estimated_val": 2730797.0
+      },
+      "injection_id": "SYNTH-INJ-00297",
+      "original_tender_id": "2018_HPIPH_20620_1-4009"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00298",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00299",
+      "original_tender_id": "2017_HPAMB_15873_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00300",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 4,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00301",
+      "original_tender_id": "2017_PWD_17147_8"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00302",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4966263.71
+      },
+      "injection_id": "SYNTH-INJ-00303",
+      "original_tender_id": "2017_PWD_17029_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00304",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00305",
+      "original_tender_id": "2017_HPIPH_16552_1-280"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00306",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00307",
+      "original_tender_id": "2018_HPIPH_25081_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00308",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00309",
+      "original_tender_id": "KAR-KA-2021-01201"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00310",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 50.55,
+        "estimated_val": 174835.0
+      },
+      "injection_id": "SYNTH-INJ-00311",
+      "original_tender_id": "2017_HPIPH_18203_4"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00312",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00313",
+      "original_tender_id": "2019_HPIPH_25730_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00314",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00315",
+      "original_tender_id": "2019_HPIPH_27745_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00316",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4811053.53
+      },
+      "injection_id": "SYNTH-INJ-00317",
+      "original_tender_id": "2018_PWD_20124_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00318",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00319",
+      "original_tender_id": "2019_HPIPH_32922_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00320",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00321",
+      "original_tender_id": "2017_HPIPH_16878_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00322",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00323",
+      "original_tender_id": "CEN-CE-2021-01315"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00324",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 58.47,
+        "estimated_val": 1098813.0
+      },
+      "injection_id": "SYNTH-INJ-00325",
+      "original_tender_id": "2017_PWD_16562_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00326",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00327",
+      "original_tender_id": "2017_HPIPH_16816_1-1060"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00328",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 4,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00329",
+      "original_tender_id": "2017_PWD_17942_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00330",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4967182.44
+      },
+      "injection_id": "SYNTH-INJ-00331",
+      "original_tender_id": "UTT-UT-2021-01212"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00332",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00333",
+      "original_tender_id": "2020_HPIPH_36895_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00334",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00335",
+      "original_tender_id": "2017_PWD_14580_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00336",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00337",
+      "original_tender_id": "2017_HPIPH_16798_5"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00338",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 40.64,
+        "estimated_val": 4287263.0
+      },
+      "injection_id": "SYNTH-INJ-00339",
+      "original_tender_id": "2019_HPIPH_26930_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00340",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00341",
+      "original_tender_id": "2017_PWD_15400_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00342",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00343",
+      "original_tender_id": "MAH-MA-2021-01134"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00344",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4930494.32
+      },
+      "injection_id": "SYNTH-INJ-00345",
+      "original_tender_id": "2018_PWD_19838_9"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00346",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00347",
+      "original_tender_id": "2019_PWD_28626_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00348",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00349",
+      "original_tender_id": "2017_PWD_18732_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00350",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00351",
+      "original_tender_id": "2018_HPIPH_22516_1-547"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00352",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 35.63,
+        "estimated_val": 450000.0
+      },
+      "injection_id": "SYNTH-INJ-00353",
+      "original_tender_id": "2020_UDDHP_37864_1-3157"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00354",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00355",
+      "original_tender_id": "2018_MC_23629_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00356",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 7,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00357",
+      "original_tender_id": "2018_PWD_21170_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00358",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4845265.33
+      },
+      "injection_id": "SYNTH-INJ-00359",
+      "original_tender_id": "2017_PWD_17865_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00360",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00361",
+      "original_tender_id": "2018_HO_20597_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00362",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00363",
+      "original_tender_id": "2018_PWD_19891_10-3718"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00364",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00365",
+      "original_tender_id": "2017_HPIPH_17745_1-466"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00366",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 42.95,
+        "estimated_val": 2920750.0
+      },
+      "injection_id": "SYNTH-INJ-00367",
+      "original_tender_id": "2019_HPIPH_29313_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00368",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00369",
+      "original_tender_id": "2018_HO_20307_1-1196"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00370",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00371",
+      "original_tender_id": "2019_HPIPH_33136_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00372",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4751242.48
+      },
+      "injection_id": "SYNTH-INJ-00373",
+      "original_tender_id": "2018_PWD_19437_1-2326"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00374",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00375",
+      "original_tender_id": "2017_PWD_14983_2"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00376",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00377",
+      "original_tender_id": "CEN-CE-2021-01236"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00378",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00379",
+      "original_tender_id": "CEN-CE-2021-01323"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00380",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 42.95,
+        "estimated_val": 4194153.0
+      },
+      "injection_id": "SYNTH-INJ-00381",
+      "original_tender_id": "2017_PWD_16450_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00382",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00383",
+      "original_tender_id": "2017_UDDHP_17736_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00384",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00385",
+      "original_tender_id": "2020_HPIPH_34552_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00386",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4910051.94
+      },
+      "injection_id": "SYNTH-INJ-00387",
+      "original_tender_id": "2018_PWD_19817_10"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00388",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00389",
+      "original_tender_id": "2018_HPIPH_23848_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00390",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00391",
+      "original_tender_id": "2018_HPIPH_21327_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00392",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00393",
+      "original_tender_id": "2018_PWD_19815_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00394",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 65.85,
+        "estimated_val": 12000000.0
+      },
+      "injection_id": "SYNTH-INJ-00395",
+      "original_tender_id": "2018_HO_20307_1-1197"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00396",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00397",
+      "original_tender_id": "2018_PWD_20212_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00398",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 6,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00399",
+      "original_tender_id": "2017_PWD_17912_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00400",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4766660.05
+      },
+      "injection_id": "SYNTH-INJ-00401",
+      "original_tender_id": "2017_PWD_16960_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00402",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00403",
+      "original_tender_id": "2017_UDDHP_15839_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00404",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00405",
+      "original_tender_id": "2016_PWD_13904_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00406",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00407",
+      "original_tender_id": "MAH-MA-2021-01264"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00408",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 61.04,
+        "estimated_val": 18252014.73
+      },
+      "injection_id": "SYNTH-INJ-00409",
+      "original_tender_id": "KAR-KA-2021-01125"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00410",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00411",
+      "original_tender_id": "2017_PWD_15938_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00412",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00413",
+      "original_tender_id": "2017_UDDHP_17267_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00414",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4955865.93
+      },
+      "injection_id": "SYNTH-INJ-00415",
+      "original_tender_id": "2018_HPIPH_25167_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00416",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00417",
+      "original_tender_id": "2017_HPIPH_15020_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00418",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00419",
+      "original_tender_id": "2017_PWD_16911_8"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00420",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 2.0
+      },
+      "injection_id": "SYNTH-INJ-00421",
+      "original_tender_id": "UTT-UT-2021-01101"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00422",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 59.93,
+        "estimated_val": 1291165.0
+      },
+      "injection_id": "SYNTH-INJ-00423",
+      "original_tender_id": "2017_UDDHP_17311_1-2603"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00424",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00425",
+      "original_tender_id": "2017_UDDHP_17049_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00426",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00427",
+      "original_tender_id": "RAJ-RA-2021-01028"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00428",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4824452.06
+      },
+      "injection_id": "SYNTH-INJ-00429",
+      "original_tender_id": "2019_DMEHP_30681_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00430",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00431",
+      "original_tender_id": "MAH-MA-2021-01152"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00432",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00433",
+      "original_tender_id": "2019_HPIPH_29436_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00434",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00435",
+      "original_tender_id": "2017_PWD_15550_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00436",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 47.44,
+        "estimated_val": 1650000.0
+      },
+      "injection_id": "SYNTH-INJ-00437",
+      "original_tender_id": "2017_MC_15191_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00438",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00439",
+      "original_tender_id": "2018_PWD_20066_3"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00440",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 8,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00441",
+      "original_tender_id": "RAJ-RA-2021-01099"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00442",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4823166.25
+      },
+      "injection_id": "SYNTH-INJ-00443",
+      "original_tender_id": "2017_PWD_14679_1-1451"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00444",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00445",
+      "original_tender_id": "2018_HPIPH_20620_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00446",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00447",
+      "original_tender_id": "2018_HPIPH_21237_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00448",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00449",
+      "original_tender_id": "2018_HPAMB_21503_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00450",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 58.65,
+        "estimated_val": 4985375.61
+      },
+      "injection_id": "SYNTH-INJ-00451",
+      "original_tender_id": "MAH-MA-2021-01146"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00452",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00453",
+      "original_tender_id": "CEN-CE-2021-01298"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00454",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00455",
+      "original_tender_id": "2017_PWD_15743_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00456",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4811812.4
+      },
+      "injection_id": "SYNTH-INJ-00457",
+      "original_tender_id": "KAR-KA-2021-01049"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00458",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00459",
+      "original_tender_id": "RAJ-RA-2021-01221"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00460",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00461",
+      "original_tender_id": "2017_PWD_14764_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00462",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00463",
+      "original_tender_id": "2017_UDDHP_16125_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00464",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 53.89,
+        "estimated_val": 456209.0
+      },
+      "injection_id": "SYNTH-INJ-00465",
+      "original_tender_id": "2018_PWD_21242_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00466",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00467",
+      "original_tender_id": "2018_HPIPH_23767_7"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00468",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 2,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00469",
+      "original_tender_id": "2019_HPIPH_27364_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00470",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4776908.71
+      },
+      "injection_id": "SYNTH-INJ-00471",
+      "original_tender_id": "UTT-UT-2021-01248"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00472",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00473",
+      "original_tender_id": "2017_PWD_16668_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00474",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00475",
+      "original_tender_id": "CEN-CE-2021-01098"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00476",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 3.0
+      },
+      "injection_id": "SYNTH-INJ-00477",
+      "original_tender_id": "CEN-CE-2021-01066"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00478",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 68.96,
+        "estimated_val": 215893.0
+      },
+      "injection_id": "SYNTH-INJ-00479",
+      "original_tender_id": "2017_PWD_14921_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00480",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00481",
+      "original_tender_id": "2015_HPIPH_9560_2"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00482",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 11,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00483",
+      "original_tender_id": "2018_PWD_19627_5"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00484",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4912389.14
+      },
+      "injection_id": "SYNTH-INJ-00485",
+      "original_tender_id": "2018_HIMUD_20111_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00486",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "REPEAT_WINNER_CONCENTRATION",
+      "rule_target": "RF-2/RF-6",
+      "parameters": {
+        "favored_supplier": "COLLUSIVE_FAVORITE_ENTERPRISE"
+      },
+      "injection_id": "SYNTH-INJ-00487",
+      "original_tender_id": "MAH-MA-2021-01114"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00488",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "UNUSUAL_EXTENSIONS",
+      "rule_target": "RF-8",
+      "parameters": {
+        "extension_count": 3,
+        "cumulative_extension_days": 180
+      },
+      "injection_id": "SYNTH-INJ-00489",
+      "original_tender_id": "2019_HPIPH_31482_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00490",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "COMPRESSED_TENDER_WINDOW",
+      "rule_target": "RF-4",
+      "parameters": {
+        "injected_window_days": 4.0
+      },
+      "injection_id": "SYNTH-INJ-00491",
+      "original_tender_id": "2018_PWD_19896_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00492",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "ESTIMATE_DEVIATION_INFLATION",
+      "rule_target": "RF-5",
+      "parameters": {
+        "premium_percentage": 65.84,
+        "estimated_val": 6388583.42
+      },
+      "injection_id": "SYNTH-INJ-00493",
+      "original_tender_id": "KAR-KA-2021-01196"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00494",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SPECIFICATION_TAILORING",
+      "rule_target": "RF-7",
+      "parameters": {
+        "nlp_catalog_overlap": 0.96
+      },
+      "injection_id": "SYNTH-INJ-00495",
+      "original_tender_id": "2017_UDDHP_17263_1-1132"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00496",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "SINGLE_BIDDER_MONOPOLY",
+      "rule_target": "RF-1",
+      "parameters": {
+        "original_bidders": 3,
+        "injected_bidders": 1
+      },
+      "injection_id": "SYNTH-INJ-00497",
+      "original_tender_id": "2017_PWD_15210_1"
+    },
+    {
+      "injection_id": "SYNTH-CTRL-00498",
+      "injection_type": "CLEAN_CONTROL",
+      "rule_target": "NONE",
+      "parameters": {}
+    },
+    {
+      "injection_type": "THRESHOLD_SMURFING",
+      "rule_target": "RF-3",
+      "parameters": {
+        "statutory_limit": 5000000.0,
+        "injected_award_val": 4861104.01
+      },
+      "injection_id": "SYNTH-INJ-00499",
+      "original_tender_id": "2018_PWD_18980_1"
+    }
+  ]
+}

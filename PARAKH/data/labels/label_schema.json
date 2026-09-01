@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PARAKHReviewRecordSchema",
+  "type": "object",
+  "required": [
+    "tender_id",
+    "reviewer_id",
+    "review_date",
+    "risk_score_at_review",
+    "rule_flags",
+    "label",
+    "binary_label",
+    "reason",
+    "confidence"
+  ],
+  "properties": {
+    "tender_id": {
+      "type": "string",
+      "description": "Unique tender identification code"
+    },
+    "reviewer_id": {
+      "type": "string",
+      "description": "ID or badge of forensic auditor"
+    },
+    "review_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "risk_score_at_review": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "rule_flags": {
+      "type": "string",
+      "description": "Comma-delimited triggered red flags"
+    },
+    "label": {
+      "type": "integer",
+      "enum": [0, 1, 2, 3],
+      "description": "0=NORMAL, 1=SUSPICIOUS_PATTERN, 2=EXPERT_REVIEW_REQUIRED, 3=VERIFIED_IRREGULARITY"
+    },
+    "binary_label": {
+      "type": "integer",
+      "enum": [0, 1],
+      "description": "0=Normal/Benign (Taxonomy 0,1), 1=Audit Action Required (Taxonomy 2,3)"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Expert audit justification and findings"
+    },
+    "evidence_fields": {
+      "type": "string",
+      "description": "Specific evidence variables evaluated"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.5,
+      "maximum": 1.0
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

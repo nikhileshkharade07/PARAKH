@@ -1,0 +1,10 @@
+{
+  "execution_date": "2026-09-01T18:46:19.043531",
+  "total_evaluated_records": 1991,
+  "total_false_positives": 0,
+  "false_positive_rate": 0.0,
+  "total_false_negatives": 0,
+  "false_negative_rate": 0.0,
+  "fp_representative_cases": [],
+  "fn_representative_cases": []
+}

@@ -1,6 +1,6 @@
-# PARAKH — Real Data Pipeline Reproduction Guide
+# PARAKH — Complete Data Pipeline & Scientific Benchmark Reproduction Guide
 
-This document provides exact, reproducible terminal commands to run the complete real Indian procurement data engineering pipeline from scratch.
+This document provides exact, reproducible terminal commands to run the complete multi-source Indian procurement data engineering, quality validation, and scientific ML benchmark pipeline from scratch.
 
 ---
 
@@ -9,9 +9,9 @@ This document provides exact, reproducible terminal commands to run the complete
 Ensure Python 3.10+ and Node.js 18+ are available.
 
 ```bash
-# Activate existing Python virtual environment
+# Activate Python virtual environment
 # Windows:
-.venv\Scripts\activate
+.\.venv\Scripts\activate
 # Linux/macOS:
 # source .venv/bin/activate
 
@@ -21,83 +21,96 @@ pip install -r backend/requirements.txt
 
 ---
 
-## 2. Automated Pipeline Execution Steps
+## 2. End-to-End Automated Benchmark Execution
 
-### Step 1: Download & Verify Authentic Raw Indian Dataset
-Downloads the Himachal Pradesh State Public Procurement OCDS dataset and validates SHA-256 cryptographic checksums.
+To execute the entire end-to-end evaluation pipeline in a single command:
 
 ```bash
-python scripts/download_real_dataset.py
+python scripts/run_full_benchmark.py
 ```
-*Expected Output: SHA-256 Checksum Verified (`0744e24693c73eb8...`), saved to `data/raw/himachal_pradesh_procurement_ocds.csv`.*
+
+This single command automatically:
+1. Builds multi-source data catalog and provenance hashes (`data/catalog.json`)
+2. Executes automated data hygiene & domain constraint validation (`reports/data_quality_report.json` and `.md`)
+3. Samples stratified review records & evaluates inter-rater reliability (`reports/inter_rater_reliability.json` and `.md`)
+4. Generates isolated synthetic anomaly benchmark suite (`benchmark/synthetic/`)
+5. Enforces zero data leakage checks across Train/Val/Test partitions
+6. Runs 5-Fold Stratified Cross-Validation across 8 model baselines
+7. Evaluates independent holdout test set with 95% bootstrap confidence intervals
+8. Generates confusion matrices, ROC curves, and Precision-Recall curves in `reports/figures/`
+9. Evaluates individual forensic Red Flag rules RF-1 through RF-8 (`reports/per_rule_metrics.csv`)
+10. Executes architecture and rule ablation studies (`reports/ablation_results.csv` and `.md`)
+11. Performs operational risk threshold sweeps (`reports/threshold_analysis.csv`)
+12. Decomposes false positive / false negative errors (`reports/error_analysis.json` and `.md`)
+13. Evaluates cross-jurisdiction and temporal drift generalization
+14. Generates reproducibility manifest (`reports/reproducibility_manifest.json`) and master results (`reports/benchmark_results.json`)
 
 ---
 
-### Step 2: Run Exploratory Data Profiling & Quality Audit
-Profiles distributions, field completeness, value ranges, and generates automated Markdown / JSON reports.
+## 3. Individual Step-by-Step Execution Commands
 
+### Step 1: Multi-Source Ingestion & Provenance Catalog Construction
+Ingests and standardizes datasets for Himachal Pradesh, Central CPPP/GeM, Maharashtra, Karnataka, Rajasthan, and Uttar Pradesh:
 ```bash
-python scripts/profile_procurement_data.py
+python scripts/ingest_adapters/multi_source_adapters.py
 ```
-*Output Artifacts:*
-- `reports/data_profile/DATA_PROFILE.md`
-- `data/metadata/data_profile_report.json`
+*Output Artifact:* `data/catalog.json`, `data/processed/canonical_all_india_procurement.csv` (5,609 records).
 
 ---
 
-### Step 3: Clean, Standardize & Normalize Ingestion Pipeline
-Standardizes Indian currency values, standardizes ISO-8601 UTC dates, canonicalizes 1,856 vendor identities, maps 428 procuring entities, and logs rejected rows.
-
+### Step 2: Automated Data Quality & Hygiene Validation
+Validates unique tender IDs, entity completeness, financial non-negativity, date sanity, and bidder counts:
 ```bash
-python scripts/normalize_procurement_data.py
+python scripts/validate_procurement_data.py
 ```
-*Output Artifacts:*
-- `data/processed/india_procurement_normalized.csv` (4,209 valid records)
-- `data/processed/rejected_records.csv` (2 rejected records)
+*Output Artifacts:* `reports/data_quality_report.json`, `reports/data_quality_report.md`.
 
 ---
 
-### Step 4: Seed Database & Run Dual ML Risk Engine
-Populates SQLite relational database (`parakh.db`), trains $O(N)$ Isolation Forest anomaly detection model, evaluates 8 explainable forensic Red Flags (RF-1 to RF-8), calculates Corruption Risk Scores (CRS), opens investigation cases, and anchors blockchain cryptographic hashes.
-
+### Step 3: Generate Ground-Truth Review Queue & Inter-Rater Reliability
+Constructs stratified review queue (1,991 contracts) and calculates dual-annotator agreement:
 ```bash
-python backend/scripts/seed_real_data.py
+python scripts/build_review_dataset.py
+python scripts/inter_rater_reliability.py
 ```
-*Expected Output: Seeded 4,209 contracts, 428 departments, 1,856 vendors, 6 showcase investigation cases.*
+*Output Artifacts:* `data/labels/reviewed_labels.csv`, `reports/inter_rater_reliability.md` ($\kappa = 0.7704$).
 
 ---
 
-### Step 5: Generate Empirical Risk Benchmark Report
-Runs automated statistical analysis across all 4,209 contracts and generates a benchmark report.
-
+### Step 4: Generate Isolated Synthetic Anomaly Benchmark
+Generates controlled anomaly injections with explicit parameter tracking:
 ```bash
-python scripts/benchmark_real_data.py
+python benchmark/synthetic/generate_synthetic_anomalies.py
 ```
-*Output Artifact:*
-- `reports/REAL_DATA_BENCHMARK.md`
+*Output Artifact:* `benchmark/synthetic/synthetic_anomaly_dataset.csv`.
 
 ---
 
-## 3. Automated Verification & Testing
+### Step 5: Execute Core ML Benchmark, Cross-Validation & Reports
+Evaluates 8 models, generates ROC/PR curves, per-rule metrics, ablation, and threshold studies:
+```bash
+python benchmark/evaluate_benchmark.py
+```
+*Output Artifacts:* `reports/model_comparison.csv`, `reports/per_rule_metrics.csv`, `reports/ablation_results.csv`, `reports/threshold_analysis.csv`, `reports/figures/`.
 
-### Run All Backend Unit, Integration & Pipeline Tests
+---
 
+## 4. Automated Test Suite Execution
+
+### Backend Pytest Suite
 ```bash
 pytest -v
 ```
-*Expected Result: 48 passed tests across API routes, ML models, heuristic red flags, real data pipeline, and AI assistant.*
+*Tests data quality validation, entity resolution, leakage detection, rule heuristics, API routes, and benchmark evaluation integrity.*
 
-### Run All Frontend Component & Integration Tests
-
+### Frontend Vitest Suite
 ```bash
-cd frontend
-npm test -- --run
+cd frontend && npm test -- --run
 ```
-*Expected Result: 9 passed tests across 4 test suites (Dashboard, Contracts, AI Assistant, API service).*
 
 ---
 
-## 4. Launching the Interactive Web Application
+## 5. Launching the Interactive Web Application
 
 ```bash
 # Terminal 1: Launch FastAPI Backend Server
@@ -109,9 +122,6 @@ npm run dev
 ```
 
 Open browser at: `http://localhost:5173`
-- Explore the **Procurement Risk Dashboard** with live data source provenance.
-- Inspect **Top Flagged Authentic Contracts** (e.g. `2017_DIT_18899_1`, `2018_FDC_19563_1`).
-- Query the **AI Investigator** with questions like:
-  - *"Where did this procurement dataset originate?"*
-  - *"Why is tender 2017_DIT_18899_1 flagged?"*
-  - *"Which departments awarded single-bidder contracts?"*
+- Inspect the **Procurement Risk Dashboard** showing multi-source coverage, data quality, and model evaluation metrics.
+- Investigate **Priority High-Risk Tenders** with explainable red flag breakdowns.
+- Query the **AI Investigator Assistant** with zero-hallucination database grounding.

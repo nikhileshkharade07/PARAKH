@@ -1,0 +1,11 @@
+configuration,mean_precision,mean_recall,mean_f1,f1_delta_vs_hybrid
+Full Hybrid PARAKH (Rules + ML),0.99,0.9906,0.9903,0.0
+PARAKH Rules Only (No ML),1.0,1.0,1.0,0.0097
+ML Only: Random Forest (No Heuristics),0.9749,0.9761,0.9755,-0.0147
+ML Only: HistGradientBoosting (No Heuristics),0.9661,0.9855,0.9757,-0.0145
+Hybrid without RF-1 (Single Bidder),1.0,0.3111,0.474,-0.5162
+Hybrid without RF-2 (Vendor Lock-in),1.0,0.3111,0.474,-0.5162
+Hybrid without RF-3 (Threshold Manipulation),1.0,0.5707,0.7265,-0.2637
+Hybrid without RF-4 (Compressed Window),1.0,0.8517,0.9198,-0.0705
+Hybrid without RF-5 (Estimate Deviation),1.0,0.5707,0.7265,-0.2637
+Hybrid without RF-6 (Repeat Winner),1.0,0.8517,0.9198,-0.0705

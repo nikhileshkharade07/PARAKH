@@ -1,0 +1,2044 @@
+{
+  "generated_at": "2026-09-01T18:45:01.185184",
+  "total_sources_audited": 6,
+  "overall_total_records": 5609,
+  "overall_valid_records": 5609,
+  "overall_rejected_records": 0,
+  "overall_quality_percentage": 100.0,
+  "sources": [
+    {
+      "source_name": "HIMACHAL_PRADESH",
+      "total_rows": 4209,
+      "valid_rows": 4209,
+      "rejected_rows_count": 0,
+      "data_quality_score_pct": 100.0,
+      "violations": {
+        "duplicate_tender_ids": 0,
+        "missing_ids": 0,
+        "negative_amounts": 0,
+        "zero_procurement_amounts": 0,
+        "deadline_before_publication": 0,
+        "impossible_durations": 0,
+        "invalid_bidder_counts": 0,
+        "invalid_state_names": 0,
+        "missing_suppliers": 0,
+        "missing_departments": 0
+      },
+      "field_availability": {
+        "total_records": 4209,
+        "fields": {
+          "tender_id": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "tender_reference": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "department": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "organization": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "state": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "district": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "location": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "procurement_category": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "tender_title": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "description": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "published_date": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "submission_deadline": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "opening_date": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "contract_date": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "estimated_value": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "award_value": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "currency": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "number_of_bidders": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "winning_supplier": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "supplier_id": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "supplier_name": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "supplier_address": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "tender_status": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "contract_duration": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "extension_count": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "extension_days": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "procurement_method": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "buyer": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "source_dataset": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "source_url": {
+            "available_count": 4209,
+            "completeness_pct": 100.0
+          },
+          "bid_amounts": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "all_bidders": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "technical_specifications": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "product_catalog": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "sanctioned_amount": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "approval_threshold": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_start": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_end": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          }
+        }
+      },
+      "rejected_samples": [],
+      "valid_records_sample": [
+        {
+          "tender_id": "2017_PWD_16278_1",
+          "tender_reference": "2017_PWD_16278_1",
+          "department": "EXECUTIVE ENGINEER",
+          "organization": "Himachal Pradesh State Government",
+          "state": "HIMACHAL PRADESH",
+          "district": "JAWALI",
+          "location": "JAWALI",
+          "procurement_category": "works",
+          "tender_title": "Periodical Renewal of roads for the year 2017-18 Under PMGSY (I) Katholi to Bantungali road km. 0/0 to 3/625 ( Package No.HP-04-052) (II) Narhan to Nana Khas road km. 0/0 to 2/990 ( Package No.HP-04-056)",
+          "description": "(I) Katholi to Bantungali road (SH Providing and laying 25mm thick bitumenous concrete in km. 2/0 to 2/500 (II) Narhan to Nana Khas road (SH Providing and laying 25mm thick bitumenous concrete in km 1/0 to 1/500",
+          "published_date": "2017-05-10 11:00:00",
+          "submission_deadline": "2017-05-31 10:00:00",
+          "opening_date": "2017-05-31 10:00:00",
+          "contract_date": "2017-05-10",
+          "estimated_value": 773315.0,
+          "award_value": 813728.0,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "RAJAT THAKUR",
+          "supplier_id": "ENT-SUP-B5EE7DE115",
+          "supplier_name": "RAJAT THAKUR",
+          "supplier_address": "Himachal Pradesh, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 20.95833333333333,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "EXECUTIVE ENGINEER",
+          "source_dataset": "HIMACHAL_PRADESH",
+          "source_url": "https://hptenders.gov.in/"
+        },
+        {
+          "tender_id": "2020_PWD_37341_4",
+          "tender_reference": "2020_PWD_37341_4",
+          "department": "EXECUTIVE ENGINEER",
+          "organization": "Himachal Pradesh State Government",
+          "state": "HIMACHAL PRADESH",
+          "district": "Nahan",
+          "location": "Nahan",
+          "procurement_category": "works",
+          "tender_title": "Periodic Maintenance of Various Rural Roads under Nahan Division under AMP Plan for the year 2020-21",
+          "description": "P/L 30 mm thick Bituminous Concrete on Dadahu to Bechar Ka Bag Road Km 3/0 to 5/0, 8/0 to 9/0 and 13/0 to 14/0 and Jamta to Mahipur Road Km 0/0 to 1/0",
+          "published_date": "2020-05-21 17:00:00",
+          "submission_deadline": "2020-05-28 10:00:00",
+          "opening_date": "2020-05-28 10:00:00",
+          "contract_date": "2020-05-21",
+          "estimated_value": 4861757.0,
+          "award_value": 6864089.0,
+          "currency": "INR",
+          "number_of_bidders": 3,
+          "winning_supplier": "PREM SINGH",
+          "supplier_id": "ENT-SUP-46ADD0E862",
+          "supplier_name": "PREM SINGH",
+          "supplier_address": "Himachal Pradesh, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 6.708333333333333,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "EXECUTIVE ENGINEER",
+          "source_dataset": "HIMACHAL_PRADESH",
+          "source_url": "https://hptenders.gov.in/"
+        },
+        {
+          "tender_id": "2017_PWD_15116_3",
+          "tender_reference": "2017_PWD_15116_3",
+          "department": "EXECUTIVE ENGINEER",
+          "organization": "Himachal Pradesh State Government",
+          "state": "HIMACHAL PRADESH",
+          "district": "Salooni",
+          "location": "Salooni",
+          "procurement_category": "works",
+          "tender_title": "Construction of link road to village Bhatiyound in Tehsil Salooni under SCSP Head",
+          "description": "Formation cutting 2.75/5.00 mtrs wide road in K.M. 0/0 to 1/315",
+          "published_date": "2017-03-01 10:00:00",
+          "submission_deadline": "2017-03-22 11:00:00",
+          "opening_date": "2017-03-22 11:00:00",
+          "contract_date": "2017-03-01",
+          "estimated_value": 1588389.0,
+          "award_value": 1155303.0,
+          "currency": "INR",
+          "number_of_bidders": 13,
+          "winning_supplier": "HANIF ALI",
+          "supplier_id": "ENT-SUP-A04920159A",
+          "supplier_name": "HANIF ALI",
+          "supplier_address": "Himachal Pradesh, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 21.041666666666668,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "EXECUTIVE ENGINEER",
+          "source_dataset": "HIMACHAL_PRADESH",
+          "source_url": "https://hptenders.gov.in/"
+        },
+        {
+          "tender_id": "2018_PWD_24827_1",
+          "tender_reference": "2018_PWD_24827_1",
+          "department": "EXECUTIVE ENGINEER B AND R SOLAN",
+          "organization": "Himachal Pradesh State Government",
+          "state": "HIMACHAL PRADESH",
+          "district": "Solan",
+          "location": "Solan",
+          "procurement_category": "works",
+          "tender_title": "Construction of Office of the State Vigilance and anti corruption Beuro office building at Solan",
+          "description": "SH Construction of building portion providign water supply and sanitary installation C/o septic tnak soak pit C/o rain water harvesting tank and site developement etc",
+          "published_date": "2018-11-22 18:30:00",
+          "submission_deadline": "2018-12-06 10:30:00",
+          "opening_date": "2018-12-06 10:30:00",
+          "contract_date": "2018-11-22",
+          "estimated_value": 12332545.0,
+          "award_value": 14781351.24,
+          "currency": "INR",
+          "number_of_bidders": 5,
+          "winning_supplier": "M P MOHAN SONS",
+          "supplier_id": "ENT-SUP-ED3E46C7D8",
+          "supplier_name": "M P MOHAN SONS",
+          "supplier_address": "Himachal Pradesh, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 13.666666666666666,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "EXECUTIVE ENGINEER B AND R SOLAN",
+          "source_dataset": "HIMACHAL_PRADESH",
+          "source_url": "https://hptenders.gov.in/"
+        },
+        {
+          "tender_id": "2017_PWD_17093_1",
+          "tender_reference": "2017_PWD_17093_1",
+          "department": "EXECUTIVE ENGINEER HIMACHAL PRADESH PUBLIC WORKS DEPARTMENT DIVISION SANGRAH",
+          "organization": "Himachal Pradesh State Government",
+          "state": "HIMACHAL PRADESH",
+          "district": "Sangrah",
+          "location": "Sangrah",
+          "procurement_category": "works",
+          "tender_title": "Construction of multipurpose Hall in respect of Govt. Degree College Haripurdhar Distt. Sirmour H.P.",
+          "description": "C/O Civil work including water Supply and Sanitary Installation and Septic and including soak pit in ground floor",
+          "published_date": "2017-07-03 17:00:00",
+          "submission_deadline": "2017-07-24 17:00:00",
+          "opening_date": "2017-07-24 17:00:00",
+          "contract_date": "2017-07-03",
+          "estimated_value": 5086786.0,
+          "award_value": 6176087.0,
+          "currency": "INR",
+          "number_of_bidders": 9,
+          "winning_supplier": "VIKRAM SINGH",
+          "supplier_id": "ENT-SUP-7FC0132EBD",
+          "supplier_name": "VIKRAM SINGH",
+          "supplier_address": "Himachal Pradesh, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 21.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "EXECUTIVE ENGINEER HIMACHAL PRADESH PUBLIC WORKS DEPARTMENT DIVISION SANGRAH",
+          "source_dataset": "HIMACHAL_PRADESH",
+          "source_url": "https://hptenders.gov.in/"
+        }
+      ]
+    },
+    {
+      "source_name": "CENTRAL_CPPP",
+      "total_rows": 350,
+      "valid_rows": 350,
+      "rejected_rows_count": 0,
+      "data_quality_score_pct": 100.0,
+      "violations": {
+        "duplicate_tender_ids": 0,
+        "missing_ids": 0,
+        "negative_amounts": 0,
+        "zero_procurement_amounts": 0,
+        "deadline_before_publication": 0,
+        "impossible_durations": 0,
+        "invalid_bidder_counts": 0,
+        "invalid_state_names": 0,
+        "missing_suppliers": 0,
+        "missing_departments": 0
+      },
+      "field_availability": {
+        "total_records": 350,
+        "fields": {
+          "tender_id": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "tender_reference": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "department": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "organization": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "state": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "district": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "location": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "procurement_category": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "tender_title": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "description": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "published_date": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "submission_deadline": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "opening_date": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "contract_date": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "estimated_value": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "award_value": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "currency": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "number_of_bidders": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "winning_supplier": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "supplier_id": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "supplier_name": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "supplier_address": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "tender_status": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "contract_duration": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "extension_count": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "extension_days": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "procurement_method": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "buyer": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "source_dataset": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "source_url": {
+            "available_count": 350,
+            "completeness_pct": 100.0
+          },
+          "bid_amounts": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "all_bidders": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "technical_specifications": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "product_catalog": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "sanctioned_amount": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "approval_threshold": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_start": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_end": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          }
+        }
+      },
+      "rejected_samples": [],
+      "valid_records_sample": [
+        {
+          "tender_id": "CEN-CE-2021-01001",
+          "tender_reference": "REF-CEN-CE-2021-01001",
+          "department": "DEFENCE RESEARCH DEVELOPMENT ORG",
+          "organization": "Government of India",
+          "state": "CENTRAL",
+          "district": "Central District",
+          "location": "CENTRAL, India",
+          "procurement_category": "Electrical & Mechanical",
+          "tender_title": "Procurement of electrical & mechanical for DEFENCE RESEARCH DEVELOPMENT ORG",
+          "description": "Official public tender for supply of electrical & mechanical under standard CENTRAL state procurement guidelines.",
+          "published_date": "2019-07-23 00:00:00",
+          "submission_deadline": "2019-08-22 00:00:00",
+          "opening_date": "2019-08-23 00:00:00",
+          "contract_date": "2019-09-06",
+          "estimated_value": 3446691.02,
+          "award_value": 4653032.88,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "NCC LIMITED INFRASTRUCTURE",
+          "supplier_id": "ENT-SUP-0DFD916C8B",
+          "supplier_name": "NCC LIMITED INFRASTRUCTURE",
+          "supplier_address": "CENTRAL, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 30.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "DEFENCE RESEARCH DEVELOPMENT ORG",
+          "source_dataset": "CENTRAL_CPPP",
+          "source_url": "https://eprocure.gov.in/cppp/"
+        },
+        {
+          "tender_id": "CEN-CE-2021-01002",
+          "tender_reference": "REF-CEN-CE-2021-01002",
+          "department": "DEFENCE RESEARCH DEVELOPMENT ORG",
+          "organization": "Government of India",
+          "state": "CENTRAL",
+          "district": "Central District",
+          "location": "CENTRAL, India",
+          "procurement_category": "Civil Works & Infrastructure",
+          "tender_title": "Procurement of civil works & infrastructure for DEFENCE RESEARCH DEVELOPMENT ORG",
+          "description": "Official public tender for supply of civil works & infrastructure under standard CENTRAL state procurement guidelines.",
+          "published_date": "2020-11-30 00:00:00",
+          "submission_deadline": "2020-12-21 00:00:00",
+          "opening_date": "2020-12-22 00:00:00",
+          "contract_date": "2021-01-05",
+          "estimated_value": 343373572.97,
+          "award_value": 370843458.8,
+          "currency": "INR",
+          "number_of_bidders": 4,
+          "winning_supplier": "SHARMA ENGINEERING WORKS",
+          "supplier_id": "ENT-SUP-9473B0CC3C",
+          "supplier_name": "SHARMA ENGINEERING WORKS",
+          "supplier_address": "CENTRAL, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 21.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "DEFENCE RESEARCH DEVELOPMENT ORG",
+          "source_dataset": "CENTRAL_CPPP",
+          "source_url": "https://eprocure.gov.in/cppp/"
+        },
+        {
+          "tender_id": "CEN-CE-2021-01003",
+          "tender_reference": "REF-CEN-CE-2021-01003",
+          "department": "MINISTRY OF HEALTH FAMILY WELFARE",
+          "organization": "Government of India",
+          "state": "CENTRAL",
+          "district": "Central District",
+          "location": "CENTRAL, India",
+          "procurement_category": "Consultancy & Facility Management",
+          "tender_title": "Procurement of consultancy & facility management for MINISTRY OF HEALTH FAMILY WELFARE",
+          "description": "Official public tender for supply of consultancy & facility management under standard CENTRAL state procurement guidelines.",
+          "published_date": "2020-02-21 00:00:00",
+          "submission_deadline": "2020-03-22 00:00:00",
+          "opening_date": "2020-03-23 00:00:00",
+          "contract_date": "2020-04-06",
+          "estimated_value": 212588531.67,
+          "award_value": 216840302.3,
+          "currency": "INR",
+          "number_of_bidders": 3,
+          "winning_supplier": "SHREE BALAJI ENTERPRISE",
+          "supplier_id": "ENT-SUP-CA68E614E4",
+          "supplier_name": "SHREE BALAJI ENTERPRISE",
+          "supplier_address": "CENTRAL, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 30.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "MINISTRY OF HEALTH FAMILY WELFARE",
+          "source_dataset": "CENTRAL_CPPP",
+          "source_url": "https://eprocure.gov.in/cppp/"
+        },
+        {
+          "tender_id": "CEN-CE-2021-01004",
+          "tender_reference": "REF-CEN-CE-2021-01004",
+          "department": "NHAI HIGHWAYS",
+          "organization": "Government of India",
+          "state": "CENTRAL",
+          "district": "Central District",
+          "location": "CENTRAL, India",
+          "procurement_category": "Civil Works & Infrastructure",
+          "tender_title": "Procurement of civil works & infrastructure for NHAI HIGHWAYS",
+          "description": "Official public tender for supply of civil works & infrastructure under standard CENTRAL state procurement guidelines.",
+          "published_date": "2021-05-28 00:00:00",
+          "submission_deadline": "2021-06-11 00:00:00",
+          "opening_date": "2021-06-12 00:00:00",
+          "contract_date": "2021-06-26",
+          "estimated_value": 308759404.05,
+          "award_value": 355073314.66,
+          "currency": "INR",
+          "number_of_bidders": 4,
+          "winning_supplier": "NCC LIMITED INFRASTRUCTURE",
+          "supplier_id": "ENT-SUP-0DFD916C8B",
+          "supplier_name": "NCC LIMITED INFRASTRUCTURE",
+          "supplier_address": "CENTRAL, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 14.0,
+          "extension_count": 2,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "NHAI HIGHWAYS",
+          "source_dataset": "CENTRAL_CPPP",
+          "source_url": "https://eprocure.gov.in/cppp/"
+        },
+        {
+          "tender_id": "CEN-CE-2021-01005",
+          "tender_reference": "REF-CEN-CE-2021-01005",
+          "department": "DEFENCE RESEARCH DEVELOPMENT ORG",
+          "organization": "Government of India",
+          "state": "CENTRAL",
+          "district": "Central District",
+          "location": "CENTRAL, India",
+          "procurement_category": "Information Technology & Software",
+          "tender_title": "Procurement of information technology & software for DEFENCE RESEARCH DEVELOPMENT ORG",
+          "description": "Official public tender for supply of information technology & software under standard CENTRAL state procurement guidelines.",
+          "published_date": "2021-06-26 00:00:00",
+          "submission_deadline": "2021-07-10 00:00:00",
+          "opening_date": "2021-07-11 00:00:00",
+          "contract_date": "2021-07-25",
+          "estimated_value": 4953929.42,
+          "award_value": 4359457.89,
+          "currency": "INR",
+          "number_of_bidders": 3,
+          "winning_supplier": "SHREE BALAJI ENTERPRISE",
+          "supplier_id": "ENT-SUP-CA68E614E4",
+          "supplier_name": "SHREE BALAJI ENTERPRISE",
+          "supplier_address": "CENTRAL, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 14.0,
+          "extension_count": 2,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "DEFENCE RESEARCH DEVELOPMENT ORG",
+          "source_dataset": "CENTRAL_CPPP",
+          "source_url": "https://eprocure.gov.in/cppp/"
+        }
+      ]
+    },
+    {
+      "source_name": "MAHARASHTRA",
+      "total_rows": 300,
+      "valid_rows": 300,
+      "rejected_rows_count": 0,
+      "data_quality_score_pct": 100.0,
+      "violations": {
+        "duplicate_tender_ids": 0,
+        "missing_ids": 0,
+        "negative_amounts": 0,
+        "zero_procurement_amounts": 0,
+        "deadline_before_publication": 0,
+        "impossible_durations": 0,
+        "invalid_bidder_counts": 0,
+        "invalid_state_names": 0,
+        "missing_suppliers": 0,
+        "missing_departments": 0
+      },
+      "field_availability": {
+        "total_records": 300,
+        "fields": {
+          "tender_id": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "tender_reference": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "department": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "organization": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "state": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "district": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "location": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "procurement_category": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "tender_title": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "description": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "published_date": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "submission_deadline": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "opening_date": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "contract_date": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "estimated_value": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "award_value": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "currency": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "number_of_bidders": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "winning_supplier": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "supplier_id": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "supplier_name": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "supplier_address": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "tender_status": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "contract_duration": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "extension_count": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "extension_days": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "procurement_method": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "buyer": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "source_dataset": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "source_url": {
+            "available_count": 300,
+            "completeness_pct": 100.0
+          },
+          "bid_amounts": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "all_bidders": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "technical_specifications": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "product_catalog": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "sanctioned_amount": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "approval_threshold": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_start": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_end": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          }
+        }
+      },
+      "rejected_samples": [],
+      "valid_records_sample": [
+        {
+          "tender_id": "MAH-MA-2021-01001",
+          "tender_reference": "REF-MAH-MA-2021-01001",
+          "department": "MMRDA URBAN TRANSPORT",
+          "organization": "MAHARASHTRA State Government",
+          "state": "MAHARASHTRA",
+          "district": "Central District",
+          "location": "MAHARASHTRA, India",
+          "procurement_category": "Consultancy & Facility Management",
+          "tender_title": "Procurement of consultancy & facility management for MMRDA URBAN TRANSPORT",
+          "description": "Official public tender for supply of consultancy & facility management under standard MAHARASHTRA state procurement guidelines.",
+          "published_date": "2019-05-18 00:00:00",
+          "submission_deadline": "2019-06-08 00:00:00",
+          "opening_date": "2019-06-09 00:00:00",
+          "contract_date": "2019-06-23",
+          "estimated_value": 139851504.35,
+          "award_value": 132858929.13,
+          "currency": "INR",
+          "number_of_bidders": 4,
+          "winning_supplier": "PNC INFRATECH LIMITED",
+          "supplier_id": "ENT-SUP-4B3E89D111",
+          "supplier_name": "PNC INFRATECH LIMITED",
+          "supplier_address": "MAHARASHTRA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 21.0,
+          "extension_count": 2,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "MMRDA URBAN TRANSPORT",
+          "source_dataset": "MAHARASHTRA",
+          "source_url": "https://mahatenders.gov.in/"
+        },
+        {
+          "tender_id": "MAH-MA-2021-01002",
+          "tender_reference": "REF-MAH-MA-2021-01002",
+          "department": "MSEDCL POWER DISTRIBUTION",
+          "organization": "MAHARASHTRA State Government",
+          "state": "MAHARASHTRA",
+          "district": "Central District",
+          "location": "MAHARASHTRA, India",
+          "procurement_category": "Consultancy & Facility Management",
+          "tender_title": "Procurement of consultancy & facility management for MSEDCL POWER DISTRIBUTION",
+          "description": "Official public tender for supply of consultancy & facility management under standard MAHARASHTRA state procurement guidelines.",
+          "published_date": "2021-01-27 00:00:00",
+          "submission_deadline": "2021-02-26 00:00:00",
+          "opening_date": "2021-02-27 00:00:00",
+          "contract_date": "2021-03-13",
+          "estimated_value": 4908612.33,
+          "award_value": 4663181.71,
+          "currency": "INR",
+          "number_of_bidders": 3,
+          "winning_supplier": "PNC INFRATECH LIMITED",
+          "supplier_id": "ENT-SUP-4B3E89D111",
+          "supplier_name": "PNC INFRATECH LIMITED",
+          "supplier_address": "MAHARASHTRA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 30.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "MSEDCL POWER DISTRIBUTION",
+          "source_dataset": "MAHARASHTRA",
+          "source_url": "https://mahatenders.gov.in/"
+        },
+        {
+          "tender_id": "MAH-MA-2021-01003",
+          "tender_reference": "REF-MAH-MA-2021-01003",
+          "department": "PUBLIC HEALTH DEPT MUMBAI",
+          "organization": "MAHARASHTRA State Government",
+          "state": "MAHARASHTRA",
+          "district": "Central District",
+          "location": "MAHARASHTRA, India",
+          "procurement_category": "Civil Works & Infrastructure",
+          "tender_title": "Procurement of civil works & infrastructure for PUBLIC HEALTH DEPT MUMBAI",
+          "description": "Official public tender for supply of civil works & infrastructure under standard MAHARASHTRA state procurement guidelines.",
+          "published_date": "2019-08-26 00:00:00",
+          "submission_deadline": "2019-09-01 00:00:00",
+          "opening_date": "2019-09-02 00:00:00",
+          "contract_date": "2019-09-16",
+          "estimated_value": 22061569.97,
+          "award_value": 19414181.58,
+          "currency": "INR",
+          "number_of_bidders": 5,
+          "winning_supplier": "BHARAT DIAGNOSTIC SYSTEMS",
+          "supplier_id": "ENT-SUP-C6B6FCD7BC",
+          "supplier_name": "BHARAT DIAGNOSTIC SYSTEMS",
+          "supplier_address": "MAHARASHTRA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 6.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "PUBLIC HEALTH DEPT MUMBAI",
+          "source_dataset": "MAHARASHTRA",
+          "source_url": "https://mahatenders.gov.in/"
+        },
+        {
+          "tender_id": "MAH-MA-2021-01004",
+          "tender_reference": "REF-MAH-MA-2021-01004",
+          "department": "MMRDA URBAN TRANSPORT",
+          "organization": "MAHARASHTRA State Government",
+          "state": "MAHARASHTRA",
+          "district": "Central District",
+          "location": "MAHARASHTRA, India",
+          "procurement_category": "Information Technology & Software",
+          "tender_title": "Procurement of information technology & software for MMRDA URBAN TRANSPORT",
+          "description": "Official public tender for supply of information technology & software under standard MAHARASHTRA state procurement guidelines.",
+          "published_date": "2019-03-30 00:00:00",
+          "submission_deadline": "2019-04-13 00:00:00",
+          "opening_date": "2019-04-14 00:00:00",
+          "contract_date": "2019-04-28",
+          "estimated_value": 208875674.8,
+          "award_value": 183810593.82,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "AFCONS INFRASTRUCTURE LIMITED",
+          "supplier_id": "ENT-SUP-AC3B9A87E5",
+          "supplier_name": "AFCONS INFRASTRUCTURE LIMITED",
+          "supplier_address": "MAHARASHTRA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 14.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "MMRDA URBAN TRANSPORT",
+          "source_dataset": "MAHARASHTRA",
+          "source_url": "https://mahatenders.gov.in/"
+        },
+        {
+          "tender_id": "MAH-MA-2021-01005",
+          "tender_reference": "REF-MAH-MA-2021-01005",
+          "department": "PUBLIC HEALTH DEPT MUMBAI",
+          "organization": "MAHARASHTRA State Government",
+          "state": "MAHARASHTRA",
+          "district": "Central District",
+          "location": "MAHARASHTRA, India",
+          "procurement_category": "Information Technology & Software",
+          "tender_title": "Procurement of information technology & software for PUBLIC HEALTH DEPT MUMBAI",
+          "description": "Official public tender for supply of information technology & software under standard MAHARASHTRA state procurement guidelines.",
+          "published_date": "2019-07-14 00:00:00",
+          "submission_deadline": "2019-07-28 00:00:00",
+          "opening_date": "2019-07-29 00:00:00",
+          "contract_date": "2019-08-12",
+          "estimated_value": 332700449.75,
+          "award_value": 449145607.16,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "ZENITH INFRASTRUCTURE PROJECTS",
+          "supplier_id": "ENT-SUP-4F350A4CA1",
+          "supplier_name": "ZENITH INFRASTRUCTURE PROJECTS",
+          "supplier_address": "MAHARASHTRA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 14.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "PUBLIC HEALTH DEPT MUMBAI",
+          "source_dataset": "MAHARASHTRA",
+          "source_url": "https://mahatenders.gov.in/"
+        }
+      ]
+    },
+    {
+      "source_name": "KARNATAKA",
+      "total_rows": 250,
+      "valid_rows": 250,
+      "rejected_rows_count": 0,
+      "data_quality_score_pct": 100.0,
+      "violations": {
+        "duplicate_tender_ids": 0,
+        "missing_ids": 0,
+        "negative_amounts": 0,
+        "zero_procurement_amounts": 0,
+        "deadline_before_publication": 0,
+        "impossible_durations": 0,
+        "invalid_bidder_counts": 0,
+        "invalid_state_names": 0,
+        "missing_suppliers": 0,
+        "missing_departments": 0
+      },
+      "field_availability": {
+        "total_records": 250,
+        "fields": {
+          "tender_id": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_reference": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "department": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "organization": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "state": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "district": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "location": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "procurement_category": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_title": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "description": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "published_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "submission_deadline": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "opening_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "contract_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "estimated_value": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "award_value": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "currency": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "number_of_bidders": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "winning_supplier": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_id": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_name": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_address": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_status": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "contract_duration": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "extension_count": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "extension_days": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "procurement_method": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "buyer": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "source_dataset": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "source_url": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "bid_amounts": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "all_bidders": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "technical_specifications": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "product_catalog": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "sanctioned_amount": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "approval_threshold": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_start": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_end": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          }
+        }
+      },
+      "rejected_samples": [],
+      "valid_records_sample": [
+        {
+          "tender_id": "KAR-KA-2021-01001",
+          "tender_reference": "REF-KAR-KA-2021-01001",
+          "department": "BANGALORE METRO RAIL CORP",
+          "organization": "KARNATAKA State Government",
+          "state": "KARNATAKA",
+          "district": "Central District",
+          "location": "KARNATAKA, India",
+          "procurement_category": "Information Technology & Software",
+          "tender_title": "Procurement of information technology & software for BANGALORE METRO RAIL CORP",
+          "description": "Official public tender for supply of information technology & software under standard KARNATAKA state procurement guidelines.",
+          "published_date": "2019-10-20 00:00:00",
+          "submission_deadline": "2019-10-26 00:00:00",
+          "opening_date": "2019-10-27 00:00:00",
+          "contract_date": "2019-11-10",
+          "estimated_value": 3777858.43,
+          "award_value": 4080087.1,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "BHARAT DIAGNOSTIC SYSTEMS",
+          "supplier_id": "ENT-SUP-C6B6FCD7BC",
+          "supplier_name": "BHARAT DIAGNOSTIC SYSTEMS",
+          "supplier_address": "KARNATAKA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 6.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "BANGALORE METRO RAIL CORP",
+          "source_dataset": "KARNATAKA",
+          "source_url": "https://kppp.karnataka.gov.in/"
+        },
+        {
+          "tender_id": "KAR-KA-2021-01002",
+          "tender_reference": "REF-KAR-KA-2021-01002",
+          "department": "BRUHAT BENGALURU MAHANAGARA PALIKE BBMP",
+          "organization": "KARNATAKA State Government",
+          "state": "KARNATAKA",
+          "district": "Central District",
+          "location": "KARNATAKA, India",
+          "procurement_category": "Consultancy & Facility Management",
+          "tender_title": "Procurement of consultancy & facility management for BRUHAT BENGALURU MAHANAGARA PALIKE BBMP",
+          "description": "Official public tender for supply of consultancy & facility management under standard KARNATAKA state procurement guidelines.",
+          "published_date": "2020-07-06 00:00:00",
+          "submission_deadline": "2020-07-27 00:00:00",
+          "opening_date": "2020-07-28 00:00:00",
+          "contract_date": "2020-08-11",
+          "estimated_value": 3376125.42,
+          "award_value": 4557769.32,
+          "currency": "INR",
+          "number_of_bidders": 3,
+          "winning_supplier": "DILIP BUILDCON LIMITED",
+          "supplier_id": "ENT-SUP-55226FC7C8",
+          "supplier_name": "DILIP BUILDCON LIMITED",
+          "supplier_address": "KARNATAKA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 21.0,
+          "extension_count": 1,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "BRUHAT BENGALURU MAHANAGARA PALIKE BBMP",
+          "source_dataset": "KARNATAKA",
+          "source_url": "https://kppp.karnataka.gov.in/"
+        },
+        {
+          "tender_id": "KAR-KA-2021-01003",
+          "tender_reference": "REF-KAR-KA-2021-01003",
+          "department": "KARNATAKA RURAL INFRASTRUCTURE",
+          "organization": "KARNATAKA State Government",
+          "state": "KARNATAKA",
+          "district": "Central District",
+          "location": "KARNATAKA, India",
+          "procurement_category": "Consultancy & Facility Management",
+          "tender_title": "Procurement of consultancy & facility management for KARNATAKA RURAL INFRASTRUCTURE",
+          "description": "Official public tender for supply of consultancy & facility management under standard KARNATAKA state procurement guidelines.",
+          "published_date": "2019-11-20 00:00:00",
+          "submission_deadline": "2019-11-24 00:00:00",
+          "opening_date": "2019-11-25 00:00:00",
+          "contract_date": "2019-12-09",
+          "estimated_value": 172070204.9,
+          "award_value": 232294776.62,
+          "currency": "INR",
+          "number_of_bidders": 1,
+          "winning_supplier": "AFCONS INFRASTRUCTURE LIMITED",
+          "supplier_id": "ENT-SUP-AC3B9A87E5",
+          "supplier_name": "AFCONS INFRASTRUCTURE LIMITED",
+          "supplier_address": "KARNATAKA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 4.0,
+          "extension_count": 1,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "KARNATAKA RURAL INFRASTRUCTURE",
+          "source_dataset": "KARNATAKA",
+          "source_url": "https://kppp.karnataka.gov.in/"
+        },
+        {
+          "tender_id": "KAR-KA-2021-01004",
+          "tender_reference": "REF-KAR-KA-2021-01004",
+          "department": "KARNATAKA PUBLIC WORKS PORTS INLAND WATER",
+          "organization": "KARNATAKA State Government",
+          "state": "KARNATAKA",
+          "district": "Central District",
+          "location": "KARNATAKA, India",
+          "procurement_category": "Information Technology & Software",
+          "tender_title": "Procurement of information technology & software for KARNATAKA PUBLIC WORKS PORTS INLAND WATER",
+          "description": "Official public tender for supply of information technology & software under standard KARNATAKA state procurement guidelines.",
+          "published_date": "2020-11-12 00:00:00",
+          "submission_deadline": "2020-11-16 00:00:00",
+          "opening_date": "2020-11-17 00:00:00",
+          "contract_date": "2020-12-01",
+          "estimated_value": 4935548.9,
+          "award_value": 5034259.88,
+          "currency": "INR",
+          "number_of_bidders": 8,
+          "winning_supplier": "APEX MEDITECH SOLUTIONS",
+          "supplier_id": "ENT-SUP-A750489DC1",
+          "supplier_name": "APEX MEDITECH SOLUTIONS",
+          "supplier_address": "KARNATAKA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 4.0,
+          "extension_count": 1,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "KARNATAKA PUBLIC WORKS PORTS INLAND WATER",
+          "source_dataset": "KARNATAKA",
+          "source_url": "https://kppp.karnataka.gov.in/"
+        },
+        {
+          "tender_id": "KAR-KA-2021-01005",
+          "tender_reference": "REF-KAR-KA-2021-01005",
+          "department": "BANGALORE METRO RAIL CORP",
+          "organization": "KARNATAKA State Government",
+          "state": "KARNATAKA",
+          "district": "Central District",
+          "location": "KARNATAKA, India",
+          "procurement_category": "Medical Equipment & Consumables",
+          "tender_title": "Procurement of medical equipment & consumables for BANGALORE METRO RAIL CORP",
+          "description": "Official public tender for supply of medical equipment & consumables under standard KARNATAKA state procurement guidelines.",
+          "published_date": "2021-04-26 00:00:00",
+          "submission_deadline": "2021-05-02 00:00:00",
+          "opening_date": "2021-05-03 00:00:00",
+          "contract_date": "2021-05-17",
+          "estimated_value": 4913846.33,
+          "award_value": 4668154.02,
+          "currency": "INR",
+          "number_of_bidders": 5,
+          "winning_supplier": "PNC INFRATECH LIMITED",
+          "supplier_id": "ENT-SUP-4B3E89D111",
+          "supplier_name": "PNC INFRATECH LIMITED",
+          "supplier_address": "KARNATAKA, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 6.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "BANGALORE METRO RAIL CORP",
+          "source_dataset": "KARNATAKA",
+          "source_url": "https://kppp.karnataka.gov.in/"
+        }
+      ]
+    },
+    {
+      "source_name": "RAJASTHAN",
+      "total_rows": 250,
+      "valid_rows": 250,
+      "rejected_rows_count": 0,
+      "data_quality_score_pct": 100.0,
+      "violations": {
+        "duplicate_tender_ids": 0,
+        "missing_ids": 0,
+        "negative_amounts": 0,
+        "zero_procurement_amounts": 0,
+        "deadline_before_publication": 0,
+        "impossible_durations": 0,
+        "invalid_bidder_counts": 0,
+        "invalid_state_names": 0,
+        "missing_suppliers": 0,
+        "missing_departments": 0
+      },
+      "field_availability": {
+        "total_records": 250,
+        "fields": {
+          "tender_id": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_reference": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "department": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "organization": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "state": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "district": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "location": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "procurement_category": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_title": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "description": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "published_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "submission_deadline": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "opening_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "contract_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "estimated_value": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "award_value": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "currency": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "number_of_bidders": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "winning_supplier": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_id": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_name": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_address": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_status": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "contract_duration": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "extension_count": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "extension_days": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "procurement_method": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "buyer": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "source_dataset": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "source_url": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "bid_amounts": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "all_bidders": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "technical_specifications": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "product_catalog": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "sanctioned_amount": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "approval_threshold": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_start": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_end": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          }
+        }
+      },
+      "rejected_samples": [],
+      "valid_records_sample": [
+        {
+          "tender_id": "RAJ-RA-2021-01001",
+          "tender_reference": "REF-RAJ-RA-2021-01001",
+          "department": "JAIPUR DEVELOPMENT AUTHORITY",
+          "organization": "RAJASTHAN State Government",
+          "state": "RAJASTHAN",
+          "district": "Central District",
+          "location": "RAJASTHAN, India",
+          "procurement_category": "Consultancy & Facility Management",
+          "tender_title": "Procurement of consultancy & facility management for JAIPUR DEVELOPMENT AUTHORITY",
+          "description": "Official public tender for supply of consultancy & facility management under standard RAJASTHAN state procurement guidelines.",
+          "published_date": "2020-05-17 00:00:00",
+          "submission_deadline": "2020-05-21 00:00:00",
+          "opening_date": "2020-05-22 00:00:00",
+          "contract_date": "2020-06-05",
+          "estimated_value": 878559.04,
+          "award_value": 1010342.9,
+          "currency": "INR",
+          "number_of_bidders": 4,
+          "winning_supplier": "SHARMA ENGINEERING WORKS",
+          "supplier_id": "ENT-SUP-9473B0CC3C",
+          "supplier_name": "SHARMA ENGINEERING WORKS",
+          "supplier_address": "RAJASTHAN, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 4.0,
+          "extension_count": 1,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "JAIPUR DEVELOPMENT AUTHORITY",
+          "source_dataset": "RAJASTHAN",
+          "source_url": "https://eproc.rajasthan.gov.in/"
+        },
+        {
+          "tender_id": "RAJ-RA-2021-01002",
+          "tender_reference": "REF-RAJ-RA-2021-01002",
+          "department": "RAJASTHAN RAJYA VIDYUT PRASARAN",
+          "organization": "RAJASTHAN State Government",
+          "state": "RAJASTHAN",
+          "district": "Central District",
+          "location": "RAJASTHAN, India",
+          "procurement_category": "Electrical & Mechanical",
+          "tender_title": "Procurement of electrical & mechanical for RAJASTHAN RAJYA VIDYUT PRASARAN",
+          "description": "Official public tender for supply of electrical & mechanical under standard RAJASTHAN state procurement guidelines.",
+          "published_date": "2019-11-17 00:00:00",
+          "submission_deadline": "2019-12-01 00:00:00",
+          "opening_date": "2019-12-02 00:00:00",
+          "contract_date": "2019-12-16",
+          "estimated_value": 287844186.35,
+          "award_value": 388589651.57,
+          "currency": "INR",
+          "number_of_bidders": 8,
+          "winning_supplier": "APEX MEDITECH SOLUTIONS",
+          "supplier_id": "ENT-SUP-A750489DC1",
+          "supplier_name": "APEX MEDITECH SOLUTIONS",
+          "supplier_address": "RAJASTHAN, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 14.0,
+          "extension_count": 1,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "RAJASTHAN RAJYA VIDYUT PRASARAN",
+          "source_dataset": "RAJASTHAN",
+          "source_url": "https://eproc.rajasthan.gov.in/"
+        },
+        {
+          "tender_id": "RAJ-RA-2021-01003",
+          "tender_reference": "REF-RAJ-RA-2021-01003",
+          "department": "RAJASTHAN PUBLIC WORKS DEPARTMENT",
+          "organization": "RAJASTHAN State Government",
+          "state": "RAJASTHAN",
+          "district": "Central District",
+          "location": "RAJASTHAN, India",
+          "procurement_category": "Information Technology & Software",
+          "tender_title": "Procurement of information technology & software for RAJASTHAN PUBLIC WORKS DEPARTMENT",
+          "description": "Official public tender for supply of information technology & software under standard RAJASTHAN state procurement guidelines.",
+          "published_date": "2021-01-09 00:00:00",
+          "submission_deadline": "2021-01-15 00:00:00",
+          "opening_date": "2021-01-16 00:00:00",
+          "contract_date": "2021-01-30",
+          "estimated_value": 295739676.21,
+          "award_value": 319398850.31,
+          "currency": "INR",
+          "number_of_bidders": 3,
+          "winning_supplier": "BHARAT DIAGNOSTIC SYSTEMS",
+          "supplier_id": "ENT-SUP-C6B6FCD7BC",
+          "supplier_name": "BHARAT DIAGNOSTIC SYSTEMS",
+          "supplier_address": "RAJASTHAN, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 6.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "RAJASTHAN PUBLIC WORKS DEPARTMENT",
+          "source_dataset": "RAJASTHAN",
+          "source_url": "https://eproc.rajasthan.gov.in/"
+        },
+        {
+          "tender_id": "RAJ-RA-2021-01004",
+          "tender_reference": "REF-RAJ-RA-2021-01004",
+          "department": "JAIPUR DEVELOPMENT AUTHORITY",
+          "organization": "RAJASTHAN State Government",
+          "state": "RAJASTHAN",
+          "district": "Central District",
+          "location": "RAJASTHAN, India",
+          "procurement_category": "Electrical & Mechanical",
+          "tender_title": "Procurement of electrical & mechanical for JAIPUR DEVELOPMENT AUTHORITY",
+          "description": "Official public tender for supply of electrical & mechanical under standard RAJASTHAN state procurement guidelines.",
+          "published_date": "2019-09-04 00:00:00",
+          "submission_deadline": "2019-09-08 00:00:00",
+          "opening_date": "2019-09-09 00:00:00",
+          "contract_date": "2019-09-23",
+          "estimated_value": 84583959.41,
+          "award_value": 86275638.6,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "VANGUARD POWER SERVICES",
+          "supplier_id": "ENT-SUP-FBE5090586",
+          "supplier_name": "VANGUARD POWER SERVICES",
+          "supplier_address": "RAJASTHAN, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 4.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "JAIPUR DEVELOPMENT AUTHORITY",
+          "source_dataset": "RAJASTHAN",
+          "source_url": "https://eproc.rajasthan.gov.in/"
+        },
+        {
+          "tender_id": "RAJ-RA-2021-01005",
+          "tender_reference": "REF-RAJ-RA-2021-01005",
+          "department": "PUBLIC HEALTH ENGINEERING DEPT RAJASTHAN",
+          "organization": "RAJASTHAN State Government",
+          "state": "RAJASTHAN",
+          "district": "Central District",
+          "location": "RAJASTHAN, India",
+          "procurement_category": "Medical Equipment & Consumables",
+          "tender_title": "Procurement of medical equipment & consumables for PUBLIC HEALTH ENGINEERING DEPT RAJASTHAN",
+          "description": "Official public tender for supply of medical equipment & consumables under standard RAJASTHAN state procurement guidelines.",
+          "published_date": "2019-12-31 00:00:00",
+          "submission_deadline": "2020-01-21 00:00:00",
+          "opening_date": "2020-01-22 00:00:00",
+          "contract_date": "2020-02-05",
+          "estimated_value": 19600259.29,
+          "award_value": 22540298.18,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "ZENITH INFRASTRUCTURE PROJECTS",
+          "supplier_id": "ENT-SUP-4F350A4CA1",
+          "supplier_name": "ZENITH INFRASTRUCTURE PROJECTS",
+          "supplier_address": "RAJASTHAN, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 21.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "PUBLIC HEALTH ENGINEERING DEPT RAJASTHAN",
+          "source_dataset": "RAJASTHAN",
+          "source_url": "https://eproc.rajasthan.gov.in/"
+        }
+      ]
+    },
+    {
+      "source_name": "UTTAR_PRADESH",
+      "total_rows": 250,
+      "valid_rows": 250,
+      "rejected_rows_count": 0,
+      "data_quality_score_pct": 100.0,
+      "violations": {
+        "duplicate_tender_ids": 0,
+        "missing_ids": 0,
+        "negative_amounts": 0,
+        "zero_procurement_amounts": 0,
+        "deadline_before_publication": 0,
+        "impossible_durations": 0,
+        "invalid_bidder_counts": 0,
+        "invalid_state_names": 0,
+        "missing_suppliers": 0,
+        "missing_departments": 0
+      },
+      "field_availability": {
+        "total_records": 250,
+        "fields": {
+          "tender_id": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_reference": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "department": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "organization": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "state": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "district": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "location": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "procurement_category": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_title": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "description": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "published_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "submission_deadline": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "opening_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "contract_date": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "estimated_value": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "award_value": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "currency": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "number_of_bidders": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "winning_supplier": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_id": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_name": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "supplier_address": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "tender_status": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "contract_duration": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "extension_count": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "extension_days": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "procurement_method": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "buyer": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "source_dataset": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "source_url": {
+            "available_count": 250,
+            "completeness_pct": 100.0
+          },
+          "bid_amounts": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "all_bidders": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "technical_specifications": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "product_catalog": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "sanctioned_amount": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "approval_threshold": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_start": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          },
+          "contract_end": {
+            "available_count": 0,
+            "completeness_pct": 0.0
+          }
+        }
+      },
+      "rejected_samples": [],
+      "valid_records_sample": [
+        {
+          "tender_id": "UTT-UT-2021-01001",
+          "tender_reference": "REF-UTT-UT-2021-01001",
+          "department": "UTTAR PRADESH JAL NIGAM",
+          "organization": "UTTAR PRADESH State Government",
+          "state": "UTTAR PRADESH",
+          "district": "Central District",
+          "location": "UTTAR PRADESH, India",
+          "procurement_category": "Consultancy & Facility Management",
+          "tender_title": "Procurement of consultancy & facility management for UTTAR PRADESH JAL NIGAM",
+          "description": "Official public tender for supply of consultancy & facility management under standard UTTAR PRADESH state procurement guidelines.",
+          "published_date": "2019-04-07 00:00:00",
+          "submission_deadline": "2019-04-11 00:00:00",
+          "opening_date": "2019-04-12 00:00:00",
+          "contract_date": "2019-04-26",
+          "estimated_value": 91560236.95,
+          "award_value": 123606319.88,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "BHARAT DIAGNOSTIC SYSTEMS",
+          "supplier_id": "ENT-SUP-C6B6FCD7BC",
+          "supplier_name": "BHARAT DIAGNOSTIC SYSTEMS",
+          "supplier_address": "UTTAR PRADESH, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 4.0,
+          "extension_count": 1,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "UTTAR PRADESH JAL NIGAM",
+          "source_dataset": "UTTAR_PRADESH",
+          "source_url": "https://etender.up.nic.in/"
+        },
+        {
+          "tender_id": "UTT-UT-2021-01002",
+          "tender_reference": "REF-UTT-UT-2021-01002",
+          "department": "UP STATE HIGHWAY AUTHORITY",
+          "organization": "UTTAR PRADESH State Government",
+          "state": "UTTAR PRADESH",
+          "district": "Central District",
+          "location": "UTTAR PRADESH, India",
+          "procurement_category": "Information Technology & Software",
+          "tender_title": "Procurement of information technology & software for UP STATE HIGHWAY AUTHORITY",
+          "description": "Official public tender for supply of information technology & software under standard UTTAR PRADESH state procurement guidelines.",
+          "published_date": "2019-04-06 00:00:00",
+          "submission_deadline": "2019-04-20 00:00:00",
+          "opening_date": "2019-04-21 00:00:00",
+          "contract_date": "2019-05-05",
+          "estimated_value": 3101482.77,
+          "award_value": 3349601.4,
+          "currency": "INR",
+          "number_of_bidders": 2,
+          "winning_supplier": "SHARMA ENGINEERING WORKS",
+          "supplier_id": "ENT-SUP-9473B0CC3C",
+          "supplier_name": "SHARMA ENGINEERING WORKS",
+          "supplier_address": "UTTAR PRADESH, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 14.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "UP STATE HIGHWAY AUTHORITY",
+          "source_dataset": "UTTAR_PRADESH",
+          "source_url": "https://etender.up.nic.in/"
+        },
+        {
+          "tender_id": "UTT-UT-2021-01003",
+          "tender_reference": "REF-UTT-UT-2021-01003",
+          "department": "UP STATE HIGHWAY AUTHORITY",
+          "organization": "UTTAR PRADESH State Government",
+          "state": "UTTAR PRADESH",
+          "district": "Central District",
+          "location": "UTTAR PRADESH, India",
+          "procurement_category": "Civil Works & Infrastructure",
+          "tender_title": "Procurement of civil works & infrastructure for UP STATE HIGHWAY AUTHORITY",
+          "description": "Official public tender for supply of civil works & infrastructure under standard UTTAR PRADESH state procurement guidelines.",
+          "published_date": "2020-12-25 00:00:00",
+          "submission_deadline": "2021-01-24 00:00:00",
+          "opening_date": "2021-01-25 00:00:00",
+          "contract_date": "2021-02-08",
+          "estimated_value": 4990272.54,
+          "award_value": 5090077.99,
+          "currency": "INR",
+          "number_of_bidders": 3,
+          "winning_supplier": "PNC INFRATECH LIMITED",
+          "supplier_id": "ENT-SUP-4B3E89D111",
+          "supplier_name": "PNC INFRATECH LIMITED",
+          "supplier_address": "UTTAR PRADESH, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 30.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "UP STATE HIGHWAY AUTHORITY",
+          "source_dataset": "UTTAR_PRADESH",
+          "source_url": "https://etender.up.nic.in/"
+        },
+        {
+          "tender_id": "UTT-UT-2021-01004",
+          "tender_reference": "REF-UTT-UT-2021-01004",
+          "department": "MEDICAL HEALTH FAMILY WELFARE LUCKNOW",
+          "organization": "UTTAR PRADESH State Government",
+          "state": "UTTAR PRADESH",
+          "district": "Central District",
+          "location": "UTTAR PRADESH, India",
+          "procurement_category": "Medical Equipment & Consumables",
+          "tender_title": "Procurement of medical equipment & consumables for MEDICAL HEALTH FAMILY WELFARE LUCKNOW",
+          "description": "Official public tender for supply of medical equipment & consumables under standard UTTAR PRADESH state procurement guidelines.",
+          "published_date": "2021-08-09 00:00:00",
+          "submission_deadline": "2021-08-30 00:00:00",
+          "opening_date": "2021-08-31 00:00:00",
+          "contract_date": "2021-09-14",
+          "estimated_value": 314553337.11,
+          "award_value": 320844403.85,
+          "currency": "INR",
+          "number_of_bidders": 1,
+          "winning_supplier": "ZENITH INFRASTRUCTURE PROJECTS",
+          "supplier_id": "ENT-SUP-4F350A4CA1",
+          "supplier_name": "ZENITH INFRASTRUCTURE PROJECTS",
+          "supplier_address": "UTTAR PRADESH, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 21.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "MEDICAL HEALTH FAMILY WELFARE LUCKNOW",
+          "source_dataset": "UTTAR_PRADESH",
+          "source_url": "https://etender.up.nic.in/"
+        },
+        {
+          "tender_id": "UTT-UT-2021-01005",
+          "tender_reference": "REF-UTT-UT-2021-01005",
+          "department": "UP STATE HIGHWAY AUTHORITY",
+          "organization": "UTTAR PRADESH State Government",
+          "state": "UTTAR PRADESH",
+          "district": "Central District",
+          "location": "UTTAR PRADESH, India",
+          "procurement_category": "Civil Works & Infrastructure",
+          "tender_title": "Procurement of civil works & infrastructure for UP STATE HIGHWAY AUTHORITY",
+          "description": "Official public tender for supply of civil works & infrastructure under standard UTTAR PRADESH state procurement guidelines.",
+          "published_date": "2020-06-12 00:00:00",
+          "submission_deadline": "2020-06-16 00:00:00",
+          "opening_date": "2020-06-17 00:00:00",
+          "contract_date": "2020-07-01",
+          "estimated_value": 4665164.73,
+          "award_value": 4105344.97,
+          "currency": "INR",
+          "number_of_bidders": 1,
+          "winning_supplier": "SHARMA ENGINEERING WORKS",
+          "supplier_id": "ENT-SUP-9473B0CC3C",
+          "supplier_name": "SHARMA ENGINEERING WORKS",
+          "supplier_address": "UTTAR PRADESH, India",
+          "tender_status": "AWARDED",
+          "contract_duration": 4.0,
+          "extension_count": 0,
+          "extension_days": 0,
+          "procurement_method": "OPEN_TENDER",
+          "buyer": "UP STATE HIGHWAY AUTHORITY",
+          "source_dataset": "UTTAR_PRADESH",
+          "source_url": "https://etender.up.nic.in/"
+        }
+      ]
+    }
+  ]
+}

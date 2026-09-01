@@ -1,0 +1,37 @@
+{
+  "manifest_version": "2.0.0",
+  "benchmark_execution_date": "2026-09-01T18:46:21.471221",
+  "environment": {
+    "os": "Windows",
+    "os_release": "11",
+    "python_version": "3.13.14",
+    "scikit_learn_version": "1.9.0",
+    "numpy_version": "2.5.2",
+    "pandas_version": "3.0.5"
+  },
+  "random_seeds": {
+    "split_seed": 42,
+    "model_seed": 42,
+    "bootstrap_seed": 42
+  },
+  "dataset_metadata": {
+    "total_procurement_records": 5609,
+    "reviewed_ground_truth_records": 1991,
+    "positive_class_ratio": 0.7991,
+    "train_samples": 1393,
+    "val_samples": 298,
+    "test_samples": 300
+  },
+  "best_performing_model": "Hybrid PARAKH (Rules + ML)",
+  "key_metrics_summary": {
+    "hybrid_parakh_f1": 0.9835390946502057,
+    "hybrid_parakh_f1_95_ci": [
+      0.9724,
+      0.9937
+    ],
+    "hybrid_parakh_precision": 0.987603305785124,
+    "hybrid_parakh_recall": 0.9795081967213115,
+    "hybrid_parakh_roc_auc": 0.9979508196721312,
+    "hybrid_parakh_pr_auc": 0.9995275956692203
+  }
+}
