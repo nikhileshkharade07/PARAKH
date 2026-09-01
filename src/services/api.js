@@ -22,6 +22,212 @@ rawApi.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+function generateForensicAssistantAnswer(userQuery, contractId = null, caseId = null) {
+  const q = (userQuery || "").toLowerCase().trim();
+  const citations = [];
+
+  // 1. What is PARAKH
+  if (q.includes("what is parakh") || q.includes("explain parakh") || q.includes("about parakh")) {
+    return {
+      answer: `### About PARAKH AI Public Procurement Risk Auditor\n\n` +
+        `**PARAKH** is an advanced AI-powered procurement **risk-screening and audit-support intelligence platform** designed for public oversight bodies, CAG auditors, and vigilance authorities.\n\n` +
+        `**Core Capabilities:**\n` +
+        `- **Corruption Risk Score (CRS 0–100)**: Evaluates contracts using a hybrid formula combining deterministic rule-based heuristic scoring (80%) and Isolation Forest unsupervised anomaly detection (20%).\n` +
+        `- **8 Explainable Red Flags**: Flags single-bidder cartels, vendor lock-in, threshold proximity, fast-track windows, price estimate deviations, and specification tailoring.\n` +
+        `- **Interactive Vendor Network**: Visualizes multi-department supplier cartels, repeat winners, and bidding collusion clusters.\n` +
+        `- **Cryptographic Audit Trail**: Anchors immutable contract assessment hashes to the Sepolia blockchain for non-repudiation.\n\n` +
+        `*Responsible AI Policy:* PARAKH flags anomalies for human audit review and does not declare judicial guilt.`,
+      citations: [
+        {
+          title: "System Overview: PARAKH Architecture",
+          citation_type: "SYSTEM",
+          reference_id: "PARAKH-CORE",
+          summary: "Hybrid Rules + Isolation Forest Anomaly Detection Engine (CRS 0-100)",
+          link: "/"
+        }
+      ]
+    };
+  }
+
+  // 2. How many contracts
+  if (q.includes("how many contract") || q.includes("contract count") || q.includes("total contract") || q.includes("number of contract")) {
+    const total = staticData.stats.total_contracts.toLocaleString("en-IN");
+    const val = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(staticData.stats.total_value);
+    return {
+      answer: `### Procurement Dataset Scope\n\n` +
+        `- **Total Audited Contracts**: **${total} contracts**\n` +
+        `- **Cumulative Procured Value**: **${val}**\n` +
+        `- **High-Risk Contracts (CRS ≥ 70)**: **${staticData.stats.high_risk_contracts}** tenders requiring priority investigation\n` +
+        `- **Medium-Risk Contracts (40–69)**: **${staticData.stats.medium_risk_contracts}** tenders\n` +
+        `- **Participating Departments**: **${staticData.stats.total_departments}**\n` +
+        `- **Registered Suppliers**: **${staticData.stats.total_vendors}**\n` +
+        `- **Data Horizon**: Multi-State Open Contracting Data Standard (${staticData.stats.time_range})`,
+      citations: [
+        {
+          title: "Contracts Registry",
+          citation_type: "REGISTRY",
+          reference_id: "ALL-CONTRACTS",
+          summary: `${total} verified public procurement awards`,
+          link: "/contracts"
+        }
+      ]
+    };
+  }
+
+  // 3. Highest risk contracts / tenders
+  if (q.includes("highest risk") || q.includes("high risk contract") || q.includes("top risk") || q.includes("most suspicious") || q.includes("highest crs")) {
+    const highRisks = staticData.contracts.filter(c => c.crs >= 75).slice(0, 4);
+    let answerText = `### Top High-Risk Procurement Contracts (CRS ≥ 75)\n\n` +
+      `The following tenders have been flagged with the highest heuristic and statistical risk indices:\n\n`;
+
+    highRisks.forEach((c, idx) => {
+      answerText += `${idx + 1}. **[${c.contract_number}](/contracts/${c.id})** — *CRS ${c.crs}/100*\n` +
+        `   - **Title**: ${c.title}\n` +
+        `   - **Department**: ${c.department_name}\n` +
+        `   - **Supplier**: ${c.vendor_name}\n` +
+        `   - **Award Value**: ₹${Number(c.award_value).toLocaleString("en-IN")}\n\n`;
+
+      citations.push({
+        title: `Tender ${c.contract_number}`,
+        citation_type: "CONTRACT",
+        reference_id: c.contract_number,
+        summary: `CRS: ${c.crs} | Award: ₹${Number(c.award_value).toLocaleString("en-IN")}`,
+        link: `/contracts/${c.id}`
+      });
+    });
+
+    answerText += `*Recommendation:* Open the contract dossier to examine individual triggered red flag evidence or initiate a formal case file.`;
+    return { answer: answerText, citations };
+  }
+
+  // 4. Highest risk department
+  if (q.includes("department") && (q.includes("highest risk") || q.includes("most risk") || q.includes("breakdown") || q.includes("riskiest"))) {
+    const topDepts = staticData.stats.departments.slice(0, 5);
+    let answerText = `### Department Procurement Risk Analysis\n\n` +
+      `Based on aggregated CRS scores across all audited procurement contracts, the highest-risk procuring entities are:\n\n`;
+
+    topDepts.forEach((d, idx) => {
+      answerText += `${idx + 1}. **${d.name}**\n` +
+        `   - **Average CRS**: **${d.avg_crs} / 100**\n` +
+        `   - **Total Contracts Audited**: ${d.contract_count}\n` +
+        `   - **Total Procured Value**: ₹${Number(d.total_value).toLocaleString("en-IN")}\n\n`;
+
+      citations.push({
+        title: d.name,
+        citation_type: "DEPARTMENT",
+        reference_id: `DEPT-${d.id}`,
+        summary: `Avg CRS: ${d.avg_crs} across ${d.contract_count} contracts`,
+        link: `/departments/${d.id}`
+      });
+    });
+
+    answerText += `*Key Finding:* Departments with higher CRS frequently exhibit vendor lock-in above 60% and compressed tender bidding windows.`;
+    return { answer: answerText, citations };
+  }
+
+  // 5. Highest risk vendors
+  if (q.includes("vendor") && (q.includes("highest risk") || q.includes("riskiest") || q.includes("suspicious") || q.includes("win rate") || q.includes("monopoly"))) {
+    const topVendors = staticData.network.nodes.filter(n => n.data.type === "vendor").sort((a, b) => b.data.crs - a.data.crs).slice(0, 4);
+    let answerText = `### High-Risk Vendor Intelligence & Cartel Indicators\n\n` +
+      `The following suppliers have the highest risk concentrations and repeated single-bidder win rates:\n\n`;
+
+    topVendors.forEach((v, idx) => {
+      answerText += `${idx + 1}. **${v.data.label}**\n` +
+        `   - **Average Risk Score**: **CRS ${v.data.crs} / 100**\n` +
+        `   - **Awarded Contracts**: ${v.data.contracts}\n` +
+        `   - **Cumulative Award Value**: ₹${Number(v.data.value).toLocaleString("en-IN")}\n\n`;
+
+      citations.push({
+        title: v.data.label,
+        citation_type: "VENDOR",
+        reference_id: v.data.id,
+        summary: `CRS: ${v.data.crs} | Total: ₹${Number(v.data.value).toLocaleString("en-IN")}`,
+        link: "/network"
+      });
+    });
+
+    return { answer: answerText, citations };
+  }
+
+  // 6. Explain risk indicators / red flags
+  if (q.includes("risk indicator") || q.includes("red flag") || q.includes("explain risk") || q.includes("flags used")) {
+    return {
+      answer: `### PARAKH Heuristic Risk Indicators (RF-1 to RF-8)\n\n` +
+        `PARAKH evaluates each contract against 8 standardized, explainable red flags:\n\n` +
+        `1. **RF-1: Single Bidder Participation (High, +20 pts)**: Tender awarded where only one commercial entity submitted a bid.\n` +
+        `2. **RF-2: Vendor Lock-in & Concentration (High, +20 pts)**: A single vendor captures >60% of a department's procurement value.\n` +
+        `3. **RF-3: Threshold-Related Proximity (High, +15 pts)**: Award value structured right below mandatory statutory review thresholds (e.g. ₹50 Lakhs).\n` +
+        `4. **RF-4: Compressed Tender Window (Medium, +10 pts)**: Bidding duration restricted to less than 7 days, hindering competitive bids.\n` +
+        `5. **RF-5: Price Estimate Deviation (Medium, +10 pts)**: Winning bid deviates significantly (>30%) from sanctioned government cost estimates.\n` +
+        `6. **RF-6: Repeat Winner / Network Pattern (High, +20 pts)**: Multi-department repeat awards without open competition.\n` +
+        `7. **RF-7: Specification Tailoring (Medium, +15 pts)**: TF-IDF cosine similarity (>0.85) between tender technical requirements and a specific supplier's product catalog.\n` +
+        `8. **RF-8: Unusual Contract Extensions (Low, +5 pts)**: Uncompetitive extension durations exceeding 90 days without retendering.\n\n` +
+        `**Formula**: $\\text{CRS} = \\min(100, \\text{round}(0.80 \\times \\text{RuleScore} + 0.20 \\times \\text{AnomalyScore}))$.`,
+      citations: [
+        {
+          title: "Heuristic Risk Engine Ruleset",
+          citation_type: "RULES",
+          reference_id: "RF1-RF8",
+          summary: "8 explainable procurement anomaly indicators",
+          link: "/simulator"
+        }
+      ]
+    };
+  }
+
+  // 7. Specific Case inquiry or why case flagged
+  if (q.includes("case") || caseId) {
+    const targetCase = staticData.cases[0];
+    return {
+      answer: `### Case Investigation Dossier: **${targetCase.case_number}**\n\n` +
+        `- **Title**: ${targetCase.title}\n` +
+        `- **Tender Reference**: [${targetCase.contract_number}](/contracts/${targetCase.contract_id})\n` +
+        `- **Priority**: **${targetCase.priority}** | **Status**: \`${targetCase.status}\`\n` +
+        `- **Assigned Investigator**: ${targetCase.assigned_to_name}\n` +
+        `- **Procuring Entity**: ${targetCase.department_name}\n` +
+        `- **Target Supplier**: ${targetCase.vendor_name}\n` +
+        `- **Awarded Amount**: ₹${Number(targetCase.award_value).toLocaleString("en-IN")}\n` +
+        `- **Corruption Risk Score (CRS)**: **${targetCase.crs}/100**\n\n` +
+        `**Key Risk Triggers:**\n` +
+        `1. Single bidder participation recorded during technical opening.\n` +
+        `2. Sanctioned price deviation of +33% above government benchmark estimates.\n` +
+        `3. Technical specifications exhibited 94% text similarity to supplier's proprietary catalog.\n\n` +
+        `*Evidence Status:* Financial audit statements and e-procurement audit trail attached to case file.`,
+      citations: [
+        {
+          title: `Case File: ${targetCase.case_number}`,
+          citation_type: "CASE",
+          reference_id: targetCase.case_number,
+          summary: `${targetCase.title} (Priority: ${targetCase.priority})`,
+          link: "/cases"
+        }
+      ]
+    };
+  }
+
+  // Default forensic response with relevant search
+  const foundContract = staticData.contracts.find(c => q.includes(c.contract_number.toLowerCase()) || q.includes(c.title.toLowerCase())) || staticData.contracts[0];
+  return {
+    answer: `### Forensic Intelligence Assessment\n\n` +
+      `Regarding your inquiry on *"**${userQuery}**"*:\n\n` +
+      `- **Correlated Tender Reference**: [${foundContract.contract_number}](/contracts/${foundContract.id})\n` +
+      `- **Procuring Department**: ${foundContract.department_name}\n` +
+      `- **Supplier**: ${foundContract.vendor_name}\n` +
+      `- **Assessed CRS**: **${foundContract.crs}/100** (${foundContract.risk_level?.toUpperCase()} RISK)\n` +
+      `- **Key Heuristics**: RF-1 (Single Bidder), RF-5 (Price Estimate Deviation), RF-7 (Specification Tailoring)\n\n` +
+      `You can inspect the full cryptographic audit dossier, bid distributions, and network topology directly in the linked contract file.`,
+    citations: [
+      {
+        title: `Audit Dossier: ${foundContract.contract_number}`,
+        citation_type: "CONTRACT",
+        reference_id: foundContract.contract_number,
+        summary: `CRS: ${foundContract.crs} | Department: ${foundContract.department_name}`,
+        link: `/contracts/${foundContract.id}`
+      }
+    ]
+  };
+}
+
 // Fallback helper to query the synchronized procurement database locally
 function handleFallback(url, method = "GET", data = null) {
   const urlObj = new URL(url, "http://dummy.base");
@@ -192,11 +398,12 @@ function handleFallback(url, method = "GET", data = null) {
     };
   }
 
-  if (path === "/assistant/chat") {
+  if (path === "/assistant/query" || path === "/assistant/chat") {
+    const queryStr = data?.query || data?.message || "";
+    const contractId = data?.contract_id || null;
+    const caseId = data?.case_id || null;
     return {
-      data: {
-        reply: `Investigation Assistant Analysis: Based on the procurement parameters, this tender exhibits risk indicators in pricing alignment and bidding concentration. Further evidence collection is recommended for the contract audit dossier.`
-      }
+      data: generateForensicAssistantAnswer(queryStr, contractId, caseId)
     };
   }
 
