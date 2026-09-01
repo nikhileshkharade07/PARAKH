@@ -27,7 +27,9 @@ FIELD_MAPPINGS = {
     "vendor_product_description": ["vendor_product_description", "product_description", "vendor_catalog", "vendor_profile"],
     "extensions": ["extensions", "extension_count", "num_extensions", "extension_days"],
     "procurement_category": ["procurement_category", "category", "type", "sector"],
-    "location": ["location", "city", "state", "region"]
+    "location": ["location", "city", "state", "region"],
+    "provenance_ocid": ["provenance_ocid", "ocid", "source_record_id"],
+    "provenance_source": ["provenance_source", "source_dataset", "source_url", "source"]
 }
 
 def clean_currency(val: Any) -> Decimal:
@@ -207,7 +209,9 @@ class IngestionService:
                 tender_start=t_start,
                 tender_end=t_end,
                 procurement_category=str(mapped["procurement_category"] or "Goods & Services"),
-                location=str(mapped["location"] or "National")
+                location=str(mapped["location"] or "National"),
+                provenance_ocid=str(mapped["provenance_ocid"]) if mapped.get("provenance_ocid") else None,
+                provenance_source=str(mapped["provenance_source"]) if mapped.get("provenance_source") else "Uploaded Dataset"
             )
             self.db.add(contract)
             self.db.flush()

@@ -1,140 +1,123 @@
-from typing import List, Dict, Any, Optional
-from app.core.config import settings as default_settings
+import json
 
-def tender_duration_days(contract) -> float:
-    if not contract.tender_start or not contract.tender_end:
-        return 14.0
-    return max(0.0, (contract.tender_end - contract.tender_start).total_seconds() / 86400)
+def tender_duration_days(contract):
+    return (contract.tender_end - contract.tender_start).total_seconds() / 86400
 
-def price_deviation(contract) -> float:
-    if not contract.estimate_value or float(contract.estimate_value) <= 0:
+def price_deviation(contract):
+    if not contract.estimate_value or float(contract.estimate_value) == 0:
         return 0.0
     return (float(contract.award_value) - float(contract.estimate_value)) / float(contract.estimate_value)
 
-def evaluate_rules(contract, department_contracts=None, settings=None) -> List[Dict[str, Any]]:
+def evaluate_rules(contract, department_contracts=None, settings=None):
     if settings is None:
+        from app.core.config import settings as default_settings
         settings = default_settings
-
-    bids = contract.bids or []
-    bidder_count = len(bids)
+        
+    bidder_count = len(contract.bids) if contract.bids else 1
     duration = tender_duration_days(contract)
     deviation = price_deviation(contract)
     peers = department_contracts or []
-    
-    vendor_wins = sum(1 for c in peers if c.vendor_id == contract.vendor_id)
-    peer_count = len(peers)
-    ratio = (vendor_wins / peer_count) if peer_count > 0 else 0.0
-    
-    extensions = contract.extensions or []
-    long_extensions = [e for e in extensions if e.extension_days >= settings.unusual_extension_days]
-    total_ext_days = sum(e.extension_days for e in extensions)
-    
-    award_val = float(contract.award_value or 0)
-    est_val = float(contract.estimate_value or 0)
-    approval_limit = float(settings.approval_threshold)
-
-    # Rule detections
-    rf1_detected = bidder_count == 1
-    rf2_detected = ratio > settings.vendor_lockin_threshold and peer_count >= 3
-    rf3_detected = (award_val <= approval_limit) and (award_val >= approval_limit * 0.90) and (approval_limit > 0)
-    rf4_detected = duration < settings.tender_duration_threshold_days
-    rf5_detected = deviation > settings.price_deviation_threshold
-    rf6_detected = vendor_wins >= 3
-    rf7_detected = False # Updated via NLP similarity in risk engine
-    rf8_detected = len(long_extensions) >= 2 or total_ext_days >= (settings.unusual_extension_days * 2)
+    vendor_wins = sum(c.vendor_id == contract.vendor_id for c in peers)
+    ratio = vendor_wins / len(peers) if peers else 0
+    long_extensions = sum(
+        e.extension_days >= settings.unusual_extension_days for e in (contract.extensions or [])
+    )
+    award_val = float(contract.award_value)
+    thresh = float(settings.approval_threshold)
 
     return [
         {
             "flag_id": "RF-1",
-            "flag_name": "Single Bidder",
-            "detected": rf1_detected,
+            "flag_name": "Single Bidder Tender",
+            "detected": bidder_count == 1,
             "severity": "high",
             "score": 20,
-            "explanation": "Only one bidder participated in this competitive tender, indicating potential market restriction or suppression.",
+            "explanation": "Only one bidder participated in this tender.",
             "evidence": {
                 "bidder_count": bidder_count,
-                "bidders": [b.vendor_name for b in bids],
-                "award_value": award_val
+                "tender_number": contract.contract_number
             },
-            "recommended_action": "Audit tender advertisement reach and verify whether tender requirements discouraged fair competition."
+            "recommended_action": "Request administrative rationale for single-bidder tender award without retendering."
         },
         {
             "flag_id": "RF-2",
             "flag_name": "Vendor Lock-in",
-            "detected": rf2_detected,
+            "detected": ratio > settings.vendor_lockin_threshold,
             "severity": "high",
             "score": 20,
-            "explanation": f"Vendor captured {ratio:.1%} of observed contracts ({vendor_wins}/{peer_count}) for this department, surpassing the {settings.vendor_lockin_threshold:.0%} threshold.",
+            "explanation": f"Vendor won {ratio:.0%} of contracts observed for this department (Threshold: {settings.vendor_lockin_threshold:.0%}).",
             "evidence": {
                 "vendor_wins": vendor_wins,
-                "department_total_contracts": peer_count,
-                "win_ratio": round(ratio, 3),
+                "total_peer_contracts": len(peers),
+                "department_contracts": len(peers),
+                "win_ratio": ratio,
                 "threshold": settings.vendor_lockin_threshold
             },
-            "recommended_action": "Investigate department vendor allocation practices and examine whether technical requirements favor incumbent vendor."
+            "recommended_action": "Review department vendor allocation policies and evaluate competitive barrier complaints."
         },
         {
             "flag_id": "RF-3",
-            "flag_name": "Threshold Proximity",
-            "detected": rf3_detected,
+            "flag_name": "Approval Threshold Manipulation",
+            "detected": award_val <= thresh and award_val >= thresh * 0.90,
             "severity": "high",
             "score": 15,
-            "explanation": f"Contract award value (₹{award_val:,.2f}) is structured within 10% below the approval threshold of ₹{approval_limit:,.2f}, indicating possible threshold-splitting.",
+            "explanation": f"Contract value (₹{award_val:,.0f}) is within 10% below statutory threshold (₹{thresh:,.0f}).",
             "evidence": {
                 "award_value": award_val,
-                "approval_threshold": approval_limit,
-                "proximity_percentage": round((award_val / approval_limit) * 100, 2) if approval_limit > 0 else 0
+                "approval_threshold": thresh,
+                "ratio_to_threshold": award_val / thresh if thresh else 0,
+                "threshold_ratio": round(award_val / thresh, 3) if thresh else 0
             },
-            "recommended_action": "Verify if multiple smaller contracts were awarded concurrently to bypass higher-tier administrative sanction."
+            "recommended_action": "Investigate potential artificial contract splitting designed to evade higher-level administrative approval."
         },
         {
             "flag_id": "RF-4",
             "flag_name": "Compressed Tender Window",
-            "detected": rf4_detected,
+            "detected": duration < settings.tender_duration_threshold_days,
             "severity": "medium",
             "score": 10,
-            "explanation": f"Tender was open for only {duration:.1f} days, below the required minimum window of {settings.tender_duration_threshold_days} days.",
+            "explanation": f"Tender was open for {duration:.1f} days, below the configured statutory minimum of {settings.tender_duration_threshold_days} days.",
             "evidence": {
-                "tender_duration_days": round(duration, 1),
+                "tender_duration_days": duration,
                 "threshold_days": settings.tender_duration_threshold_days,
-                "tender_start": contract.tender_start.isoformat() if contract.tender_start else None,
-                "tender_end": contract.tender_end.isoformat() if contract.tender_end else None
+                "min_required_days": settings.tender_duration_threshold_days
             },
-            "recommended_action": "Inspect publishing logs to verify why standard public advertisement timeframe was compressed."
+            "recommended_action": "Audit public portal publication logs to verify whether tender advertisement met statutory notice requirements."
         },
         {
             "flag_id": "RF-5",
-            "flag_name": "Bid/Estimate Deviation",
-            "detected": rf5_detected,
+            "flag_name": "Estimate Deviation",
+            "detected": deviation > settings.price_deviation_threshold,
             "severity": "medium",
             "score": 10,
-            "explanation": f"Award value exceeds internal department cost estimate by {deviation:.1%}, exceeding allowable variance threshold of {settings.price_deviation_threshold:.0%}.",
+            "explanation": f"Award price was {deviation:.0%} above the sanctioned government estimate (Threshold: {settings.price_deviation_threshold:.0%}).",
             "evidence": {
-                "estimate_value": est_val,
+                "estimated_value": float(contract.estimate_value) if contract.estimate_value else 0.0,
+                "estimate_value": float(contract.estimate_value) if contract.estimate_value else 0.0,
                 "award_value": award_val,
-                "deviation_percentage": round(deviation * 100, 2),
-                "deviation_threshold": settings.price_deviation_threshold
+                "deviation_percent": deviation * 100,
+                "deviation_pct": round(deviation, 3)
             },
-            "recommended_action": "Review initial cost estimation methodology and price negotiation committee minutes."
+            "recommended_action": "Examine justification for premium over estimate and review cost engineering assumptions."
         },
         {
             "flag_id": "RF-6",
-            "flag_name": "Repeat Winner Pattern",
-            "detected": rf6_detected,
+            "flag_name": "Repeat Winner / Network Pattern",
+            "detected": vendor_wins >= 3,
             "severity": "high",
             "score": 20,
-            "explanation": f"Vendor has repeatedly won multiple consecutive contracts ({vendor_wins} observed awards) with this procuring entity.",
+            "explanation": f"Vendor has repeatedly won contracts from this department ({vendor_wins} observed wins).",
             "evidence": {
-                "observed_wins": vendor_wins,
-                "vendor_id": contract.vendor_id,
-                "department_id": contract.department_id
+                "vendor_wins": vendor_wins,
+                "department_contracts_observed": len(peers),
+                "threshold_wins": 3
             },
-            "recommended_action": "Cross-reference bidder rotation patterns and beneficial ownership records for collusion."
+            "recommended_action": "Conduct cross-vendor bid pattern forensic check to rule out rotational bidding or cartel behavior."
         },
         {
             "flag_id": "RF-7",
             "flag_name": "Specification Tailoring",
-            "detected": rf7_detected,
+            "detected": False,
             "severity": "medium",
             "score": 15,
             "explanation": "No unusually high specification similarity detected.",
@@ -142,21 +125,22 @@ def evaluate_rules(contract, department_contracts=None, settings=None) -> List[D
                 "similarity_score": 0.0,
                 "threshold": settings.nlp_similarity_threshold
             },
-            "recommended_action": "Perform semantic specification comparison against vendor product catalog."
+            "recommended_action": "Compare technical specifications against proprietary product catalog of the winning supplier."
         },
         {
             "flag_id": "RF-8",
             "flag_name": "Unusual Extensions",
-            "detected": rf8_detected,
+            "detected": long_extensions >= 2,
             "severity": "low",
             "score": 5,
-            "explanation": f"Observed {len(long_extensions)} extended milestone delays totalling {total_ext_days} days.",
+            "explanation": f"{long_extensions} unusually long contract extensions were observed.",
             "evidence": {
-                "total_extension_days": total_ext_days,
-                "long_extensions_count": len(long_extensions),
-                "threshold_days": settings.unusual_extension_days,
-                "reasons": [e.reason for e in extensions if e.reason]
+                "long_extensions_count": long_extensions,
+                "extension_count": long_extensions,
+                "extension_threshold_days": settings.unusual_extension_days,
+                "min_days": settings.unusual_extension_days,
+                "extensions": [e.extension_days for e in (contract.extensions or [])]
             },
-            "recommended_action": "Examine justification for project schedule overruns and contractor performance penalties."
-        }
+            "recommended_action": "Audit contract amendment records and reason for repetitive project delivery delays."
+        },
     ]

@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
-from ml.nlp.similarity import specification_similarity
+try:
+    from ml.nlp.similarity import specification_similarity
+except ImportError:
+    from backend.ml.nlp.similarity import specification_similarity
 
 router = APIRouter()
 

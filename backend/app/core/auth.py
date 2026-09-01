@@ -3,6 +3,7 @@ import hmac
 import base64
 import json
 import time
+import secrets
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List
 from fastapi import Depends, HTTPException, status, Header
@@ -15,9 +16,9 @@ from app.models import User
 security_scheme = HTTPBearer(auto_error=False)
 
 def hash_password(password: str, salt: Optional[str] = None) -> str:
-    """Hash password using PBKDF2-HMAC-SHA256."""
+    """Hash password using PBKDF2-HMAC-SHA256 with cryptographically secure salt."""
     if not salt:
-        salt = base64.b64encode(hashlib.sha256(str(time.time()).encode()).digest()[:16]).decode('utf-8')
+        salt = base64.b64encode(secrets.token_bytes(16)).decode('utf-8')
     iterations = 100_000
     derived = hashlib.pbkdf2_hmac(
         'sha256',
