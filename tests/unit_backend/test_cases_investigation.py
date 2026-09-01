@@ -1,17 +1,27 @@
 from fastapi.testclient import TestClient
 from app.main import app
+from app.database.session import SessionLocal
+from app.models import Contract, InvestigationCase
 
 client = TestClient(app)
 
 def test_investigation_workflow_end_to_end():
-    # 1. Get contract ID
-    list_res = client.get("/api/contracts?limit=1")
-    contract_id = list_res.json()[0]["id"]
+    db = SessionLocal()
+    # Find a contract without an active case
+    existing_case_contract_ids = {c.contract_id for c in db.query(InvestigationCase.contract_id).all()}
+    candidate = db.query(Contract).filter(Contract.id.notin_(existing_case_contract_ids)).first()
+    if not candidate:
+        candidate = db.query(Contract).first()
+        # Delete any existing case on this candidate for isolated test run
+        db.query(InvestigationCase).filter(InvestigationCase.contract_id == candidate.id).delete()
+        db.commit()
+    contract_id = candidate.id
+    db.close()
 
-    # 2. Open Case
+    # 1. Open Case
     create_res = client.post("/api/cases", json={
         "contract_id": contract_id,
-        "title": "Forensic Review into Flagged Hardware Tender",
+        "title": f"Forensic Review into Flagged Hardware Tender {contract_id}",
         "priority": "HIGH",
         "notes_summary": "Initiating investigation into single bidder anomaly"
     })
@@ -21,19 +31,19 @@ def test_investigation_workflow_end_to_end():
     assert case_data["contract_id"] == contract_id
     assert case_data["status"] == "NEW"
 
-    # 3. List Cases
+    # 2. List Cases
     list_cases_res = client.get("/api/cases")
     assert list_cases_res.status_code == 200
     cases = list_cases_res.json()
     assert len(cases) > 0
     assert any(c["id"] == case_id for c in cases)
 
-    # 4. Get Case Detail
+    # 3. Get Case Detail
     detail_res = client.get(f"/api/cases/{case_id}")
     assert detail_res.status_code == 200
     assert detail_res.json()["id"] == case_id
 
-    # 5. Add Forensic Note
+    # 4. Add Forensic Note
     note_res = client.post(f"/api/cases/{case_id}/notes", json={
         "author_name": "Priya Sharma (Investigator)",
         "content": "Requested procurement officer interview and audit trail."
@@ -41,7 +51,7 @@ def test_investigation_workflow_end_to_end():
     assert note_res.status_code == 200
     assert "id" in note_res.json()
 
-    # 6. Attach Evidence Artifact
+    # 5. Attach Evidence Artifact
     evidence_res = client.post(f"/api/cases/{case_id}/evidence", json={
         "title": "Technical Specification Comparison Report",
         "evidence_type": "SPECIFICATION_DIFF",
@@ -51,7 +61,7 @@ def test_investigation_workflow_end_to_end():
     assert evidence_res.status_code == 200
     assert "id" in evidence_res.json()
 
-    # 7. Update Status to ESCALATED
+    # 6. Update Status to ESCALATED
     patch_res = client.patch(f"/api/cases/{case_id}", json={
         "status": "ESCALATED",
         "resolution_notes": "Forwarded to Central Vigilance Commission"
@@ -59,6 +69,6 @@ def test_investigation_workflow_end_to_end():
     assert patch_res.status_code == 200
     assert patch_res.json()["status"] == "ESCALATED"
 
-    # 8. 404 for invalid case ID
+    # 7. 404 for invalid case ID
     err_res = client.get("/api/cases/999999")
     assert err_res.status_code == 404

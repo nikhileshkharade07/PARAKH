@@ -1,4 +1,6 @@
 import io
+import uuid
+import json
 from fastapi.testclient import TestClient
 from app.main import app
 
@@ -11,12 +13,13 @@ def test_ingest_template():
     assert "estimate_value" in res.text
 
 def test_ingest_csv_upload_success():
+    uid = uuid.uuid4().hex[:6]
     csv_content = (
         "tender_id,title,department,vendor,estimate_value,award_value,tender_start,tender_end,bidder_count,specification,extensions,location\n"
-        "TEST-ING-001,IT Infrastructure Overhaul,Digital Services Directorate,Apex Systems India,8000000,7800000,2025-06-01,2025-06-15,3,Server rack setup,0,New Delhi\n"
-        "TEST-ING-002,Bridge Rehabilitation,Public Works Department,Bharat Infrastructure Works,15000000,14900000,2025-06-05,2025-06-25,2,Structural repair,1,Mumbai\n"
+        f"TEST-ING-{uid}-1,IT Infrastructure Overhaul,Digital Services Directorate,Apex Systems India,8000000,7800000,2025-06-01,2025-06-15,3,Server rack setup,0,New Delhi\n"
+        f"TEST-ING-{uid}-2,Bridge Rehabilitation,Public Works Department,Bharat Infrastructure Works,15000000,14900000,2025-06-05,2025-06-25,2,Structural repair,1,Mumbai\n"
     )
-    files = {"file": ("test_import.csv", io.BytesIO(csv_content.encode("utf-8")), "text/csv")}
+    files = {"file": (f"test_import_{uid}.csv", io.BytesIO(csv_content.encode("utf-8")), "text/csv")}
     res = client.post("/api/ingest/upload", files=files)
     assert res.status_code == 200
     data = res.json()
@@ -25,10 +28,10 @@ def test_ingest_csv_upload_success():
     assert data["analyzed"] >= 2
 
 def test_ingest_json_upload_success():
-    import json
+    uid = uuid.uuid4().hex[:6]
     json_payload = [
         {
-            "tender_id": "TEST-JSON-001",
+            "tender_id": f"TEST-JSON-{uid}-1",
             "title": "Hospital Diagnostic Units",
             "department": "Health Services Directorate",
             "vendor": "MedSupply Bharat",
@@ -41,7 +44,7 @@ def test_ingest_json_upload_success():
             "location": "Bengaluru"
         }
     ]
-    files = {"file": ("test_import.json", io.BytesIO(json.dumps(json_payload).encode("utf-8")), "application/json")}
+    files = {"file": (f"test_import_{uid}.json", io.BytesIO(json.dumps(json_payload).encode("utf-8")), "application/json")}
     res = client.post("/api/ingest/upload", files=files)
     assert res.status_code == 200
     data = res.json()
