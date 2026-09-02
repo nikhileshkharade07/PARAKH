@@ -449,7 +449,12 @@ function handleFallback(url, method = "GET", data = null) {
 export const api = {
   get: async (url, config) => {
     try {
-      return await rawApi.get(url, config);
+      const res = await rawApi.get(url, config);
+      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+        console.warn(`[PARAKH API] HTML response intercepted at ${url}, falling back to synchronized dataset.`);
+        return handleFallback(url, "GET");
+      }
+      return res;
     } catch (err) {
       console.warn(`[PARAKH API] Live backend unreachable at ${url}, using synchronized data layer.`);
       return handleFallback(url, "GET");
@@ -457,7 +462,12 @@ export const api = {
   },
   post: async (url, data, config) => {
     try {
-      return await rawApi.post(url, data, config);
+      const res = await rawApi.post(url, data, config);
+      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+        console.warn(`[PARAKH API] HTML response intercepted at ${url}, falling back to synchronized dataset.`);
+        return handleFallback(url, "POST", data);
+      }
+      return res;
     } catch (err) {
       console.warn(`[PARAKH API] Live backend unreachable at ${url}, using synchronized data layer.`);
       return handleFallback(url, "POST", data);
@@ -465,14 +475,22 @@ export const api = {
   },
   put: async (url, data, config) => {
     try {
-      return await rawApi.put(url, data, config);
+      const res = await rawApi.put(url, data, config);
+      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+        return handleFallback(url, "PUT", data);
+      }
+      return res;
     } catch (err) {
       return handleFallback(url, "PUT", data);
     }
   },
   delete: async (url, config) => {
     try {
-      return await rawApi.delete(url, config);
+      const res = await rawApi.delete(url, config);
+      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+        return handleFallback(url, "DELETE");
+      }
+      return res;
     } catch (err) {
       return handleFallback(url, "DELETE");
     }
@@ -480,4 +498,5 @@ export const api = {
   defaults: rawApi.defaults,
   interceptors: rawApi.interceptors
 };
+
 

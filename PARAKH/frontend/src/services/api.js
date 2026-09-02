@@ -407,6 +407,41 @@ function handleFallback(url, method = "GET", data = null) {
     };
   }
 
+  if (path === "/nlp/analyze") {
+    const spec = (data?.specification || data?.specification_text || "").toLowerCase().trim();
+    const cat = (data?.vendor_description || "").toLowerCase().trim();
+    const threshold = Number(data?.threshold || 0.85);
+    const specWords = new Set(spec.split(/\s+/).filter(Boolean));
+    const catWords = new Set(cat.split(/\s+/).filter(Boolean));
+    const intersection = [...specWords].filter(x => catWords.has(x));
+    const similarity = specWords.size && catWords.size ? intersection.length / Math.max(specWords.size, catWords.size) : 0;
+    const flagged = similarity >= threshold;
+    return {
+      data: {
+        similarity_score: Math.round(similarity * 10000) / 10000,
+        threshold,
+        flagged,
+        explanation: flagged
+          ? `Tender specification has unusually high (${(similarity * 100).toFixed(1)}%) similarity to vendor catalog.`
+          : "No unusually high specification similarity detected."
+      }
+    };
+  }
+
+  if (path === "/risk/analyze") {
+    const contractId = params.get("contract_id");
+    const contract = staticData.contracts.find(c => String(c.id) === String(contractId)) || staticData.contracts[0];
+    return {
+      data: {
+        crs: contract.crs || 85,
+        rule_score: Math.round((contract.crs || 85) * 0.8),
+        anomaly_score: Math.round((contract.crs || 85) * 0.2),
+        risk_level: contract.risk_level || "high",
+        flags: []
+      }
+    };
+  }
+
   return { data: [] };
 }
 
@@ -414,7 +449,12 @@ function handleFallback(url, method = "GET", data = null) {
 export const api = {
   get: async (url, config) => {
     try {
-      return await rawApi.get(url, config);
+      const res = await rawApi.get(url, config);
+      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+        console.warn(`[PARAKH API] HTML response intercepted at ${url}, falling back to synchronized dataset.`);
+        return handleFallback(url, "GET");
+      }
+      return res;
     } catch (err) {
       console.warn(`[PARAKH API] Live backend unreachable at ${url}, using synchronized data layer.`);
       return handleFallback(url, "GET");
@@ -422,7 +462,12 @@ export const api = {
   },
   post: async (url, data, config) => {
     try {
-      return await rawApi.post(url, data, config);
+      const res = await rawApi.post(url, data, config);
+      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+        console.warn(`[PARAKH API] HTML response intercepted at ${url}, falling back to synchronized dataset.`);
+        return handleFallback(url, "POST", data);
+      }
+      return res;
     } catch (err) {
       console.warn(`[PARAKH API] Live backend unreachable at ${url}, using synchronized data layer.`);
       return handleFallback(url, "POST", data);
@@ -430,16 +475,28 @@ export const api = {
   },
   put: async (url, data, config) => {
     try {
-      return await rawApi.put(url, data, config);
+      const res = await rawApi.put(url, data, config);
+      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+        return handleFallback(url, "PUT", data);
+      }
+      return res;
     } catch (err) {
       return handleFallback(url, "PUT", data);
     }
   },
   delete: async (url, config) => {
     try {
-      return await rawApi.delete(url, config);
+      const res = await rawApi.delete(url, config);
+      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+        return handleFallback(url, "DELETE");
+      }
+      return res;
     } catch (err) {
       return handleFallback(url, "DELETE");
     }
-  }
+  },
+  defaults: rawApi.defaults,
+  interceptors: rawApi.interceptors
 };
+
+
