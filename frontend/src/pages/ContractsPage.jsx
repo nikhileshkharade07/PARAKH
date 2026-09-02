@@ -53,7 +53,7 @@ export default function ContractsPage() {
         params.append("limit", "5000");
 
         const res = await api.get(`/contracts?${params.toString()}`);
-        if (res.data && res.data.length > 0) {
+        if (Array.isArray(res.data)) {
           setContracts(res.data);
         } else {
           setContracts(defaultContracts);
@@ -75,7 +75,8 @@ export default function ContractsPage() {
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/40 text-error border border-error/20">
           <span className="w-1.5 h-1.5 rounded-full bg-error"></span>
-          Critical ({crs}/100)
+          <span>Critical</span>
+          <span className="text-xs font-mono font-bold">CRS {crs}</span>
         </span>
       );
     }
@@ -83,7 +84,8 @@ export default function ContractsPage() {
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 border border-orange-200">
           <span className="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
-          High ({crs}/100)
+          <span>High</span>
+          <span className="text-xs font-mono font-bold">CRS {crs}</span>
         </span>
       );
     }
@@ -91,14 +93,16 @@ export default function ContractsPage() {
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
           <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-          Medium ({crs}/100)
+          <span>Medium</span>
+          <span className="text-xs font-mono font-bold">CRS {crs}</span>
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-        Low ({crs}/100)
+        <span>Low</span>
+        <span className="text-xs font-mono font-bold">CRS {crs}</span>
       </span>
     );
   };
@@ -158,7 +162,7 @@ export default function ContractsPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-4 flex flex-wrap gap-4 items-end mb-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
+      <div className="bg-surface-container-lowest dark:bg-slate-900 border border-outline-variant/30 rounded-xl p-4 flex flex-wrap gap-4 items-end mb-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
         <div className="flex-1 min-w-[240px]">
           <label className="font-label-bold text-label-bold text-on-surface-variant uppercase block mb-1.5">
             Search Contracts / Vendors
@@ -178,7 +182,7 @@ export default function ContractsPage() {
                 setSearchParams(p);
                 setPage(1);
               }}
-              className="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg pl-9 pr-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary/50"
+              className="w-full bg-surface-container-low dark:bg-slate-800 border border-outline-variant/30 rounded-lg pl-9 pr-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary/50"
             />
           </div>
         </div>
@@ -196,7 +200,7 @@ export default function ContractsPage() {
               setSearchParams(p);
               setPage(1);
             }}
-            className="bg-surface-container-low border border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2 focus:outline-none focus:border-primary/50 cursor-pointer"
+            className="bg-surface-container-low dark:bg-slate-800 border border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2 focus:outline-none focus:border-primary/50 cursor-pointer"
           >
             <option value="">All Risk Levels</option>
             <option value="critical">Critical (CRS ≥ 85)</option>
@@ -219,7 +223,7 @@ export default function ContractsPage() {
               setSearchParams(p);
               setPage(1);
             }}
-            className="bg-surface-container-low border border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2 focus:outline-none focus:border-primary/50 cursor-pointer"
+            className="bg-surface-container-low dark:bg-slate-800 border border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2 focus:outline-none focus:border-primary/50 cursor-pointer"
           >
             <option value="">All Departments</option>
             {departments.map((d) => (
@@ -233,7 +237,7 @@ export default function ContractsPage() {
             setSearchParams(new URLSearchParams());
             setPage(1);
           }}
-          className="px-4 py-2 bg-surface-container-low border border-outline-variant/30 text-on-surface-variant rounded-lg text-sm font-medium hover:bg-surface-container-high/60 transition-colors h-[38px] flex items-center gap-1.5 cursor-pointer"
+          className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 border border-outline-variant/30 text-on-surface-variant rounded-lg text-sm font-medium hover:bg-surface-container-high/60 transition-colors h-[38px] flex items-center gap-1.5 cursor-pointer"
         >
           <span className="material-symbols-outlined text-[18px]">restart_alt</span>
           <span>Reset</span>
@@ -241,11 +245,11 @@ export default function ContractsPage() {
       </div>
 
       {/* Data Table Container */}
-      <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
+      <div className="bg-surface-container-lowest dark:bg-slate-900 rounded-xl border border-outline-variant/30 overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-outline-variant/20 bg-surface-container-low/50">
+              <tr className="border-b border-outline-variant/20 bg-surface-container-low/50 dark:bg-slate-800/50">
                 <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Contract ID</th>
                 <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Title / Scope</th>
                 <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Department</th>
@@ -259,7 +263,7 @@ export default function ContractsPage() {
               {loading ? (
                 <tr>
                   <td colSpan="7" className="px-6 py-12 text-center text-sm text-on-surface-variant font-mono">
-                    Loading contract registry records...
+                    Loading contracts database records...
                   </td>
                 </tr>
               ) : paginatedContracts.length > 0 ? (
@@ -308,7 +312,7 @@ export default function ContractsPage() {
               ) : (
                 <tr>
                   <td colSpan="7" className="px-6 py-12 text-center text-sm text-on-surface-variant">
-                    No contracts found matching the filter criteria.
+                    No contracts matching the selected filters.
                   </td>
                 </tr>
               )}
