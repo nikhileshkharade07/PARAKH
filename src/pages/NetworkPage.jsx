@@ -34,15 +34,15 @@ export default function NetworkPage() {
       cyInstance.current.destroy();
     }
 
-    let nodes = networkData.nodes;
-    let edges = networkData.edges;
+    let nodes = Array.isArray(networkData?.nodes) ? networkData.nodes : [];
+    let edges = Array.isArray(networkData?.edges) ? networkData.edges : [];
 
     if (highRiskOnly) {
       const highRiskNodeIds = new Set(
-        nodes.filter(n => (n.data.average_crs || 0) >= 70).map(n => n.data.id)
+        nodes.filter(n => (n?.data?.average_crs || 0) >= 70).map(n => n?.data?.id)
       );
-      nodes = nodes.filter(n => highRiskNodeIds.has(n.data.id));
-      edges = edges.filter(e => highRiskNodeIds.has(e.data.source) || highRiskNodeIds.has(e.data.target));
+      nodes = nodes.filter(n => highRiskNodeIds.has(n?.data?.id));
+      edges = edges.filter(e => highRiskNodeIds.has(e?.data?.source) || highRiskNodeIds.has(e?.data?.target));
     }
 
     const cy = cytoscape({

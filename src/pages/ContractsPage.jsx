@@ -21,8 +21,8 @@ export default function ContractsPage() {
           api.get("/departments"),
           api.get("/vendors")
         ]);
-        setDepartments(dRes.data || []);
-        setVendors(vRes.data || []);
+        setDepartments(Array.isArray(dRes?.data) ? dRes.data : []);
+        setVendors(Array.isArray(vRes?.data) ? vRes.data : []);
       } catch (e) {
         console.error(e);
       }
@@ -42,7 +42,7 @@ export default function ContractsPage() {
         params.append("limit", "5000");
 
         const res = await api.get(`/contracts?${params.toString()}`);
-        setContracts(res.data || []);
+        setContracts(Array.isArray(res?.data) ? res.data : []);
       } catch (err) {
         console.error("Error fetching contracts:", err);
       } finally {

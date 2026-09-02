@@ -450,8 +450,7 @@ export const api = {
   get: async (url, config) => {
     try {
       const res = await rawApi.get(url, config);
-      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
-        console.warn(`[PARAKH API] HTML response intercepted at ${url}, falling back to synchronized dataset.`);
+      if (typeof res.data === "string" || !res.data) {
         return handleFallback(url, "GET");
       }
       return res;
@@ -463,8 +462,7 @@ export const api = {
   post: async (url, data, config) => {
     try {
       const res = await rawApi.post(url, data, config);
-      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
-        console.warn(`[PARAKH API] HTML response intercepted at ${url}, falling back to synchronized dataset.`);
+      if (typeof res.data === "string" || !res.data) {
         return handleFallback(url, "POST", data);
       }
       return res;
@@ -476,7 +474,7 @@ export const api = {
   put: async (url, data, config) => {
     try {
       const res = await rawApi.put(url, data, config);
-      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+      if (typeof res.data === "string" || !res.data) {
         return handleFallback(url, "PUT", data);
       }
       return res;
@@ -487,7 +485,7 @@ export const api = {
   delete: async (url, config) => {
     try {
       const res = await rawApi.delete(url, config);
-      if (typeof res.data === "string" && res.data.trim().toLowerCase().startsWith("<!doctype")) {
+      if (typeof res.data === "string" || !res.data) {
         return handleFallback(url, "DELETE");
       }
       return res;

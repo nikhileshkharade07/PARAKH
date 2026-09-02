@@ -17,12 +17,12 @@ export default function DashboardPage({ onOpenIngest, onOpenAI }) {
           api.get("/contracts?risk_level=high&limit=8"),
           api.get("/contracts?limit=8")
         ]);
-        setStats(statsRes.data);
+        setStats(statsRes?.data || {});
         
         // If high risk contracts exist, use them, otherwise use top contracts
-        const contractList = (highRiskRes.data && highRiskRes.data.length > 0) 
-          ? highRiskRes.data 
-          : (topContractsRes.data || []);
+        const rawHighRisk = Array.isArray(highRiskRes?.data) ? highRiskRes.data : [];
+        const rawTopContracts = Array.isArray(topContractsRes?.data) ? topContractsRes.data : [];
+        const contractList = rawHighRisk.length > 0 ? rawHighRisk : rawTopContracts;
         setHighRiskContracts(contractList);
 
         // Derive showcase cases dynamically from top anomalous contracts
@@ -48,16 +48,17 @@ export default function DashboardPage({ onOpenIngest, onOpenAI }) {
   if (loading) return <div className="loading-spinner">Loading forensic audit statistics...</div>;
 
   const pieData = stats ? [
-    { name: "High Risk (CRS ≥ 70)", value: stats.high_risk_contracts, color: "#ef4444" },
-    { name: "Medium Risk (40–69)", value: stats.medium_risk_contracts, color: "#f59e0b" },
-    { name: "Low Risk (< 40)", value: stats.low_risk_contracts, color: "#10b981" },
+    { name: "High Risk (CRS ≥ 70)", value: stats.high_risk_contracts || 0, color: "#ef4444" },
+    { name: "Medium Risk (40–69)", value: stats.medium_risk_contracts || 0, color: "#f59e0b" },
+    { name: "Low Risk (< 40)", value: stats.low_risk_contracts || 0, color: "#10b981" },
   ] : [];
 
-  const deptChartData = stats?.departments ? stats.departments.slice(0, 6).map(d => ({
+  const deptList = Array.isArray(stats?.departments) ? stats.departments : [];
+  const deptChartData = deptList.slice(0, 6).map(d => ({
     name: d.name.length > 18 ? d.name.substring(0, 16) + "..." : d.name,
     contracts: d.contract_count,
     avg_crs: d.avg_crs
-  })) : [];
+  }));
 
   const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
 
