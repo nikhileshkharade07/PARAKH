@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     api_prefix: str = "/api"
     database_url: str = "sqlite:///./parakh.db"
-    cors_origins: Union[List[str], str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+    cors_origins: Union[List[str], str] = ["*", "http://localhost:5173", "http://127.0.0.1:5173", "https://parakh2.vercel.app"]
     approval_threshold: float = 5_000_000
     price_deviation_threshold: float = 0.30
     nlp_similarity_threshold: float = 0.85
@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
         if isinstance(v, str):
+            if v == "*":
+                return ["*"]
             if v.startswith("[") and v.endswith("]"):
                 try:
                     return json.loads(v)
@@ -40,7 +42,7 @@ class Settings(BaseSettings):
             return [i.strip() for i in v.split(",") if i.strip()]
         elif isinstance(v, list):
             return v
-        return ["http://localhost:5173", "http://127.0.0.1:5173"]
+        return ["*", "http://localhost:5173", "http://127.0.0.1:5173", "https://parakh2.vercel.app"]
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

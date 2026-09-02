@@ -4,7 +4,14 @@ import re
 from datetime import datetime, date, timedelta
 from decimal import Decimal
 from typing import Dict, Any, List, Tuple, Optional
-import pandas as pd
+try:
+    import pandas as pd
+except ImportError:
+    class DummyPD:
+        @staticmethod
+        def isna(v):
+            return v is None or v != v or str(v).lower() in ("nan", "none", "")
+    pd = DummyPD()
 from sqlalchemy.orm import Session
 
 

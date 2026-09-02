@@ -407,6 +407,41 @@ function handleFallback(url, method = "GET", data = null) {
     };
   }
 
+  if (path === "/nlp/analyze") {
+    const spec = (data?.specification || data?.specification_text || "").toLowerCase().trim();
+    const cat = (data?.vendor_description || "").toLowerCase().trim();
+    const threshold = Number(data?.threshold || 0.85);
+    const specWords = new Set(spec.split(/\s+/).filter(Boolean));
+    const catWords = new Set(cat.split(/\s+/).filter(Boolean));
+    const intersection = [...specWords].filter(x => catWords.has(x));
+    const similarity = specWords.size && catWords.size ? intersection.length / Math.max(specWords.size, catWords.size) : 0;
+    const flagged = similarity >= threshold;
+    return {
+      data: {
+        similarity_score: Math.round(similarity * 10000) / 10000,
+        threshold,
+        flagged,
+        explanation: flagged
+          ? `Tender specification has unusually high (${(similarity * 100).toFixed(1)}%) similarity to vendor catalog.`
+          : "No unusually high specification similarity detected."
+      }
+    };
+  }
+
+  if (path === "/risk/analyze") {
+    const contractId = params.get("contract_id");
+    const contract = staticData.contracts.find(c => String(c.id) === String(contractId)) || staticData.contracts[0];
+    return {
+      data: {
+        crs: contract.crs || 85,
+        rule_score: Math.round((contract.crs || 85) * 0.8),
+        anomaly_score: Math.round((contract.crs || 85) * 0.2),
+        risk_level: contract.risk_level || "high",
+        flags: []
+      }
+    };
+  }
+
   return { data: [] };
 }
 
@@ -441,5 +476,8 @@ export const api = {
     } catch (err) {
       return handleFallback(url, "DELETE");
     }
-  }
+  },
+  defaults: rawApi.defaults,
+  interceptors: rawApi.interceptors
 };
+

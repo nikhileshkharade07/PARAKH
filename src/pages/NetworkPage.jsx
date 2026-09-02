@@ -271,13 +271,13 @@ export default function NetworkPage() {
                 </div>
 
                 {selectedElement.type === "vendor" && (
-                  <Link to={`/vendors/${selectedElement.id.replace("vendor-", "")}`} className="btn btn-primary" style={{ marginTop: 12, textAlign: "center", justifyContent: "center" }}>
+                  <Link to={`/vendors/${selectedElement.raw_id || selectedElement.id?.replace(/^(vendor-|v_)/, '')}`} className="btn btn-primary" style={{ marginTop: 12, textAlign: "center", justifyContent: "center" }}>
                     View Vendor Profile →
                   </Link>
                 )}
 
                 {selectedElement.type === "department" && (
-                  <Link to={`/departments/${selectedElement.id.replace("department-", "")}`} className="btn btn-primary" style={{ marginTop: 12, textAlign: "center", justifyContent: "center" }}>
+                  <Link to={`/departments/${selectedElement.raw_id || selectedElement.id?.replace(/^(department-|d_)/, '')}`} className="btn btn-primary" style={{ marginTop: 12, textAlign: "center", justifyContent: "center" }}>
                     View Department Profile →
                   </Link>
                 )}

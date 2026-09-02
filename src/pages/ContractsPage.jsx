@@ -52,6 +52,9 @@ export default function ContractsPage() {
     loadContracts();
   }, [search, riskLevel, deptId, vendorId]);
 
+  const [page, setPage] = useState(1);
+  const pageSize = 25;
+
   const updateFilter = (key, value) => {
     const next = new URLSearchParams(searchParams);
     if (value) {
@@ -67,9 +70,6 @@ export default function ContractsPage() {
     setSearchParams({});
     setPage(1);
   };
-
-  const [page, setPage] = useState(1);
-  const pageSize = 25;
 
   const exportCSV = () => {
     if (contracts.length === 0) return;
@@ -174,11 +174,11 @@ export default function ContractsPage() {
       </div>
 
       {loading ? (
-        <div className="loading-spinner">Loading audited procurement contracts...</div>
+        <div className="loading-spinner">Loading contracts database...</div>
       ) : contracts.length === 0 ? (
         <div className="card" style={{ textAlign: "center", padding: "48px 24px" }}>
           <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
-          <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>No matching procurement contracts found</h3>
+          <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>No contracts matching the selected filters</h3>
           <p style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 16 }}>
             Try broadening your search query or removing active filters.
           </p>

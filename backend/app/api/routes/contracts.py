@@ -3,8 +3,6 @@ import statistics
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, joinedload, selectinload
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 from app.database.session import get_db
 from app.models import Contract, RiskAssessment
 from app.schemas.contracts import (
@@ -187,6 +185,8 @@ def get_similar_tenders(contract_id: int, db: Session = Depends(get_db), limit: 
 
     corpus = [target.specification] + [p.specification for p in pool]
     try:
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        from sklearn.metrics.pairwise import cosine_similarity
         vec = TfidfVectorizer(stop_words="english", max_features=500)
         tfidf_matrix = vec.fit_transform(corpus)
         sim_scores = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:]).flatten()

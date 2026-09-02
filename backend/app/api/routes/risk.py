@@ -19,4 +19,8 @@ def get_risk(contract_id: int, service: ContractService = Depends(get_contract_s
 
 @router.post("/analyze")
 def analyze(contract_id: int, service: ContractService = Depends(get_contract_service)):
-    return service.analyze_contract_risk(contract_id)
+    try:
+        return service.analyze_contract_risk(contract_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+

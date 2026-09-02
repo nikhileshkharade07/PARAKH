@@ -16,9 +16,24 @@ if not os.path.exists(db_path):
     if os.path.exists(alt_db):
         db_path = alt_db
 
-# Configure database URL with read-only SQLite URI to ensure 100% serverless concurrency
+# In serverless environments (e.g. Vercel/AWS Lambda), /var/task is read-only.
+# Copy parakh.db to /tmp/parakh.db so writes (cases, notes, evidence) succeed without error.
 if os.path.exists(db_path):
-    db_abs = os.path.abspath(db_path).replace("\\", "/")
+    target_db = db_path
+    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        tmp_db = "/tmp/parakh.db"
+        if not os.path.exists(tmp_db) or os.path.getsize(tmp_db) == 0:
+            import shutil
+            try:
+                shutil.copyfile(db_path, tmp_db)
+                target_db = tmp_db
+            except Exception as e:
+                pass
+        else:
+            target_db = tmp_db
+            
+    db_abs = os.path.abspath(target_db).replace("\\", "/")
     os.environ["DATABASE_URL"] = f"sqlite:///{db_abs}"
 
 from backend.app.main import app
+

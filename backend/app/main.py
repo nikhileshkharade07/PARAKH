@@ -40,3 +40,8 @@ app.include_router(api_router, prefix=settings.api_prefix)
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "parakh-api"}
+
+@app.get("/ready")
+def ready():
+    return {"status": "ready", "database": "ok"}
+

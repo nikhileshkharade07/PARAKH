@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database.session import get_db
 from app.models import User
-from app.schemas.auth import LoginRequest, TokenResponse, UserOut, UserCreate
-from app.core.auth import hash_password, verify_password, create_access_token, get_current_user, require_roles
+from app.schemas.auth import LoginRequest, TokenResponse, UserOut, UserCreate, RefreshTokenRequest
+from app.core.auth import hash_password, verify_password, create_access_token, decode_access_token, get_current_user, require_roles
 from app.services.audit_service import log_audit
 
 router = APIRouter()
@@ -14,6 +14,52 @@ DEMO_USERS = [
     {"username": "investigator", "email": "investigator@parakh.gov.in", "full_name": "Priya Sharma (Forensic Investigator)", "role": "INVESTIGATOR", "password": "investigator"},
     {"username": "officer", "email": "officer@pwd.gov.in", "full_name": "Amit Deshmukh (Dept Officer)", "role": "DEPARTMENT_OFFICER", "password": "officer"},
 ]
+
+@router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+def register(req: UserCreate, db: Session = Depends(get_db)):
+    """Register a new investigator or auditor user."""
+    existing = db.query(User).filter((User.username == req.username) | (User.email == req.email)).first()
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username or email is already registered."
+        )
+    user = User(
+        username=req.username,
+        email=req.email,
+        full_name=req.full_name,
+        role=req.role,
+        department_id=req.department_id,
+        hashed_password=hash_password(req.password),
+        is_active=True
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    token = create_access_token({"sub": user.username, "role": user.role, "uid": user.id})
+    log_audit(db, action="REGISTER", resource_type="AUTH", resource_id=user.username, details={"role": user.role}, user=user)
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": user
+    }
+
+@router.post("/refresh")
+def refresh_token(req: RefreshTokenRequest, db: Session = Depends(get_db)):
+    """Refresh an existing active JWT token."""
+    payload = decode_access_token(req.token)
+    if not payload or "sub" not in payload:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
+    new_token = create_access_token({"sub": payload["sub"], "role": payload.get("role", "INVESTIGATOR"), "uid": payload.get("uid")})
+    return {"access_token": new_token, "token_type": "bearer"}
+
+@router.post("/logout")
+def logout(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Log out current user and record audit trail."""
+    log_audit(db, action="LOGOUT", resource_type="AUTH", resource_id=current_user.username, user=current_user)
+    return {"message": "Logged out successfully"}
+
 
 @router.post("/seed-users")
 def seed_users(db: Session = Depends(get_db)):

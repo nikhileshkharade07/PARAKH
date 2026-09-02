@@ -1,20 +1,26 @@
 import numpy as np
-from sklearn.ensemble import IsolationForest
+try:
+    from sklearn.ensemble import IsolationForest
+except ImportError:
+    IsolationForest = None
 
 
 def _features(contract, peers):
-    vendor_wins = sum(c.vendor_id == contract.vendor_id for c in peers)
+    v_id = getattr(contract, "vendor_id", 1)
+    vendor_wins = sum(getattr(c, "vendor_id", None) == v_id for c in peers)
     ratio = vendor_wins / len(peers) if peers else 0
-    duration = (contract.tender_end - contract.tender_start).total_seconds() / 86400
-    deviation = (
-        (float(contract.award_value) - float(contract.estimate_value))
-        / float(contract.estimate_value)
-        if contract.estimate_value else 0
-    )
+    t_start = getattr(contract, "tender_start", None)
+    t_end = getattr(contract, "tender_end", None)
+    duration = (t_end - t_start).total_seconds() / 86400 if (t_end and t_start) else 14.0
+    est_f = float(getattr(contract, "estimate_value", 0) or 0)
+    awd_f = float(getattr(contract, "award_value", 0) or 0)
+    deviation = (awd_f - est_f) / est_f if est_f > 0 else 0.0
+    bids = getattr(contract, "bids", []) or []
+    exts = getattr(contract, "extensions", []) or []
     return [
-        float(contract.award_value), len(contract.bids), duration,
-        float(contract.estimate_value), deviation, vendor_wins, ratio,
-        len(contract.extensions), len(peers)
+        awd_f, len(bids), duration,
+        est_f, deviation, vendor_wins, ratio,
+        len(exts), len(peers)
     ]
 
 
@@ -27,42 +33,63 @@ def anomaly_scores_for_contracts(contracts):
     vendor_counts = {}
     dept_counts = {}
     for c in contracts:
-        vendor_counts[c.vendor_id] = vendor_counts.get(c.vendor_id, 0) + 1
-        dept_counts[c.department_id] = dept_counts.get(c.department_id, 0) + 1
+        v_id = getattr(c, "vendor_id", 1)
+        d_id = getattr(c, "department_id", 1)
+        vendor_counts[v_id] = vendor_counts.get(v_id, 0) + 1
+        dept_counts[d_id] = dept_counts.get(d_id, 0) + 1
 
     total_contracts = len(contracts)
     features_list = []
     for c in contracts:
-        v_wins = vendor_counts.get(c.vendor_id, 1)
+        v_id = getattr(c, "vendor_id", 1)
+        d_id = getattr(c, "department_id", 1)
+        v_wins = vendor_counts.get(v_id, 1)
         ratio = v_wins / total_contracts if total_contracts else 0.0
-        duration = (c.tender_end - c.tender_start).total_seconds() / 86400 if (c.tender_end and c.tender_start) else 14.0
-        est_f = float(c.estimate_value) if c.estimate_value else 0.0
-        awd_f = float(c.award_value) if c.award_value else 0.0
+        t_start = getattr(c, "tender_start", None)
+        t_end = getattr(c, "tender_end", None)
+        duration = (t_end - t_start).total_seconds() / 86400 if (t_end and t_start) else 14.0
+        est_f = float(getattr(c, "estimate_value", 0) or 0)
+        awd_f = float(getattr(c, "award_value", 0) or 0)
         dev = (awd_f - est_f) / est_f if est_f > 0 else 0.0
-        ext_count = len(c.extensions) if hasattr(c, "extensions") and c.extensions else 0
-        bids_count = len(c.bids) if hasattr(c, "bids") and c.bids else 1
+        bids = getattr(c, "bids", []) or []
+        exts = getattr(c, "extensions", []) or []
+        ext_count = len(exts)
+        bids_count = len(bids) if bids else 1
         features_list.append([
             awd_f, bids_count, duration,
             est_f, dev, v_wins, ratio,
-            ext_count, dept_counts.get(c.department_id, 1)
+            ext_count, dept_counts.get(d_id, 1)
         ])
 
     X = np.array(features_list, dtype=float)
-    model = IsolationForest(
-        n_estimators=100,
-        contamination="auto",
-        random_state=42,
-    )
-    model.fit(X)
+    if IsolationForest is not None:
+        model = IsolationForest(
+            n_estimators=100,
+            contamination="auto",
+            random_state=42,
+        )
+        model.fit(X)
 
-    raw = -model.decision_function(X)
-    lo, hi = float(raw.min()), float(raw.max())
-    if hi <= lo:
-        scores = np.zeros(len(contracts))
+        raw = -model.decision_function(X)
+        lo, hi = float(raw.min()), float(raw.max())
+        if hi <= lo:
+            scores = np.zeros(len(contracts))
+        else:
+            scores = np.clip((raw - lo) / (hi - lo) * 100, 0, 100)
     else:
-        scores = np.clip((raw - lo) / (hi - lo) * 100, 0, 100)
+        # Fallback: statistical z-score aggregate outlier metric
+        means = X.mean(axis=0)
+        stds = X.std(axis=0)
+        stds[stds == 0] = 1.0
+        z_scores = np.abs((X - means) / stds).sum(axis=1)
+        z_lo, z_hi = float(z_scores.min()), float(z_scores.max())
+        if z_hi <= z_lo:
+            scores = np.zeros(len(contracts))
+        else:
+            scores = np.clip((z_scores - z_lo) / (z_hi - z_lo) * 100, 0, 100)
 
     return {id(c): float(s) for c, s in zip(contracts, scores)}
+
 
 
 def anomaly_for_contract(contract, peers):

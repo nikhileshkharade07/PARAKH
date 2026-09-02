@@ -26,10 +26,21 @@ class RiskEngine:
                 flag["explanation"] = nlp["explanation"]
                 flag["evidence"] = {"similarity_score": nlp["similarity_score"], "threshold": nlp.get("threshold", self.settings.nlp_similarity_threshold)}
 
-        rule_score = min(100, sum(f["score"] for f in flags if f["detected"]))
+        detected_flags = [f for f in flags if f["detected"]]
+        detected_count = len(detected_flags)
+        compounding_mult = 1.4 if detected_count >= 4 else (1.25 if detected_count >= 3 else 1.0)
+        base_rule_score = sum(f["score"] for f in detected_flags)
+        rule_score = min(100.0, base_rule_score * compounding_mult)
+
         if anomaly_score is None:
             anomaly_score = anomaly_for_contract(contract, peers)
-        crs = round(min(100, 0.80 * rule_score + 0.20 * anomaly_score))
+
+        if detected_count >= 4:
+            anomaly_score = max(anomaly_score, 70.0)
+        elif detected_count >= 3:
+            anomaly_score = max(anomaly_score, 50.0)
+
+        crs = round(min(100.0, 0.80 * rule_score + 0.20 * anomaly_score))
 
         if contract.risk_assessment:
             ra = contract.risk_assessment

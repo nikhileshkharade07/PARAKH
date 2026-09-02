@@ -25,6 +25,30 @@ def evaluate_rules(contract, department_contracts=None, settings=None):
     award_val = float(contract.award_value)
     thresh = float(settings.approval_threshold)
 
+    spec = getattr(contract, "specification", None) or ""
+    vendor_desc = ""
+    if hasattr(contract, "vendor") and contract.vendor:
+        vendor_desc = getattr(contract.vendor, "product_description", None) or ""
+    elif hasattr(contract, "vendor_product_description"):
+        vendor_desc = getattr(contract, "vendor_product_description", None) or ""
+
+    try:
+        from ml.nlp.similarity import specification_similarity
+    except ImportError:
+        try:
+            from backend.ml.nlp.similarity import specification_similarity
+        except ImportError:
+            specification_similarity = None
+
+    nlp_sim = 0.0
+    nlp_flagged = False
+    nlp_expl = "No unusually high specification similarity detected."
+    if specification_similarity and spec and vendor_desc:
+        nlp_res = specification_similarity(spec, vendor_desc, settings.nlp_similarity_threshold)
+        nlp_sim = nlp_res.get("similarity_score", 0.0)
+        nlp_flagged = nlp_res.get("flagged", False)
+        nlp_expl = nlp_res.get("explanation", nlp_expl)
+
     return [
         {
             "flag_id": "RF-1",
@@ -117,12 +141,12 @@ def evaluate_rules(contract, department_contracts=None, settings=None):
         {
             "flag_id": "RF-7",
             "flag_name": "Specification Tailoring",
-            "detected": False,
+            "detected": nlp_flagged,
             "severity": "medium",
             "score": 15,
-            "explanation": "No unusually high specification similarity detected.",
+            "explanation": nlp_expl,
             "evidence": {
-                "similarity_score": 0.0,
+                "similarity_score": nlp_sim,
                 "threshold": settings.nlp_similarity_threshold
             },
             "recommended_action": "Compare technical specifications against proprietary product catalog of the winning supplier."
