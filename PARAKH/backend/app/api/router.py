@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.api.routes import (
     contracts, vendors, departments, dashboard, network,
-    risk, nlp, blockchain, auth, ingest, cases, audit, assistant, aegis
+    risk, nlp, blockchain, auth, ingest, cases, audit, assistant, aegis, search
 )
 
 api_router = APIRouter()
@@ -18,4 +18,15 @@ api_router.include_router(risk.router, prefix="/risk", tags=["risk"])
 api_router.include_router(nlp.router, prefix="/nlp", tags=["nlp"])
 api_router.include_router(blockchain.router, prefix="/blockchain", tags=["blockchain"])
 api_router.include_router(audit.router, prefix="/audit-logs", tags=["audit"])
+api_router.include_router(audit.router, prefix="/audit", tags=["audit"])
 api_router.include_router(assistant.router, prefix="/assistant", tags=["assistant"])
+api_router.include_router(search.router, prefix="/search", tags=["search"])
+
+@api_router.get("/health")
+def api_health():
+    return {"status": "ok", "service": "PARAKH backend"}
+
+@api_router.get("/ready")
+def api_ready():
+    return {"status": "ready", "database": "ok"}
+

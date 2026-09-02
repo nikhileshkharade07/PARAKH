@@ -38,13 +38,29 @@ import { api } from "./api";
 
 export const networkService = {
   /**
-   * Fetch vendor-department bipartite network graph with risk metrics.
+   * Fetch multi-mode network graph with risk metrics.
+   * @param {Object} [options]
+   * @param {string} [options.graph_type]
+   * @param {number} [options.contract_id]
+   * @param {boolean} [options.high_risk_only]
+   * @param {number} [options.limit]
    * @returns {Promise<NetworkGraphData>}
    */
-  async getNetworkGraph() {
-    const response = await api.get("/network");
+  async getNetworkGraph(options = {}) {
+    const params = new URLSearchParams();
+    if (options.graph_type) params.append("graph_type", options.graph_type);
+    if (options.contract_id) params.append("contract_id", options.contract_id);
+    if (options.high_risk_only) params.append("high_risk_only", "true");
+    if (options.limit) params.append("limit", String(options.limit));
+
+    const qs = params.toString();
+    const url = qs ? `/network?${qs}` : "/network";
+    const response = await api.get(url);
     return response.data;
   },
+  async getNetwork(options = {}) {
+    return this.getNetworkGraph(options);
+  }
 };
 
 export default networkService;

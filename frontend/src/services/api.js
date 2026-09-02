@@ -393,7 +393,140 @@ function handleFallback(url, method = "GET", data = null) {
     return { data: c };
   }
 
+  if (path === "/search") {
+    const q = (params.get("q") || "").toLowerCase().trim();
+    if (!q) {
+      return { data: { query: "", total: 0, results: { contracts: [], vendors: [], departments: [], cases: [] } } };
+    }
+
+    const contracts = staticData.contracts.filter(c =>
+      (c.contract_number && c.contract_number.toLowerCase().includes(q)) ||
+      (c.title && c.title.toLowerCase().includes(q)) ||
+      (c.vendor_name && c.vendor_name.toLowerCase().includes(q)) ||
+      (c.department_name && c.department_name.toLowerCase().includes(q))
+    ).slice(0, 8).map(c => ({
+      id: c.id,
+      contract_number: c.contract_number,
+      title: c.title,
+      award_value: c.award_value,
+      crs: c.crs,
+      vendor_name: c.vendor_name,
+      department_name: c.department_name,
+      url: `/investigation?contractId=${c.id}`
+    }));
+
+    const vendors = staticData.vendors.filter(v =>
+      v.name && v.name.toLowerCase().includes(q)
+    ).slice(0, 6).map(v => ({
+      id: v.id,
+      name: v.name,
+      contract_count: v.contract_count || 12,
+      url: `/vendors/${v.id}`
+    }));
+
+    const departments = staticData.departments.filter(d =>
+      d.name && d.name.toLowerCase().includes(q)
+    ).slice(0, 6).map(d => ({
+      id: d.id,
+      name: d.name,
+      contract_count: d.contract_count || 8,
+      url: `/departments/${d.id}`
+    }));
+
+    const cases = (staticData.cases || []).filter(cs =>
+      (cs.case_number && cs.case_number.toLowerCase().includes(q)) ||
+      (cs.title && cs.title.toLowerCase().includes(q)) ||
+      (cs.notes && cs.notes.toLowerCase().includes(q))
+    ).slice(0, 6).map(cs => ({
+      id: cs.id,
+      case_number: cs.case_number,
+      title: cs.title,
+      priority: cs.priority,
+      status: cs.status,
+      contract_id: cs.contract_id,
+      url: `/investigation?contractId=${cs.contract_id || cs.id}`
+    }));
+
+    return {
+      data: {
+        query: q,
+        total: contracts.length + vendors.length + departments.length + cases.length,
+        results: { contracts, vendors, departments, cases }
+      }
+    };
+  }
+
   if (path === "/network" || path === "/network/graph") {
+    const graphType = params.get("graph_type") || "vendor_department";
+    const contractId = params.get("contract_id");
+
+    if (graphType === "investigation") {
+      const c = staticData.contracts.find(x => String(x.id) === String(contractId)) || staticData.contracts[0];
+      return {
+        data: {
+          nodes: [
+            { data: { id: `cnt-${c.id}`, label: c.contract_number, type: "Contract", risk: "Critical", crs: c.crs, details: c.title } },
+            { data: { id: `vend-${c.id}`, label: c.vendor_name, type: "Vendor", risk: "Critical", crs: c.crs, details: "Awardee" } },
+            { data: { id: `dept-${c.id}`, label: c.department_name, type: "Department", risk: "Medium", crs: 50, details: "Procuring Dept" } },
+            { data: { id: `bidder-${c.id}`, label: "Delta Infotech", type: "Vendor", risk: "High", crs: 78, details: "Disqualified competitor bid" } },
+            { data: { id: `flag-rf1-${c.id}`, label: "RF-1: Single Bidder", type: "RiskFlag", risk: "High", crs: 90, details: "Single qualified tenderer" } },
+            { data: { id: `flag-rf7-${c.id}`, label: "RF-7: Spec Tailoring", type: "RiskFlag", risk: "Critical", crs: 94, details: "94.2% vendor catalog match" } }
+          ],
+          edges: [
+            { data: { id: `e1-${c.id}`, source: `vend-${c.id}`, target: `cnt-${c.id}`, label: "AWARDED" } },
+            { data: { id: `e2-${c.id}`, source: `cnt-${c.id}`, target: `dept-${c.id}`, label: "ISSUED_BY" } },
+            { data: { id: `e3-${c.id}`, source: `bidder-${c.id}`, target: `cnt-${c.id}`, label: "DISQUALIFIED_BID" } },
+            { data: { id: `e4-${c.id}`, source: `cnt-${c.id}`, target: `flag-rf1-${c.id}`, label: "TRIGGERED" } },
+            { data: { id: `e5-${c.id}`, source: `cnt-${c.id}`, target: `flag-rf7-${c.id}`, label: "TRIGGERED" } }
+          ]
+        }
+      };
+    }
+
+    if (graphType === "vendor_network" || graphType === "vendor_vendor") {
+      return {
+        data: {
+          nodes: [
+            { data: { id: "vend-1", label: "Apex Solutions Ltd", type: "Vendor", risk: "Critical", crs: 92, details: "Flagged in 8 tenders" } },
+            { data: { id: "vend-2", label: "Delta Infotech", type: "Vendor", risk: "High", crs: 78, details: "Common MCA address" } },
+            { data: { id: "vend-3", label: "Omega Corp India", type: "Vendor", risk: "Medium", crs: 55, details: "Frequent runner-up" } },
+            { data: { id: "vend-4", label: "Prime Tech Infra", type: "Vendor", risk: "Low", crs: 24, details: "Standard vendor" } },
+            { data: { id: "person-1", label: "Rajesh V. (Common DIN)", type: "Person", risk: "Critical", crs: 95, details: "Director in 3 bidding entities" } }
+          ],
+          edges: [
+            { data: { id: "ev1", source: "vend-1", target: "person-1", label: "COMMON_DIRECTOR" } },
+            { data: { id: "ev2", source: "vend-2", target: "person-1", label: "COMMON_DIRECTOR" } },
+            { data: { id: "ev3", source: "vend-1", target: "vend-2", label: "CO_BIDDING_NEXUS" } },
+            { data: { id: "ev4", source: "vend-2", target: "vend-3", label: "CO_BIDDING_NEXUS" } }
+          ]
+        }
+      };
+    }
+
+    if (graphType === "contract_network") {
+      const topContracts = staticData.contracts.slice(0, 10);
+      const nodes = [];
+      const edges = [];
+      topContracts.forEach((c) => {
+        nodes.push({ data: { id: `c-${c.id}`, label: c.contract_number, type: "Contract", risk: c.crs >= 70 ? "High" : "Low", crs: c.crs, details: c.title } });
+        nodes.push({ data: { id: `v-${c.id}`, label: c.vendor_name, type: "Vendor", risk: "Medium", crs: c.crs, details: c.vendor_name } });
+        edges.push({ data: { id: `ec-${c.id}`, source: `v-${c.id}`, target: `c-${c.id}`, label: "AWARDED" } });
+      });
+      return { data: { nodes, edges } };
+    }
+
+    if (graphType === "risk_network") {
+      const highRisk = staticData.contracts.filter(c => c.crs >= 75).slice(0, 8);
+      const nodes = [];
+      const edges = [];
+      highRisk.forEach((c) => {
+        nodes.push({ data: { id: `rc-${c.id}`, label: c.contract_number, type: "Contract", risk: "Critical", crs: c.crs, details: c.title } });
+        nodes.push({ data: { id: `rv-${c.id}`, label: c.vendor_name, type: "Vendor", risk: "Critical", crs: c.crs, details: `High-risk awardee (CRS ${c.crs})` } });
+        edges.push({ data: { id: `er-${c.id}`, source: `rv-${c.id}`, target: `rc-${c.id}`, label: `CRS ${c.crs}` } });
+      });
+      return { data: { nodes, edges } };
+    }
+
     return { data: staticData.network };
   }
 
