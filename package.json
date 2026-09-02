@@ -9,6 +9,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-react": "latest",
     "axios": "latest",
     "cytoscape": "latest",
