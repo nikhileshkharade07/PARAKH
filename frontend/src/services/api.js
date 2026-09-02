@@ -49,6 +49,32 @@ function generateForensicAssistantAnswer(userQuery, contractId = null, caseId = 
     };
   }
 
+  // 1b. What is CRS / Corruption Risk Score
+  if (q.includes("what is crs") || q.includes("explain crs") || q.includes("corruption risk score") || q.includes("how is crs calculated") || q.includes("crs formula")) {
+    return {
+      answer: `### Corruption Risk Score (CRS) — Calculation & Methodology\n\n` +
+        `The **Corruption Risk Score (CRS)** is PARAKH's authoritative 0–100 integrity metric.\n\n` +
+        `**Mathematical Formulation:**\n` +
+        `$$\\text{CRS} = \\min\\Big(100,\\; \\text{round}\\big(0.80 \\times \\text{Rule Score} + 0.20 \\times \\text{Anomaly Score}\\big)\\Big)$$\n\n` +
+        `**Components:**\n` +
+        `1. **Rule Engine Score (80% Weight)**: Evaluated against 8 deterministic statutory heuristic red flags (RF-1 to RF-8) with compounding multi-flag collusion escalation.\n` +
+        `2. **Machine Learning Anomaly Score (20% Weight)**: Unsupervised **Isolation Forest** outlier modeling on multidimensional procurement features.\n\n` +
+        `**Risk Bands:**\n` +
+        `- **High Risk (CRS ≥ 70)**: High audit priority.\n` +
+        `- **Medium Risk (40–69)**: Cautionary procedural irregularity.\n` +
+        `- **Low Risk (< 40)**: Standard competitive award.`,
+      citations: [
+        {
+          title: "Methodology: CRS Scoring Formulation",
+          citation_type: "RULES",
+          reference_id: "CRS-FORMULA",
+          summary: "80% Heuristic Rules + 20% ML Isolation Forest Anomaly Score",
+          link: "/simulator"
+        }
+      ]
+    };
+  }
+
   // 2. How many contracts
   if (q.includes("how many contract") || q.includes("contract count") || q.includes("total contract") || q.includes("number of contract")) {
     const total = staticData.stats.total_contracts.toLocaleString("en-IN");

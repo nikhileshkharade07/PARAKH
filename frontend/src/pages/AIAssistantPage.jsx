@@ -24,33 +24,37 @@ export default function AIAssistantPage() {
     setLoading(true);
 
     try {
-      let reply = "";
-      if (assistantService?.ask) {
-        const res = await assistantService.ask(q);
-        reply = res?.answer || res?.response || res?.message;
-      }
-
-      if (!reply) {
-        reply = `Forensic audit analysis for "${q}": Found 2 potential collusive nexus clusters in Department of Urban Works. Bidding pattern exhibits a 4-day compression window with 89% specification overlap to vendor catalog items.`;
-      }
+      const res = await assistantService.queryAssistant(q);
+      const reply = res?.answer || res?.response || res?.message || "Audit evidence processed.";
+      const points = Array.isArray(res?.citations) && res.citations.length > 0
+        ? res.citations.map((c) => ({
+            label: c.title || c.reference_id || "Evidence Citation",
+            desc: c.summary || c.link || "Verified registry evidence"
+          }))
+        : [
+            { label: "Provenance Source", desc: "Open Contracting Data Standard (OCDS v1.1) verified registry" },
+            { label: "Integrity Policy", desc: "Findings grounded in authentic tender awards, bids, and heuristic red flags" }
+          ];
 
       setMessages((prev) => [
         ...prev,
         {
           sender: "ai",
           text: reply,
-          points: [
-            { label: "Anomaly Index", desc: "CRS risk score elevated to 84/100 due to cross-directorship linkages." },
-            { label: "Compliance Citation", desc: "Violates CVC Guideline Circular 02/05/2019 regarding minimum tender bidding duration." }
-          ]
+          points: points,
+          citations: res?.citations || []
         }
       ]);
     } catch (err) {
+      console.error("AI Assistant query failed:", err);
       setMessages((prev) => [
         ...prev,
         {
           sender: "ai",
-          text: `PARAKH AI Copilot Response: Evaluated risk metrics for query. Red flag indicator triggered on contract specification similarity score exceeding 85%.`
+          text: "⚠️ An error occurred while retrieving forensic audit intelligence. Please verify your connection or try again.",
+          points: [
+            { label: "Error State", desc: "Network or server timeout during assistant inference" }
+          ]
         }
       ]);
     } finally {

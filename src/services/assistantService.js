@@ -21,6 +21,9 @@ export const assistantService = {
     });
     return response.data;
   },
+  async ask(query, contractId = null) {
+    return this.queryAssistant(query, contractId);
+  },
 };
 
 export default assistantService;
