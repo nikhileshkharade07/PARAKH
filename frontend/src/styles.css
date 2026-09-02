@@ -5,31 +5,31 @@
 @theme {
   --color-primary: #000000;
   --color-primary-hover: #1e293b;
-  --color-primary-container: #131b2e;
+  --color-primary-container: #0f172a;
   --color-on-primary: #ffffff;
   --color-primary-fixed: #000000;
   --color-on-primary-fixed: #ffffff;
 
-  --color-secondary: #505f76;
-  --color-secondary-container: #e2e8f0;
-  --color-on-secondary-container: #1e293b;
-  --color-secondary-fixed: #e2e8f0;
+  --color-secondary: #475569;
+  --color-secondary-container: #f1f5f9;
+  --color-on-secondary-container: #0f172a;
+  --color-secondary-fixed: #f1f5f9;
 
   --color-surface: #ffffff;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f6f3f5;
-  --color-surface-container: #f0edef;
-  --color-surface-container-high: #eae7e9;
-  --color-surface-container-highest: #e4e2e4;
-  --color-surface-variant: #e2e8f0;
+  --color-surface-container-low: #f8fafc;
+  --color-surface-container: #f1f5f9;
+  --color-surface-container-high: #e2e8f0;
+  --color-surface-container-highest: #cbd5e1;
+  --color-surface-variant: #f1f5f9;
 
-  --color-background: #fcf8fa;
-  --color-on-background: #1b1b1d;
-  --color-on-surface: #1b1b1d;
-  --color-on-surface-variant: #505f76;
+  --color-background: #ffffff;
+  --color-on-background: #0f172a;
+  --color-on-surface: #0f172a;
+  --color-on-surface-variant: #64748b;
 
-  --color-outline: #c6c6cd;
-  --color-outline-variant: #e4e2e4;
+  --color-outline: #e2e8f0;
+  --color-outline-variant: #f1f5f9;
 
   --color-error: #ba1a1a;
   --color-error-container: #fee2e2;
@@ -52,35 +52,35 @@
 }
 
 :root {
-  /* Parakh Premium Intelligence Suite (1418880512043178576) Design Tokens */
+  /* Parakh Premium Intelligence Suite Design Tokens (Light Theme) */
   --font-display: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Geist', 'JetBrains Mono', monospace;
 
   /* Surfaces & Backgrounds */
-  --bg-main: #fcf8fa;
+  --bg-main: #ffffff;
   --bg-surface: #ffffff;
-  --bg-surface-subtle: #f6f3f5;
-  --bg-surface-container: #f0edef;
+  --bg-surface-subtle: #f8fafc;
+  --bg-surface-container: #f1f5f9;
   --bg-card: #ffffff;
-  --bg-card-hover: #f6f3f5;
-  --border-color: #e4e2e4;
-  --border-subtle: #f0edef;
-  --border-dark: #c6c6cd;
+  --bg-card-hover: #f8fafc;
+  --border-color: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --border-dark: #cbd5e1;
 
   /* Brand Primary */
   --primary: #000000;
   --primary-hover: #1e293b;
-  --primary-light: #f0edef;
-  --primary-container: #131b2e;
-  --secondary: #505f76;
+  --primary-light: #f1f5f9;
+  --primary-container: #0f172a;
+  --secondary: #475569;
   --secondary-hover: #334155;
 
   /* High Contrast Typography */
-  --text-primary: #1b1b1d;
-  --text-secondary: #45464d;
-  --text-muted: #76777d;
-  --text-light: #9ca3af;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
 
   /* Restrained Financial Risk Semantics */
   --risk-critical: #7f1d1d;
@@ -104,88 +104,16 @@
   --header-height: 64px;
 }
 
-[data-theme="dark"], html.dark {
-  color-scheme: dark;
-  --bg-main: #0a0d14;
-  --bg-surface: #0f141f;
-  --bg-surface-subtle: #161c2b;
-  --bg-surface-container: #1b2234;
-  --bg-card: #0f141f;
-  --bg-card-hover: #1b2234;
-  --border-color: #263045;
-  --border-subtle: #1e2638;
-  --border-dark: #374460;
-
-  --color-primary: #f8fafc;
-  --color-primary-hover: #e2e8f0;
-  --color-primary-container: #1e293b;
-  --color-on-primary: #0f172a;
-  --color-primary-fixed: #f8fafc;
-  --color-on-primary-fixed: #0f172a;
-
-  --color-secondary: #94a3b8;
-  --color-secondary-container: #1e293b;
-  --color-on-secondary-container: #e2e8f0;
-  --color-secondary-fixed: #1e293b;
-
-  --color-surface: #0f141f;
-  --color-surface-container-lowest: #0a0d14;
-  --color-surface-container-low: #121824;
-  --color-surface-container: #171f30;
-  --color-surface-container-high: #1e283d;
-  --color-surface-container-highest: #28354f;
-  --color-surface-variant: #1e293b;
-
-  --color-background: #07090e;
-  --color-on-background: #f1f5f9;
-  --color-on-surface: #f1f5f9;
-  --color-on-surface-variant: #94a3b8;
-
-  --color-outline: #334155;
-  --color-outline-variant: #1e293b;
-
-  --primary: #f8fafc;
-  --primary-hover: #e2e8f0;
-  --primary-light: #1e293b;
-  --primary-container: #1e293b;
-  --secondary: #94a3b8;
-
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --text-light: #64748b;
-  
-  background-color: #07090e !important;
-  color: #f1f5f9 !important;
-}
-
-[data-theme="dark"] body, html.dark body {
-  background-color: #07090e !important;
-  color: #f1f5f9 !important;
-}
-
-[data-theme="dark"] .bg-white, html.dark .bg-white {
-  background-color: #0f141f !important;
-  color: #f1f5f9 !important;
-}
-
-[data-theme="dark"] .bg-white\/65, html.dark .bg-white\/65 {
-  background-color: rgba(15, 20, 31, 0.75) !important;
-}
-
-[data-theme="dark"] .bg-white\/50, html.dark .bg-white\/50 {
-  background-color: rgba(15, 20, 31, 0.6) !important;
-}
-
-[data-theme="dark"] .glass-card, html.dark .glass-card {
-  background-color: #0f141f !important;
-  border-color: #263045 !important;
-  color: #f1f5f9 !important;
-}
-
-[data-theme="dark"] .glass-panel, html.dark .glass-panel {
-  background-color: rgba(15, 20, 31, 0.75) !important;
-  border-color: rgba(38, 48, 69, 0.8) !important;
+/* Base resets */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
@@ -220,32 +148,32 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #fcf8fa;
+  background: #ffffff;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c6c6cd;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #76777d;
+  background: #94a3b8;
 }
 
 /* Glass Card & Panel System */
 .glass-card {
   background-color: #ffffff;
-  border: 1px solid #e4e2e4;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .glass-card:hover {
-  border-color: #c6c6cd;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .glass-panel {
-  background-color: rgba(255, 255, 255, 0.65);
+  background-color: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid #e2e8f0;
 }

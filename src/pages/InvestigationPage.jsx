@@ -33,7 +33,7 @@ export default function InvestigationPage() {
     async function loadCases() {
       try {
         const res = await api.get("/contracts?risk_level=high&limit=12");
-        const list = res.data && res.data.length > 0 ? res.data : defaultCases;
+        const list = Array.isArray(res.data) && res.data.length > 0 ? res.data : defaultCases;
         setContractsList(list);
 
         if (contractIdParam) {
@@ -42,7 +42,7 @@ export default function InvestigationPage() {
           else {
             try {
               const singleRes = await api.get(`/contracts/${contractIdParam}`);
-              setSelectedContract(singleRes.data || list[0]);
+              setSelectedContract(singleRes.data && typeof singleRes.data === "object" ? singleRes.data : list[0]);
             } catch {
               setSelectedContract(list[0]);
             }

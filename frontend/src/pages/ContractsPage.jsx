@@ -32,8 +32,8 @@ export default function ContractsPage() {
           api.get("/departments"),
           api.get("/vendors")
         ]);
-        setDepartments(dRes.data || []);
-        setVendors(vRes.data || []);
+        setDepartments(Array.isArray(dRes.data) ? dRes.data : []);
+        setVendors(Array.isArray(vRes.data) ? vRes.data : []);
       } catch (e) {
         console.error(e);
       }
@@ -53,7 +53,7 @@ export default function ContractsPage() {
         params.append("limit", "5000");
 
         const res = await api.get(`/contracts?${params.toString()}`);
-        if (Array.isArray(res.data)) {
+        if (Array.isArray(res.data) && res.data.length > 0) {
           setContracts(res.data);
         } else {
           setContracts(defaultContracts);
@@ -73,8 +73,8 @@ export default function ContractsPage() {
   const getRiskBadge = (crs, level) => {
     if (crs >= 85 || level === "critical") {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/40 text-error border border-error/20">
-          <span className="w-1.5 h-1.5 rounded-full bg-error"></span>
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-600"></span>
           <span>Critical</span>
           <span className="text-xs font-mono font-bold">CRS {crs}</span>
         </span>
@@ -82,8 +82,8 @@ export default function ContractsPage() {
     }
     if (crs >= 70 || level === "high") {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 border border-orange-200">
-          <span className="w-1.5 h-1.5 rounded-full bg-orange-600"></span>
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
           <span>High</span>
           <span className="text-xs font-mono font-bold">CRS {crs}</span>
         </span>
@@ -91,15 +91,15 @@ export default function ContractsPage() {
     }
     if (crs >= 40 || level === "medium") {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
           <span>Medium</span>
           <span className="text-xs font-mono font-bold">CRS {crs}</span>
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
         <span>Low</span>
         <span className="text-xs font-mono font-bold">CRS {crs}</span>
@@ -134,26 +134,26 @@ export default function ContractsPage() {
   return (
     <>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-outline-variant/20 pb-6 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-6 mb-6">
         <div>
-          <h1 className="font-headline-page text-headline-page-mobile md:text-headline-page text-primary tracking-tight">
+          <h1 className="font-headline-page text-headline-page-mobile md:text-headline-page text-slate-900 tracking-tight font-bold">
             Contract Registry
           </h1>
-          <p className="font-body-base text-body-base text-on-surface-variant mt-1">
+          <p className="font-body-base text-body-base text-slate-600 mt-1">
             Search, filter and review all monitored procurement contracts and calculated Composite Risk Scores ({contracts.length} records).
           </p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={exportCSV}
-            className="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-on-surface font-label-bold text-label-bold uppercase hover:bg-surface-container-low transition-colors shadow-sm cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 font-label-bold text-label-bold uppercase hover:bg-slate-50 transition-colors shadow-xs cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px]">download</span>
             <span>Export CSV</span>
           </button>
           <button
             onClick={() => navigate("/ingest")}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-bold text-label-bold uppercase hover:opacity-90 transition-opacity shadow-sm cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg font-label-bold text-label-bold uppercase hover:bg-slate-800 transition-colors shadow-xs cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
             <span>New Ingestion</span>
@@ -162,13 +162,13 @@ export default function ContractsPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="bg-surface-container-lowest dark:bg-slate-900 border border-outline-variant/30 rounded-xl p-4 flex flex-wrap gap-4 items-end mb-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
+      <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-wrap gap-4 items-end mb-6 shadow-xs">
         <div className="flex-1 min-w-[240px]">
-          <label className="font-label-bold text-label-bold text-on-surface-variant uppercase block mb-1.5">
+          <label className="font-label-bold text-label-bold text-slate-600 uppercase block mb-1.5 font-semibold text-xs">
             Search Contracts / Vendors
           </label>
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-[18px]">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
               search
             </span>
             <input
@@ -182,13 +182,13 @@ export default function ContractsPage() {
                 setSearchParams(p);
                 setPage(1);
               }}
-              className="w-full bg-surface-container-low dark:bg-slate-800 border border-outline-variant/30 rounded-lg pl-9 pr-4 py-2 text-sm text-on-surface focus:outline-none focus:border-primary/50"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-900 focus:outline-none focus:border-slate-400 focus:bg-white"
             />
           </div>
         </div>
 
         <div className="flex flex-col gap-1.5 min-w-[160px]">
-          <label className="font-label-bold text-label-bold text-on-surface-variant uppercase">
+          <label className="font-label-bold text-label-bold text-slate-600 uppercase font-semibold text-xs">
             Risk Level
           </label>
           <select
@@ -200,7 +200,7 @@ export default function ContractsPage() {
               setSearchParams(p);
               setPage(1);
             }}
-            className="bg-surface-container-low dark:bg-slate-800 border border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2 focus:outline-none focus:border-primary/50 cursor-pointer"
+            className="bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 px-3 py-2 focus:outline-none focus:border-slate-400 cursor-pointer"
           >
             <option value="">All Risk Levels</option>
             <option value="critical">Critical (CRS ≥ 85)</option>
@@ -211,7 +211,7 @@ export default function ContractsPage() {
         </div>
 
         <div className="flex flex-col gap-1.5 min-w-[180px]">
-          <label className="font-label-bold text-label-bold text-on-surface-variant uppercase">
+          <label className="font-label-bold text-label-bold text-slate-600 uppercase font-semibold text-xs">
             Department
           </label>
           <select
@@ -223,7 +223,7 @@ export default function ContractsPage() {
               setSearchParams(p);
               setPage(1);
             }}
-            className="bg-surface-container-low dark:bg-slate-800 border border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2 focus:outline-none focus:border-primary/50 cursor-pointer"
+            className="bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 px-3 py-2 focus:outline-none focus:border-slate-400 cursor-pointer"
           >
             <option value="">All Departments</option>
             {departments.map((d) => (
@@ -237,7 +237,7 @@ export default function ContractsPage() {
             setSearchParams(new URLSearchParams());
             setPage(1);
           }}
-          className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 border border-outline-variant/30 text-on-surface-variant rounded-lg text-sm font-medium hover:bg-surface-container-high/60 transition-colors h-[38px] flex items-center gap-1.5 cursor-pointer"
+          className="px-4 py-2 bg-slate-100 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors h-[38px] flex items-center gap-1.5 cursor-pointer"
         >
           <span className="material-symbols-outlined text-[18px]">restart_alt</span>
           <span>Reset</span>
@@ -245,24 +245,24 @@ export default function ContractsPage() {
       </div>
 
       {/* Data Table Container */}
-      <div className="bg-surface-container-lowest dark:bg-slate-900 rounded-xl border border-outline-variant/30 overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)]">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-outline-variant/20 bg-surface-container-low/50 dark:bg-slate-800/50">
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Contract ID</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Title / Scope</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Department</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Vendor</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Value</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Risk Assessment</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+              <tr className="border-b border-slate-200 bg-slate-50">
+                <th className="px-6 py-4 font-semibold text-xs text-slate-600 uppercase tracking-wider">Contract ID</th>
+                <th className="px-6 py-4 font-semibold text-xs text-slate-600 uppercase tracking-wider">Title / Scope</th>
+                <th className="px-6 py-4 font-semibold text-xs text-slate-600 uppercase tracking-wider">Department</th>
+                <th className="px-6 py-4 font-semibold text-xs text-slate-600 uppercase tracking-wider">Vendor</th>
+                <th className="px-6 py-4 font-semibold text-xs text-slate-600 uppercase tracking-wider">Value</th>
+                <th className="px-6 py-4 font-semibold text-xs text-slate-600 uppercase tracking-wider">Risk Assessment</th>
+                <th className="px-6 py-4 font-semibold text-xs text-slate-600 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-outline-variant/10">
+            <tbody className="divide-y divide-slate-100 font-code-data text-code-data">
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-12 text-center text-sm text-on-surface-variant font-mono">
+                  <td colSpan="7" className="px-6 py-12 text-center text-sm text-slate-500 font-mono">
                     Loading contracts database records...
                   </td>
                 </tr>
@@ -273,35 +273,35 @@ export default function ContractsPage() {
                   return (
                     <tr
                       key={c.id || c.contract_number}
-                      className="hover:bg-surface-container-low/50 transition-colors"
+                      className="hover:bg-slate-50/70 transition-colors"
                     >
-                      <td className="px-6 py-4 font-mono font-semibold text-primary text-xs whitespace-nowrap">
+                      <td className="px-6 py-4 font-mono font-semibold text-slate-900 text-xs whitespace-nowrap">
                         {c.contract_number || `CNT-${c.id}`}
                       </td>
                       <td className="px-6 py-4 max-w-xs">
-                        <div className="font-medium text-sm text-primary line-clamp-1">
+                        <div className="font-medium text-sm text-slate-900 line-clamp-1">
                           {c.title}
                         </div>
-                        <div className="text-xs text-on-surface-variant mt-0.5">
+                        <div className="text-xs text-slate-500 mt-0.5 font-sans">
                           Status: {c.status || "Audited"}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-on-surface whitespace-nowrap">
+                      <td className="px-6 py-4 text-sm text-slate-700 whitespace-nowrap font-sans">
                         {c.department_name || "Government Dept"}
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-primary whitespace-nowrap">
+                      <td className="px-6 py-4 text-sm font-medium text-slate-900 whitespace-nowrap font-sans">
                         {c.vendor_name || "Supplier Org"}
                       </td>
-                      <td className="px-6 py-4 font-mono font-bold text-sm text-primary whitespace-nowrap">
+                      <td className="px-6 py-4 font-mono font-bold text-sm text-slate-900 whitespace-nowrap">
                         {formatINR(c.award_value)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getRiskBadge(crs, c.risk_level)}
                       </td>
-                      <td className="px-6 py-4 text-right whitespace-nowrap">
+                      <td className="px-6 py-4 text-right whitespace-nowrap font-sans">
                         <button
                           onClick={() => navigate(`/investigation?contract_id=${c.id}`)}
-                          className="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-xs font-medium hover:opacity-90 transition-opacity shadow-sm cursor-pointer"
+                          className="px-3 py-1.5 bg-black text-white rounded-lg text-xs font-medium hover:bg-slate-800 transition-opacity shadow-xs cursor-pointer"
                         >
                           Investigate
                         </button>
@@ -311,7 +311,7 @@ export default function ContractsPage() {
                 })
               ) : (
                 <tr>
-                  <td colSpan="7" className="px-6 py-12 text-center text-sm text-on-surface-variant">
+                  <td colSpan="7" className="px-6 py-12 text-center text-sm text-slate-500">
                     No contracts matching the selected filters.
                   </td>
                 </tr>
@@ -322,25 +322,25 @@ export default function ContractsPage() {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="p-4 border-t border-outline-variant/20 bg-surface-container-low/30 flex items-center justify-between">
-            <div className="text-xs font-mono text-on-surface-variant">
+          <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+            <div className="text-xs font-mono text-slate-500">
               Showing {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, contracts.length)} of {contracts.length} records
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs font-medium disabled:opacity-40 hover:bg-surface-container-high transition-colors cursor-pointer"
+                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium disabled:opacity-40 hover:bg-slate-100 transition-colors cursor-pointer text-slate-700"
               >
                 Previous
               </button>
-              <span className="text-xs font-mono font-bold text-primary px-2">
+              <span className="text-xs font-mono font-bold text-slate-900 px-2">
                 {page} / {totalPages}
               </span>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
-                className="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs font-medium disabled:opacity-40 hover:bg-surface-container-high transition-colors cursor-pointer"
+                className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-medium disabled:opacity-40 hover:bg-slate-100 transition-colors cursor-pointer text-slate-700"
               >
                 Next
               </button>
