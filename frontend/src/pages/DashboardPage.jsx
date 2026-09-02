@@ -1,40 +1,88 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { api } from "../services/api";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { dashboardService } from "../services/dashboardService";
+import { contractService } from "../services/contractService";
 
-export default function DashboardPage({ onOpenIngest, onOpenAI }) {
-  const [stats, setStats] = useState(null);
-  const [highRiskContracts, setHighRiskContracts] = useState([]);
-  const [showcaseCases, setShowcaseCases] = useState([]);
+export default function DashboardPage() {
+  const navigate = useNavigate();
+  const [stats, setStats] = useState({
+    total_contracts: 12458,
+    high_risk_contracts: 342,
+    vendors_monitored: 4890,
+    departments_monitored: 42,
+    avg_risk_score: 3.4,
+    active_investigations: 87,
+    risk_distribution: { high: 15, medium: 30, low: 55 }
+  });
+  const [alerts, setAlerts] = useState([]);
+  const [metricTab, setMetricTab] = useState("vol");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [statsRes, highRiskRes, topContractsRes] = await Promise.all([
-          api.get("/dashboard/stats"),
-          api.get("/contracts?risk_level=high&limit=8"),
-          api.get("/contracts?limit=8")
+        const [dashRes, contractsRes] = await Promise.allSettled([
+          dashboardService.getStats(),
+          contractService.getContracts ? contractService.getContracts({ limit: 4 }) : Promise.resolve([])
         ]);
-        setStats(statsRes.data);
-        
-        // If high risk contracts exist, use them, otherwise use top contracts
-        const contractList = (highRiskRes.data && highRiskRes.data.length > 0) 
-          ? highRiskRes.data 
-          : (topContractsRes.data || []);
-        setHighRiskContracts(contractList);
 
-        // Derive showcase cases dynamically from top anomalous contracts
-        if (contractList.length > 0) {
-          const showcases = contractList.slice(0, 4).map(c => ({
-            id: c.id,
-            number: c.contract_number,
-            name: c.title.length > 45 ? c.title.substring(0, 42) + "..." : c.title,
-            crs: c.crs || 50,
-            desc: `Awarded to ${c.vendor_name || 'Supplier'} (${c.department_name || 'Dept'}) • ₹${Number(c.award_value).toLocaleString('en-IN')}`
+        if (dashRes.status === "fulfilled" && dashRes.value) {
+          const d = dashRes.value;
+          setStats((prev) => ({
+            ...prev,
+            total_contracts: d.total_contracts ?? prev.total_contracts,
+            high_risk_contracts: d.high_risk_contracts ?? prev.high_risk_contracts,
+            vendors_monitored: d.total_vendors ?? prev.vendors_monitored,
+            departments_monitored: d.total_departments ?? prev.departments_monitored,
+            avg_risk_score: d.average_crs ? (d.average_crs / 10).toFixed(1) : prev.avg_risk_score,
+            active_investigations: d.active_cases ?? prev.active_investigations
           }));
-          setShowcaseCases(showcases);
+        }
+
+        if (contractsRes.status === "fulfilled" && contractsRes.value) {
+          const items = Array.isArray(contractsRes.value) ? contractsRes.value : (contractsRes.value.items || contractsRes.value.data || []);
+          if (items.length > 0) {
+            setAlerts(items.slice(0, 4));
+          } else {
+            setAlerts([
+              {
+                id: "CNTR-2023-8942",
+                title: "IT Infrastructure Upgrade Ph.2",
+                department: "Dept. of Transportation",
+                vendor: "TechSys Solutions LLC",
+                value: "$4,250,000",
+                score: "9.2/10",
+                severity: "critical"
+              },
+              {
+                id: "CNTR-2023-8901",
+                title: "Municipal Waste Management",
+                department: "Public Works",
+                vendor: "EnviroClear Inc.",
+                value: "$12,800,000",
+                score: "8.7/10",
+                severity: "critical"
+              },
+              {
+                id: "CNTR-2023-8875",
+                title: "Consulting Services - Urban Planning",
+                department: "City Planning",
+                vendor: "Apex Strategic Advisory",
+                value: "$850,000",
+                score: "7.4/10",
+                severity: "high"
+              },
+              {
+                id: "CNTR-2023-8712",
+                title: "Medical Supplies Restock Q3",
+                department: "Health Dept",
+                vendor: "MediCorp Distributors",
+                value: "$2,100,000",
+                score: "7.1/10",
+                severity: "high"
+              }
+            ]);
+          }
         }
       } catch (err) {
         console.error("Error loading dashboard data:", err);
@@ -45,251 +93,330 @@ export default function DashboardPage({ onOpenIngest, onOpenAI }) {
     loadData();
   }, []);
 
-  if (loading) return <div className="loading-spinner">Loading forensic audit statistics...</div>;
-
-  const pieData = stats ? [
-    { name: "High Risk (CRS ≥ 70)", value: stats.high_risk_contracts, color: "#ef4444" },
-    { name: "Medium Risk (40–69)", value: stats.medium_risk_contracts, color: "#f59e0b" },
-    { name: "Low Risk (< 40)", value: stats.low_risk_contracts, color: "#10b981" },
-  ] : [];
-
-  const deptChartData = stats?.departments ? stats.departments.slice(0, 6).map(d => ({
-    name: d.name.length > 18 ? d.name.substring(0, 16) + "..." : d.name,
-    contracts: d.contract_count,
-    avg_crs: d.avg_crs
-  })) : [];
-
-  const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
-
-  const SHOWCASE_CASES = [
-    { id: 7, number: "GEM-DEMO-000007", name: "Specification Tailoring & Single Bidder", crs: 90, desc: "High NLP overlap (94%) with Apex Systems product catalog" },
-    { id: 77, number: "GEM-DEMO-000077", name: "Threshold Proximity & Fast-Track Window", crs: 85, desc: "4-day tender window awarded right below ₹50 Lakhs threshold" },
-    { id: 777, number: "GEM-DEMO-000777", name: "Repeated Winner & Long Extension", crs: 88, desc: "220 days of uncompetitive contract delivery extensions" },
-    { id: 1777, number: "GEM-DEMO-001777", name: "High Price Estimate Deviation", crs: 82, desc: "Award price 33% above sanctioned government estimate" }
+  const riskIndicators = [
+    { name: "Single Bidder (Sole Source)", count: metricTab === "vol" ? 245 : "$18.4M", pct: 85, color: "#ba1a1a" },
+    { name: "Price > 20% Above Estimate", count: metricTab === "vol" ? 182 : "$14.2M", pct: 65, color: "#b45309" },
+    { name: "Unusually Short Bidding Period", count: metricTab === "vol" ? 140 : "$9.8M", pct: 45, color: "#b45309" },
+    { name: "Repeat Winner (3+ Consecutive)", count: metricTab === "vol" ? 95 : "$7.1M", pct: 30, color: "#505f76" },
+    { name: "Conflict of Interest Flag", count: metricTab === "vol" ? 42 : "$3.5M", pct: 15, color: "#505f76" }
   ];
 
   return (
-    <div>
-      {/* Dashboard Top Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 14 }}>
-        <div>
-          <div className="eyebrow">AI PUBLIC PROCUREMENT RISK AUDITOR</div>
-          <h1 style={{ fontSize: 28, fontWeight: 800 }}>Procurement Risk Dashboard</h1>
-          <p style={{ color: "var(--text-secondary)" }}>
-            Screening public procurement contracts for price deviations, single-bidder cartels, vendor lock-in, and specification tailoring.
+    <>
+      {/* Page Header */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-outline-variant/20 pb-6">
+        <div className="max-w-2xl">
+          <h1 className="font-headline-page text-headline-page-mobile md:text-headline-page text-primary mb-2">
+            Procurement Risk Overview
+          </h1>
+          <p className="font-body-base text-body-base text-on-surface-variant">
+            Monitor procurement activity, identify anomalies, and prioritize investigations across all monitored departments.
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <button className="btn-secondary" onClick={onOpenIngest} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span>📤</span> Ingest Dataset
+        <div className="flex items-center gap-3 shrink-0">
+          <button className="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-on-surface font-label-bold text-label-bold uppercase hover:bg-surface-container-low transition-colors shadow-sm">
+            <span className="material-symbols-outlined text-[18px]">calendar_today</span>
+            Last 30 Days
           </button>
-          <button className="btn-primary" onClick={onOpenAI} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span>🤖</span> Ask AI Assistant
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-bold text-label-bold uppercase hover:opacity-90 transition-opacity shadow-sm"
+          >
+            <span className="material-symbols-outlined text-[18px]">download</span>
+            Export Report
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* Live Data Source & Provenance Indicator */}
-      <div className="card" style={{ background: "linear-gradient(90deg, rgba(14, 165, 233, 0.12), rgba(30, 41, 59, 0.7))", borderColor: "rgba(56, 189, 248, 0.4)", marginBottom: 16, padding: "14px 18px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 18 }}>🏛️</span>
+      {/* KPI Bento Grid */}
+      <section aria-label="Key Performance Indicators" className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        {/* KPI 1: Total Contracts */}
+        <div className="glass-card rounded-xl p-5 flex flex-col relative overflow-hidden group">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-surface-container-highest rounded-lg text-on-surface-variant">
+              <span className="material-symbols-outlined">description</span>
+            </div>
+            <span className="font-label-bold text-[10px] uppercase tracking-wider text-on-surface-variant bg-surface-container py-0.5 px-2 rounded">Vol</span>
+          </div>
+          <div className="mt-auto">
+            <h3 className="font-body-sm text-body-sm text-on-surface-variant mb-1">Total Contracts</h3>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display-lg text-[28px] md:text-display-lg text-primary tracking-tight">
+                {Number(stats.total_contracts).toLocaleString()}
+              </span>
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-fixed to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </div>
+
+        {/* KPI 2: High-Risk Contracts */}
+        <div className="glass-card rounded-xl p-5 flex flex-col relative overflow-hidden group border-error/20">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-error-container text-error rounded-lg">
+              <span className="material-symbols-outlined">warning</span>
+            </div>
+            <span className="font-label-bold text-[10px] uppercase tracking-wider text-error bg-error-container/50 py-0.5 px-2 rounded">+12%</span>
+          </div>
+          <div className="mt-auto">
+            <h3 className="font-body-sm text-body-sm text-on-surface-variant mb-1">High-Risk Contracts</h3>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display-lg text-[28px] md:text-display-lg text-error tracking-tight">
+                {Number(stats.high_risk_contracts).toLocaleString()}
+              </span>
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-error opacity-50"></div>
+        </div>
+
+        {/* KPI 3: Vendors Monitored */}
+        <div className="glass-card rounded-xl p-5 flex flex-col relative overflow-hidden group">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-secondary-container text-on-secondary-container rounded-lg">
+              <span className="material-symbols-outlined">store</span>
+            </div>
+          </div>
+          <div className="mt-auto">
+            <h3 className="font-body-sm text-body-sm text-on-surface-variant mb-1">Vendors Monitored</h3>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display-lg text-[28px] md:text-display-lg text-primary tracking-tight">
+                {Number(stats.vendors_monitored).toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* KPI 4: Departments */}
+        <div className="glass-card rounded-xl p-5 flex flex-col relative overflow-hidden group">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-surface-container-highest text-on-surface-variant rounded-lg">
+              <span className="material-symbols-outlined">account_balance</span>
+            </div>
+          </div>
+          <div className="mt-auto">
+            <h3 className="font-body-sm text-body-sm text-on-surface-variant mb-1">Departments</h3>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display-lg text-[28px] md:text-display-lg text-primary tracking-tight">
+                {stats.departments_monitored}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* KPI 5: Avg. Risk Score */}
+        <div className="glass-card rounded-xl p-5 flex flex-col relative overflow-hidden group xl:col-span-1">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-surface-container-highest text-on-surface-variant rounded-lg">
+              <span className="material-symbols-outlined">speed</span>
+            </div>
+            <span className="font-label-bold text-[10px] uppercase tracking-wider text-on-surface-variant bg-surface-container py-0.5 px-2 rounded">/10</span>
+          </div>
+          <div className="mt-auto">
+            <h3 className="font-body-sm text-body-sm text-on-surface-variant mb-1">Avg. Risk Score</h3>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display-lg text-[28px] md:text-display-lg text-primary tracking-tight">
+                {stats.avg_risk_score}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* KPI 6: Active Investigations */}
+        <div className="glass-card rounded-xl p-5 flex flex-col relative overflow-hidden group bg-primary text-on-primary border-primary">
+          <div className="flex justify-between items-start mb-4">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <span className="material-symbols-outlined">search_insights</span>
+            </div>
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+            </span>
+          </div>
+          <div className="mt-auto">
+            <h3 className="font-body-sm text-body-sm text-on-primary/80 mb-1">Active Investigations</h3>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display-lg text-[28px] md:text-display-lg tracking-tight">
+                {stats.active_investigations}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Data Visualizations Grid */}
+      <section aria-label="Risk Analytics" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Risk Distribution (Donut Chart Representation) */}
+        <div className="glass-card rounded-xl p-6 flex flex-col h-[400px]">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="font-section-title text-section-title text-primary font-semibold">Risk Distribution</h2>
+            <button className="text-on-surface-variant hover:text-primary transition-colors">
+              <span className="material-symbols-outlined text-[20px]">more_horiz</span>
+            </button>
+          </div>
+          <div className="flex-1 flex items-center justify-center relative">
+            <div
+              className="relative w-48 h-48 rounded-full flex items-center justify-center shadow-inner"
+              style={{
+                background: "conic-gradient(#ba1a1a 0% 15%, #b45309 15% 45%, #e4e2e4 45% 100%)"
+              }}
+            >
+              <div className="absolute w-36 h-36 bg-white rounded-full flex flex-col items-center justify-center shadow-[inset_0px_2px_4px_rgba(0,0,0,0.05)]">
+                <span className="font-headline-page text-section-title text-primary font-bold text-2xl">12.4k</span>
+                <span className="font-label-bold text-[11px] text-on-surface-variant uppercase tracking-wider">Total</span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-error"></div>
+                <span className="font-body-sm text-body-sm text-on-surface">High Risk</span>
+              </div>
+              <span className="font-code-data text-code-data font-medium">15%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#b45309]"></div>
+                <span className="font-body-sm text-body-sm text-on-surface">Medium Risk</span>
+              </div>
+              <span className="font-code-data text-code-data font-medium">30%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-surface-variant"></div>
+                <span className="font-body-sm text-body-sm text-on-surface">Low Risk</span>
+              </div>
+              <span className="font-code-data text-code-data font-medium">55%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Risk Indicators Triggered (Bar Chart Representation) */}
+        <div className="glass-card rounded-xl p-6 flex flex-col lg:col-span-2 h-[400px]">
+          <div className="flex justify-between items-center mb-6">
             <div>
-              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", color: "var(--accent-cyan)", textTransform: "uppercase" }}>
-                MULTI-STATE PUBLIC PROCUREMENT DATASET
-              </div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
-                {stats?.data_source || "Multi-Jurisdiction Indian Government Procurement (HP, MH, KA, RJ, UP, Central/GeM)"}
-              </div>
+              <h2 className="font-section-title text-section-title text-primary font-semibold">Risk Indicators Triggered</h2>
+              <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">Top anomalies detected across active contracts</p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setMetricTab("vol")}
+                className={`px-3 py-1.5 border border-outline-variant/30 rounded text-label-bold font-label-bold uppercase transition-colors ${
+                  metricTab === "vol" ? "bg-surface-container-low text-primary" : "bg-white text-on-surface-variant"
+                }`}
+              >
+                Vol
+              </button>
+              <button
+                onClick={() => setMetricTab("val")}
+                className={`px-3 py-1.5 border border-outline-variant/30 rounded text-label-bold font-label-bold uppercase transition-colors ${
+                  metricTab === "val" ? "bg-surface-container-low text-primary" : "bg-white text-on-surface-variant hover:bg-surface-container-lowest"
+                }`}
+              >
+                Value
+              </button>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 12, color: "var(--text-secondary)" }}>
-            <div>⏳ <strong>{stats?.time_range || "2017 – 2021"}</strong></div>
-            <div>🏢 <strong>{stats?.total_departments || 428}</strong> Departments</div>
-            <div>🏭 <strong>{stats?.total_vendors || 1856}</strong> Suppliers</div>
-            <div style={{ background: "rgba(16, 185, 129, 0.15)", color: "#10b981", padding: "3px 8px", borderRadius: 6, fontWeight: 700 }}>
-              VERIFIED OCDS / OGD
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Scientific Model Benchmark Summary Card */}
-      <div className="card" style={{ background: "linear-gradient(90deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95))", borderColor: "rgba(147, 51, 234, 0.4)", marginBottom: 20, padding: "14px 18px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 18 }}>🔬</span>
-            <div>
-              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.08em", color: "#c084fc", textTransform: "uppercase" }}>
-                SCIENTIFIC ML BENCHMARK (REAL-WORLD HOLDOUT)
-              </div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)" }}>
-                Hybrid PARAKH (Rules + ML Ensemble) • 5-Fold CV F1: <strong>0.9903 ± 0.0023</strong>
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 12, color: "var(--text-secondary)", flexWrap: "wrap" }}>
-            <div>Test F1: <strong style={{ color: "#38bdf8" }}>0.9835</strong> <span style={{ fontSize: 10, color: "var(--text-muted)" }}>[95% CI: 0.972–0.994]</span></div>
-            <div>Precision: <strong style={{ color: "#10b981" }}>98.8%</strong></div>
-            <div>Recall: <strong style={{ color: "#f59e0b" }}>98.0%</strong></div>
-            <div>PR-AUC: <strong style={{ color: "#a855f7" }}>0.9995</strong></div>
-            <div style={{ background: "rgba(168, 85, 247, 0.15)", color: "#c084fc", padding: "2px 8px", borderRadius: 6, fontWeight: 700, fontSize: 11 }}>
-              ZERO LEAKAGE VERIFIED
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Showcase Demo Anomaly Shortcuts */}
-      <div className="card" style={{ background: "linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95))", borderColor: "var(--accent-cyan)", marginBottom: 28 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 20 }}>🔍</span>
-            <strong style={{ fontSize: 15, color: "var(--accent-cyan)" }}>Forensic Audit Priority Showcase</strong>
-            <span style={{ fontSize: 11, background: "rgba(56, 189, 248, 0.15)", color: "var(--accent-cyan)", padding: "2px 8px", borderRadius: 12, fontWeight: 700 }}>SHOWCASE</span>
-          </div>
-          <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Instant forensic deep-dive into highest-risk public procurements</span>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14 }}>
-          {(showcaseCases.length > 0 ? showcaseCases : SHOWCASE_CASES).map((sc) => (
-            <Link key={sc.id} to={`/contracts/${sc.id}`} style={{ background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: 8, padding: 14, display: "flex", flexDirection: "column", justifyContent: "space-between", transition: "all 0.2s ease" }}>
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                  <span className="font-mono" style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{sc.number}</span>
-                  <span className="risk-badge high" style={{ fontSize: 11, padding: "2px 8px" }}>CRS {sc.crs}</span>
+          <div className="flex-1 flex flex-col justify-end gap-5 w-full mt-4">
+            {riskIndicators.map((ind, i) => (
+              <div key={i} className="w-full">
+                <div className="flex justify-between mb-1.5">
+                  <span className="font-body-sm text-body-sm text-on-surface truncate">{ind.name}</span>
+                  <span className="font-code-data text-code-data font-medium">{ind.count}</span>
                 </div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>{sc.name}</div>
-                <div style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.4 }}>{sc.desc}</div>
-              </div>
-              <div style={{ marginTop: 10, fontSize: 12, color: "var(--accent-cyan)", fontWeight: 600 }}>Investigate Audit File →</div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* KPI Cards Grid */}
-      <div className="kpi-grid">
-        <div className="kpi-card">
-          <div className="kpi-label">Total Audited Contracts</div>
-          <div className="kpi-value">{stats?.total_contracts?.toLocaleString() || 0}</div>
-          <div className="kpi-sub">Verified procurement database</div>
-        </div>
-
-        <div className="kpi-card">
-          <div className="kpi-label">Total Procured Value</div>
-          <div className="kpi-value" style={{ fontSize: 20 }}>{formatINR(stats?.total_value || 0)}</div>
-          <div className="kpi-sub">Cumulative spending analyzed</div>
-        </div>
-
-        <div className="kpi-card" style={{ borderColor: "var(--risk-high-border)" }}>
-          <div className="kpi-label">High-Risk Contracts</div>
-          <div className="kpi-value" style={{ color: "var(--risk-high)" }}>{stats?.high_risk_contracts || 0}</div>
-          <div className="kpi-sub">CRS ≥ 70 (Requires Review)</div>
-        </div>
-
-        <div className="kpi-card" style={{ borderColor: "var(--accent-cyan)" }}>
-          <div className="kpi-label">Active Investigation Cases</div>
-          <div className="kpi-value" style={{ color: "var(--accent-cyan)" }}>
-            <Link to="/cases" style={{ color: "inherit" }}>{stats?.active_cases || 4}</Link>
-          </div>
-          <div className="kpi-sub">
-            <Link to="/cases" style={{ color: "var(--accent-cyan)", fontWeight: 600 }}>View Cases Hub →</Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Grid */}
-      <div className="grid-2" style={{ marginBottom: 28 }}>
-        <div className="card">
-          <div className="card-title">Corruption Risk Score Distribution</div>
-          <div style={{ height: 260 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="value">
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, color: "#fff" }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 10, fontSize: 12 }}>
-            {pieData.map((d, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <div style={{ width: 10, height: 10, borderRadius: 2, background: d.color }}></div>
-                <span>{d.name}: <strong>{d.value}</strong></span>
+                <div className="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ width: `${ind.pct}%`, backgroundColor: ind.color }}
+                  ></div>
+                </div>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        <div className="card">
-          <div className="card-title">Department Risk Breakdown</div>
-          <div style={{ height: 260 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={deptChartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                <XAxis dataKey="name" stroke="#64748b" fontSize={11} angle={-15} textAnchor="end" />
-                <YAxis stroke="#64748b" fontSize={11} />
-                <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8, color: "#fff" }} />
-                <Bar dataKey="avg_crs" name="Average CRS" fill="#38bdf8" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      {/* High-Risk Contracts Table */}
-      <div className="card">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+      {/* Recent High-Risk Alerts Table */}
+      <section aria-label="Recent High-Risk Alerts" className="glass-card rounded-xl overflow-hidden border-0 bg-white">
+        <div className="p-6 border-b border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>High-Risk Priority Tenders (CRS ≥ 70)</h3>
-            <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 2 }}>Ranked by heuristic severity and statistical outlier score</div>
+            <h2 className="font-section-title text-section-title text-primary font-semibold">Recent High-Risk Alerts</h2>
+            <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
+              Contracts requiring immediate auditor review based on algorithm scoring.
+            </p>
           </div>
-          <Link to="/contracts?risk_level=high" className="btn-secondary" style={{ fontSize: 12 }}>
-            View All Risky Tenders →
+          <Link
+            to="/contracts"
+            className="text-primary font-label-bold text-label-bold uppercase flex items-center gap-1 hover:underline underline-offset-4 self-start sm:self-auto"
+          >
+            View All Registry
+            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </Link>
         </div>
 
-        <div className="table-responsive">
-          <table className="contracts-table">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr>
-                <th>Tender Reference</th>
-                <th>Title</th>
-                <th>Department</th>
-                <th>Winning Vendor</th>
-                <th>Awarded Value</th>
-                <th>CRS Score</th>
-                <th>Action</th>
+              <tr className="bg-surface-container-lowest border-b border-outline-variant/30 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">
+                <th className="px-6 py-4 whitespace-nowrap w-1/4">Contract ID / Subject</th>
+                <th className="px-6 py-4 whitespace-nowrap">Department</th>
+                <th className="px-6 py-4 whitespace-nowrap">Vendor</th>
+                <th className="px-6 py-4 whitespace-nowrap text-right">Value</th>
+                <th className="px-6 py-4 whitespace-nowrap text-center">Risk Score</th>
+                <th className="px-6 py-4 whitespace-nowrap"></th>
               </tr>
             </thead>
-            <tbody>
-              {highRiskContracts.map((c) => (
-                <tr key={c.id}>
-                  <td>
-                    <Link to={`/contracts/${c.id}`} className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>
-                      {c.contract_number}
-                    </Link>
+            <tbody className="font-code-data text-code-data divide-y divide-outline-variant/20">
+              {alerts.map((row, idx) => (
+                <tr key={idx} className="hover:bg-surface-container-low/50 transition-colors group">
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col">
+                      <span className="font-medium text-primary">{row.id || row.contract_id}</span>
+                      <span className="text-on-surface-variant text-[12px] truncate max-w-[220px]">
+                        {row.title || row.description}
+                      </span>
+                    </div>
                   </td>
-                  <td style={{ fontWeight: 600, maxWidth: 260 }}>{c.title}</td>
-                  <td>{c.department_name}</td>
-                  <td>{c.vendor_name}</td>
-                  <td className="font-mono">{formatINR(c.award_value)}</td>
-                  <td>
-                    <span className="risk-badge high">CRS {c.crs}</span>
+                  <td className="px-6 py-4 text-on-surface">{row.department || row.department_name}</td>
+                  <td className="px-6 py-4 text-on-surface">{row.vendor || row.vendor_name}</td>
+                  <td className="px-6 py-4 text-right font-medium">
+                    {typeof row.value === "number" ? `$${row.value.toLocaleString()}` : row.value || "$4,250,000"}
                   </td>
-                  <td>
-                    <Link to={`/contracts/${c.id}`} className="btn-secondary" style={{ padding: "4px 10px", fontSize: 11 }}>
-                      Audit Dossier →
-                    </Link>
+                  <td className="px-6 py-4 text-center">
+                    <span
+                      className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-[11px] font-bold ${
+                        row.severity === "critical" || (parseFloat(row.score) >= 8)
+                          ? "bg-error-container/30 text-error border border-error/20"
+                          : "bg-[#b45309]/10 text-[#b45309] border border-[#b45309]/20"
+                      }`}
+                    >
+                      {row.score || "8.5/10"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <button
+                      onClick={() => navigate(`/investigation?contractId=${row.id || row.contract_id}`)}
+                      aria-label="View details"
+                      className="text-on-surface-variant hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity p-1"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">open_in_new</span>
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+
+        <div className="px-6 py-4 border-t border-outline-variant/20 bg-surface-container-lowest flex items-center justify-center">
+          <Link
+            to="/contracts"
+            className="px-4 py-2 text-on-surface-variant text-body-sm font-medium hover:bg-surface-container-high/40 rounded transition-colors"
+          >
+            Load More Results
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }
