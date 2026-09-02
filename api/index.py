@@ -35,5 +35,18 @@ if os.path.exists(db_path):
     db_abs = os.path.abspath(target_db).replace("\\", "/")
     os.environ["DATABASE_URL"] = f"sqlite:///{db_abs}"
 
-from backend.app.main import app
+try:
+    try:
+        from app.main import app
+    except ImportError:
+        from backend.app.main import app
+except Exception as e:
+    import traceback
+    err_trace = traceback.format_exc()
+    from fastapi import FastAPI
+    app = FastAPI()
+    @app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE"])
+    def catch_all(path: str):
+        return {"status": "error", "error": "Startup error", "trace": err_trace}
+
 
