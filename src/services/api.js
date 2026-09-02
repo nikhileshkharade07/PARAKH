@@ -468,6 +468,106 @@ function handleFallback(url, method = "GET", data = null) {
     };
   }
 
+  if (path === "/cases" || path.startsWith("/cases")) {
+    const defaultCases = [
+      {
+        id: 1,
+        case_number: "INV-2024-089",
+        contract_id: 7,
+        contract_number: "GEM-2024-C-000007",
+        title: "Supply and Maintenance of High-Capacity Enterprise Servers",
+        department_name: "IT & Electronics",
+        vendor_name: "Apex Solutions Ltd",
+        award_value: 4850000,
+        crs: 92,
+        status: "Investigating",
+        priority: "CRITICAL",
+        notes: "Proprietary server specifications tailored to Apex Solutions product line. Single qualified bidder.",
+        evidence_count: 4,
+        assigned_to_name: "Priya Sharma"
+      },
+      {
+        id: 2,
+        case_number: "INV-2024-088",
+        contract_id: 77,
+        contract_number: "GEM-2024-C-000077",
+        title: "Automated Traffic Surveillance Cameras & Sensor Pods",
+        department_name: "Public Works Dept",
+        vendor_name: "Optima Tech Systems",
+        award_value: 12400000,
+        crs: 86,
+        status: "Pending Review",
+        priority: "HIGH",
+        notes: "Published tender with only 4-day bidding window. Winning bidder price was 32% above engineer estimate.",
+        evidence_count: 3,
+        assigned_to_name: "Priya Sharma"
+      },
+      {
+        id: 3,
+        case_number: "INV-2024-087",
+        contract_id: 142,
+        contract_number: "GEM-2024-C-000142",
+        title: "Medical Diagnostic Equipment & Diagnostic Kits",
+        department_name: "Medical & Health",
+        vendor_name: "BioCare India Pvt",
+        award_value: 8900000,
+        crs: 81,
+        status: "Investigating",
+        priority: "HIGH",
+        notes: "Tender awardee and runner-up registered with same PAN and registered office address.",
+        evidence_count: 4,
+        assigned_to_name: "Priya Sharma"
+      },
+      {
+        id: 4,
+        case_number: "INV-2024-086",
+        contract_id: 215,
+        contract_number: "GEM-2024-C-000215",
+        title: "Highway Asphalt & Resurfacing Material Supply",
+        department_name: "Transport & Infra",
+        vendor_name: "National Bitumen Works",
+        award_value: 34000000,
+        crs: 68,
+        status: "Resolved",
+        priority: "MEDIUM",
+        notes: "Repeat contract extensions without re-tendering. Resolved after departmental refund audit.",
+        evidence_count: 2,
+        assigned_to_name: "Priya Sharma"
+      }
+    ];
+    return { data: defaultCases };
+  }
+
+  if (path === "/blockchain/record" || path === "/blockchain/anchor") {
+    const cId = data?.contract_id || 7;
+    return {
+      data: {
+        contract_id: cId,
+        contract_hash: "0x4b7f8c12e98762a4d339b1a03f441097e411b0e3529a7c36d015b630e2f5b632",
+        tx_hash: "0x98f23789b1c73a87641209b5317a63581297e5436128795412985327a1b632c4",
+        block_number: 6814209,
+        timestamp: new Date().toISOString(),
+        network: "Ethereum Sepolia Testnet",
+        verified: true
+      }
+    };
+  }
+
+  if (path === "/blockchain/verify") {
+    const cId = data?.contract_id || 7;
+    return {
+      data: {
+        contract_id: cId,
+        status: "VERIFIED",
+        match: true,
+        block_timestamp: "2024-11-14T09:30:00Z",
+        network: "Ethereum Sepolia Testnet",
+        anchored_hash: "0x4b7f8c12e98762a4d339b1a03f441097e411b0e3529a7c36d015b630e2f5b632",
+        current_hash: "0x4b7f8c12e98762a4d339b1a03f441097e411b0e3529a7c36d015b630e2f5b632"
+      }
+    };
+  }
+
   return { data: [] };
 }
 

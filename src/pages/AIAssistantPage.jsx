@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { assistantService } from "../services/assistantService";
 
 export default function AIAssistantPage() {
+  const [searchParams] = useSearchParams();
+  const urlQuery = searchParams.get("query") || searchParams.get("q");
+
   const [messages, setMessages] = useState([
     {
       sender: "ai",
@@ -14,6 +18,12 @@ export default function AIAssistantPage() {
   ]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (urlQuery && urlQuery.trim()) {
+      handleSend(urlQuery.trim());
+    }
+  }, [urlQuery]);
 
   const handleSend = async (textToSend) => {
     const q = textToSend || inputText;

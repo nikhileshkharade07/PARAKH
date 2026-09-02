@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 
 export default function InvestigationPage() {
+  const { id: routeId } = useParams();
   const [searchParams] = useSearchParams();
-  const contractIdParam = searchParams.get("contract_id");
+  const contractIdParam = routeId || searchParams.get("contract_id") || searchParams.get("contractId");
   const [contractsList, setContractsList] = useState([]);
   const [selectedContract, setSelectedContract] = useState(null);
   const [investigationNotes, setInvestigationNotes] = useState("");
@@ -185,6 +186,30 @@ export default function InvestigationPage() {
                   <div><strong>Department:</strong> {selectedContract.department_name || "IT & Electronics"}</div>
                   <div><strong>Awardee:</strong> {selectedContract.vendor_name || "Apex Solutions Ltd"}</div>
                   <div><strong>Award Value:</strong> {formatINR(selectedContract.award_value)}</div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mt-3.5 pt-3 border-t border-outline-variant/20">
+                  <button
+                    onClick={() => navigate(`/ai-assistant?query=${encodeURIComponent(`Why is contract ${selectedContract.contract_number || selectedContract.id} high risk?`)}`)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-on-primary text-xs font-medium hover:opacity-90 transition-opacity shadow-sm cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
+                    Ask AI Copilot
+                  </button>
+                  <button
+                    onClick={() => navigate(`/network`)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high text-primary border border-outline-variant/30 text-xs font-medium hover:bg-surface-container-highest transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">hub</span>
+                    Inspect Vendor Nexus
+                  </button>
+                  <button
+                    onClick={() => navigate(`/risk-sandbox`)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high text-primary border border-outline-variant/30 text-xs font-medium hover:bg-surface-container-highest transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">tune</span>
+                    Audit in Sandbox
+                  </button>
                 </div>
               </div>
 
