@@ -445,36 +445,36 @@ function handleFallback(url, method = "GET", data = null) {
   return { data: [] };
 }
 
+const isHtmlResponse = (data) => typeof data === "string" && (data.includes("<!doctype html>") || data.includes("<html"));
+
 // Resilient API Wrapper: Queries backend API first, automatically falls back to pre-compiled database
 export const api = {
   get: async (url, config) => {
     try {
       const res = await rawApi.get(url, config);
-      if (typeof res.data === "string" || !res.data) {
+      if (typeof res?.data === "string" || !res?.data || isHtmlResponse(res?.data)) {
         return handleFallback(url, "GET");
       }
       return res;
     } catch (err) {
-      console.warn(`[PARAKH API] Live backend unreachable at ${url}, using synchronized data layer.`);
       return handleFallback(url, "GET");
     }
   },
   post: async (url, data, config) => {
     try {
       const res = await rawApi.post(url, data, config);
-      if (typeof res.data === "string" || !res.data) {
+      if (typeof res?.data === "string" || !res?.data || isHtmlResponse(res?.data)) {
         return handleFallback(url, "POST", data);
       }
       return res;
     } catch (err) {
-      console.warn(`[PARAKH API] Live backend unreachable at ${url}, using synchronized data layer.`);
       return handleFallback(url, "POST", data);
     }
   },
   put: async (url, data, config) => {
     try {
       const res = await rawApi.put(url, data, config);
-      if (typeof res.data === "string" || !res.data) {
+      if (typeof res?.data === "string" || !res?.data || isHtmlResponse(res?.data)) {
         return handleFallback(url, "PUT", data);
       }
       return res;
@@ -485,7 +485,7 @@ export const api = {
   delete: async (url, config) => {
     try {
       const res = await rawApi.delete(url, config);
-      if (typeof res.data === "string" || !res.data) {
+      if (typeof res?.data === "string" || !res?.data || isHtmlResponse(res?.data)) {
         return handleFallback(url, "DELETE");
       }
       return res;
