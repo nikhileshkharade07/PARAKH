@@ -6,7 +6,7 @@ export default function AIAssistantDrawer({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
     {
       sender: "assistant",
-      text: "Hello, Investigator. I am the PARAKH Forensic Assistant. I analyze real procurement records, CRS heuristic red flags, and supplier graph topologies to assist your investigation. How can I help you today?",
+      text: "Hello, Investigator. I am the PARAKH Forensic Assistant. I analyze real public procurement records, heuristic red flags (RF-1 to RF-8), and supplier collusion graph topologies to assist your vigilance review. How can I assist your investigation today?",
       citations: []
     }
   ]);
@@ -38,7 +38,7 @@ export default function AIAssistantDrawer({ isOpen, onClose }) {
         ...prev,
         {
           sender: "assistant",
-          text: "⚠️ Failed to query the database. Please verify the backend connection.",
+          text: "⚠️ Failed to query the database. Please verify backend connection.",
           citations: []
         }
       ]);
@@ -48,47 +48,108 @@ export default function AIAssistantDrawer({ isOpen, onClose }) {
   };
 
   const QUICK_PROMPTS = [
-    "Why is tender GEM-DEMO-000007 high risk?",
-    "Which vendors have unusually high win rates?",
-    "Show departments with suspicious vendor concentration",
-    "Which tenders had one bidder and compressed submission windows?"
+    "Why is tender 2017_FDC_18741_6 high risk?",
+    "Which vendors have 100% win rates in single-bidder tenders?",
+    "Show departments with suspicious vendor concentration (>60%)",
+    "Identify tenders awarded right below the ₹50 Lakhs threshold"
   ];
 
   return (
-    <div className="drawer-overlay" onClick={onClose}>
-      <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
+    <div className="stitch-modal-overlay" onClick={onClose}>
+      <div
+        className="stitch-drawer open"
+        onClick={(e) => e.stopPropagation()}
+        style={{ width: "420px", display: "flex", flexDirection: "column" }}
+      >
         {/* Header */}
-        <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border-color)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(15, 23, 42, 0.95)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #38bdf8, #0284c7)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, color: "#fff" }}>
-              🤖
+        <div
+          style={{
+            padding: "1rem 1.25rem",
+            borderBottom: "1px solid var(--color-outline-variant)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "var(--color-surface-lowest)"
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <div
+              style={{
+                width: "2.25rem",
+                height: "2.25rem",
+                borderRadius: "0.5rem",
+                backgroundColor: "var(--color-secondary)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#ffffff"
+              }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>
+                auto_awesome
+              </span>
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 800 }}>Investigator AI Assistant</div>
-              <div style={{ fontSize: 11, color: "var(--text-muted)" }}>Grounded strictly in verified database evidence</div>
+              <div style={{ fontSize: "0.9375rem", fontWeight: 800, color: "var(--color-on-surface)" }}>
+                Investigator AI Assistant
+              </div>
+              <div style={{ fontSize: "0.6875rem", color: "var(--color-on-surface-variant)" }}>
+                Grounded strictly in verified database evidence
+              </div>
             </div>
           </div>
-          <button className="btn-ghost" onClick={onClose} style={{ fontSize: 18, padding: "4px 8px" }}>✕</button>
+
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "var(--color-on-surface-variant)",
+              padding: "0.25rem"
+            }}
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
         </div>
 
-        {/* Quick prompt chips */}
-        <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--border-color)", background: "rgba(0,0,0,0.2)" }}>
-          <div style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 8, fontWeight: 700 }}>SUGGESTED FORENSIC QUERIES:</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+        {/* Quick Prompts */}
+        <div
+          style={{
+            padding: "0.75rem 1rem",
+            backgroundColor: "var(--color-surface-low)",
+            borderBottom: "1px solid var(--color-outline-variant)"
+          }}
+        >
+          <div
+            style={{
+              fontSize: "0.6875rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              color: "var(--color-on-surface-variant)",
+              marginBottom: "0.5rem"
+            }}
+          >
+            Recommended Forensic Queries:
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem" }}>
             {QUICK_PROMPTS.map((p, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => handleSend(p)}
                 style={{
-                  fontSize: 11,
-                  background: "rgba(255, 255, 255, 0.05)",
-                  border: "1px solid rgba(255, 255, 255, 0.1)",
-                  borderRadius: 14,
-                  padding: "4px 10px",
-                  color: "var(--text-secondary)",
+                  fontSize: "0.6875rem",
+                  padding: "0.25rem 0.6rem",
+                  borderRadius: "9999px",
+                  backgroundColor: "var(--color-surface-lowest)",
+                  border: "1px solid var(--color-outline-variant)",
+                  color: "var(--color-on-surface)",
                   cursor: "pointer",
-                  textAlign: "left"
+                  textAlign: "left",
+                  transition: "all 0.15s ease"
                 }}
               >
                 {p}
@@ -97,86 +158,136 @@ export default function AIAssistantDrawer({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* Message timeline */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Messages List */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.875rem",
+            backgroundColor: "var(--color-background)"
+          }}
+        >
           {messages.map((m, idx) => (
             <div
               key={idx}
               style={{
                 alignSelf: m.sender === "user" ? "flex-end" : "flex-start",
                 maxWidth: "88%",
-                background: m.sender === "user" ? "linear-gradient(135deg, #0284c7, #0369a1)" : "rgba(30, 41, 59, 0.8)",
-                border: "1px solid " + (m.sender === "user" ? "transparent" : "var(--border-color)"),
-                borderRadius: 10,
-                padding: "12px 16px",
-                color: "#fff",
-                fontSize: 13,
-                lineHeight: 1.5
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.35rem"
               }}
             >
-              <div style={{ whiteSpace: "pre-wrap" }}>{m.text}</div>
-              {m.citations && m.citations.length > 0 && (
-                <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255, 255, 255, 0.1)" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "var(--accent-cyan)", marginBottom: 6 }}>
-                    VERIFIED CITATIONS ({m.citations.length}):
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    {m.citations.map((c, cIdx) => (
-                      <Link
-                        key={cIdx}
-                        to={c.link || "#"}
-                        onClick={onClose}
-                        style={{
-                          fontSize: 12,
-                          background: "rgba(0, 0, 0, 0.25)",
-                          padding: "6px 10px",
-                          borderRadius: 6,
-                          color: "#38bdf8",
-                          display: "block",
-                          border: "1px solid rgba(56, 189, 248, 0.2)"
-                        }}
-                      >
-                        <strong>{c.title}</strong> — {c.summary} →
-                      </Link>
-                    ))}
-                  </div>
+              <div
+                style={{
+                  padding: "0.75rem 1rem",
+                  borderRadius: "0.75rem",
+                  fontSize: "0.8125rem",
+                  lineHeight: 1.5,
+                  backgroundColor:
+                    m.sender === "user"
+                      ? "var(--color-primary)"
+                      : "var(--color-surface-lowest)",
+                  color:
+                    m.sender === "user"
+                      ? "var(--color-on-primary)"
+                      : "var(--color-on-surface)",
+                  border:
+                    m.sender === "user"
+                      ? "none"
+                      : "1px solid var(--color-outline-variant)",
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.03)"
+                }}
+              >
+                {m.text}
+              </div>
+
+              {/* Citations */}
+              {Array.isArray(m.citations) && m.citations.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", marginTop: "0.25rem" }}>
+                  <span style={{ fontSize: "0.625rem", fontWeight: 700, color: "var(--color-on-surface-variant)" }}>
+                    Citations:
+                  </span>
+                  {m.citations.map((c, cIdx) => (
+                    <Link
+                      key={cIdx}
+                      to={c.link || (c.contract_id ? `/contracts/${c.contract_id}` : "#")}
+                      style={{
+                        fontSize: "0.625rem",
+                        fontFamily: "JetBrains Mono",
+                        fontWeight: 600,
+                        padding: "0.1rem 0.35rem",
+                        borderRadius: "0.25rem",
+                        backgroundColor: "var(--color-surface-container)",
+                        color: "var(--color-secondary)"
+                      }}
+                    >
+                      {c.title || c.reference_id || c.contract_number || `CTR-${cIdx + 1}`}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
           ))}
+
           {loading && (
-            <div style={{ alignSelf: "flex-start", background: "rgba(30, 41, 59, 0.8)", padding: "10px 16px", borderRadius: 10, fontSize: 13, color: "var(--accent-cyan)" }}>
-              Analyzing forensic database records...
+            <div
+              style={{
+                alignSelf: "flex-start",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.6rem 1rem",
+                borderRadius: "0.75rem",
+                backgroundColor: "var(--color-surface-lowest)",
+                border: "1px solid var(--color-outline-variant)",
+                fontSize: "0.75rem",
+                color: "var(--color-on-surface-variant)"
+              }}
+            >
+              <div className="spinner-ring" style={{ width: "1rem", height: "1rem" }} />
+              <span>Querying forensic evidence database...</span>
             </div>
           )}
         </div>
 
-        {/* Input bar */}
-        <div style={{ padding: "16px 20px", borderTop: "1px solid var(--border-color)", background: "rgba(15, 23, 42, 0.95)" }}>
+        {/* Input Bar */}
+        <div
+          style={{
+            padding: "0.75rem 1rem",
+            backgroundColor: "var(--color-surface-lowest)",
+            borderTop: "1px solid var(--color-outline-variant)"
+          }}
+        >
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSend();
             }}
-            style={{ display: "flex", gap: 10 }}
+            style={{ display: "flex", gap: "0.5rem" }}
           >
             <input
               type="text"
+              className="stitch-input"
+              placeholder="Ask about tenders, vendor collusion, contracts, or CRS..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about tenders, vendor collusion, red flags..."
-              style={{
-                flex: 1,
-                background: "rgba(255, 255, 255, 0.05)",
-                border: "1px solid var(--border-color)",
-                borderRadius: 8,
-                padding: "10px 14px",
-                color: "#fff",
-                fontSize: 13
-              }}
+              disabled={loading}
             />
-            <button type="submit" className="btn-primary" disabled={!input.trim() || loading}>
-              Send
+            <button
+              type="submit"
+              className="btn-primary"
+              aria-label="Send query"
+              disabled={loading || !input.trim()}
+              style={{ padding: "0.5rem 0.75rem" }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>
+                send
+              </span>
+              <span style={{ display: "none" }}>Send</span>
             </button>
           </form>
         </div>

@@ -1,399 +1,362 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { api } from "../services/api";
 
 export default function SimulatorPage() {
-  // Configurable thresholds
+  // Stitch sliders state
+  const [vendorRisk, setVendorRisk] = useState(65);
+  const [priceVariance, setPriceVariance] = useState(19);
+  const [bidAnomaly, setBidAnomaly] = useState(88);
+  const [networkExposure, setNetworkExposure] = useState(4.2);
+
+  // Policy Thresholds
   const [approvalThreshold, setApprovalThreshold] = useState(5000000);
-  const [durationThreshold, setDurationThreshold] = useState(7);
-  const [priceDevThreshold, setPriceDevThreshold] = useState(0.30);
-  const [nlpThreshold, setNlpThreshold] = useState(0.85);
-  const [vendorLockinThreshold, setVendorLockinThreshold] = useState(0.60);
-
-  // Contract Inputs
-  const [estimateValue, setEstimateValue] = useState(4000000);
+  const [windowThreshold, setWindowThreshold] = useState(7);
   const [awardValue, setAwardValue] = useState(4850000);
-  const [tenderDays, setTenderDays] = useState(4);
-  const [bidderCount, setBidderCount] = useState(1);
-  const [vendorPastWins, setVendorPastWins] = useState(4);
-  const [totalDeptContracts, setTotalDeptContracts] = useState(5);
-  const [extensionCount, setExtensionCount] = useState(2);
-  const [specificationText, setSpecificationText] = useState("Enterprise core network switches and routers with redundant power supply");
-  const [vendorCatalogText, setVendorCatalogText] = useState("Enterprise core network switches and routers with redundant power supply catalog");
 
-  // Simulation result
-  const [nlpResult, setNlpResult] = useState(null);
-  const [nlpLoading, setNlpLoading] = useState(false);
-
-  const calculateFlags = () => {
-    const deviation = estimateValue > 0 ? (awardValue - estimateValue) / estimateValue : 0;
-    const vendorWinRatio = totalDeptContracts > 0 ? vendorPastWins / totalDeptContracts : 0;
-    const isNearThreshold = awardValue <= approvalThreshold && awardValue >= approvalThreshold * 0.90;
-
-    const flags = [
-      {
-        id: "RF-1",
-        name: "Single Bidder Tender",
-        score: 20,
-        severity: "high",
-        detected: bidderCount === 1,
-        explanation: bidderCount === 1 ? "Only 1 bidder participated in the procurement." : "Multiple bidders participated."
-      },
-      {
-        id: "RF-2",
-        name: "Vendor Lock-in Dominance",
-        score: 20,
-        severity: "high",
-        detected: vendorWinRatio > vendorLockinThreshold,
-        explanation: `Vendor win ratio is ${(vendorWinRatio * 100).toFixed(0)}% (threshold: ${(vendorLockinThreshold * 100).toFixed(0)}%).`
-      },
-      {
-        id: "RF-3",
-        name: "Approval Threshold Proximity",
-        score: 15,
-        severity: "high",
-        detected: isNearThreshold,
-        explanation: isNearThreshold
-          ? `Award value ₹${awardValue.toLocaleString()} is within 10% below the ₹${approvalThreshold.toLocaleString()} approval threshold.`
-          : "Contract value is not suspiciously near approval limit."
-      },
-      {
-        id: "RF-4",
-        name: "Compressed Tender Window",
-        score: 10,
-        severity: "medium",
-        detected: tenderDays < durationThreshold,
-        explanation: `Tender window open for ${tenderDays} days (minimum required: ${durationThreshold} days).`
-      },
-      {
-        id: "RF-5",
-        name: "Estimate Deviation",
-        score: 10,
-        severity: "medium",
-        detected: deviation > priceDevThreshold,
-        explanation: `Award exceeds estimate by ${(deviation * 100).toFixed(0)}% (threshold: ${(priceDevThreshold * 100).toFixed(0)}%).`
-      },
-      {
-        id: "RF-6",
-        name: "Repeat Winner Pattern",
-        score: 20,
-        severity: "high",
-        detected: vendorPastWins >= 3,
-        explanation: `Vendor has won ${vendorPastWins} contracts from this department.`
-      },
-      {
-        id: "RF-7",
-        name: "Specification Tailoring (NLP)",
-        score: 15,
-        severity: "medium",
-        detected: nlpResult ? nlpResult.flagged : false,
-        explanation: nlpResult
-          ? `TF-IDF Cosine Similarity is ${(nlpResult.similarity_score * 100).toFixed(1)}% (threshold: ${(nlpThreshold * 100).toFixed(0)}%).`
-          : "Click 'Test NLP Specification' below to compute similarity."
-      },
-      {
-        id: "RF-8",
-        name: "Unusual Extensions",
-        score: 5,
-        severity: "low",
-        detected: extensionCount >= 2,
-        explanation: `${extensionCount} extensions granted to the winning supplier.`
-      }
-    ];
-
-    const ruleScore = Math.min(100, flags.filter(f => f.detected).reduce((sum, f) => sum + f.score, 0));
-    // Simulated statistical anomaly based on combined outliers
-    const anomalyFactor = Math.min(100, (flags.filter(f => f.detected).length * 14) + (deviation > 0.3 ? 25 : 0) + (tenderDays < 5 ? 20 : 0));
-    const crs = Math.min(100, Math.round(0.80 * ruleScore + 0.20 * anomalyFactor));
-    const riskLevel = crs >= 70 ? "high" : crs >= 40 ? "medium" : "low";
-
-    return { flags, ruleScore, anomalyFactor, crs, riskLevel };
+  // Reset to default
+  const handleReset = () => {
+    setVendorRisk(65);
+    setPriceVariance(12);
+    setBidAnomaly(88);
+    setNetworkExposure(4.2);
   };
 
-  const handleRunNlp = async () => {
-    setNlpLoading(true);
-    try {
-      const res = await api.post("/nlp/analyze", {
-        specification: specificationText,
-        vendor_description: vendorCatalogText,
-        threshold: nlpThreshold
-      });
-      setNlpResult(res.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setNlpLoading(false);
-    }
-  };
+  // Dynamic CRS Calculation following PARAKH Hybrid Formula
+  const simulation = useMemo(() => {
+    // Weightings: 30% Vendor Risk + 25% Price Drift + 25% Bid Pattern + 20% Network Exposure
+    const vendorPts = Math.round((vendorRisk / 100) * 30);
+    const pricePts = Math.round((Math.max(0, priceVariance + 10) / 60) * 25);
+    const bidPts = Math.round((bidAnomaly / 100) * 25);
+    const netPts = Math.round((networkExposure / 10) * 20);
 
-  const { flags, ruleScore, anomalyFactor, crs, riskLevel } = calculateFlags();
-  const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
+    const totalCRS = Math.min(100, Math.max(10, vendorPts + pricePts + bidPts + netPts));
+    const riskLevel = totalCRS >= 70 ? "CRITICAL RISK" : totalCRS >= 40 ? "MEDIUM RISK" : "LOW RISK";
+
+    return {
+      totalCRS,
+      riskLevel,
+      vendorPts,
+      pricePts,
+      bidPts,
+      netPts,
+      flagsTriggered: [
+        vendorRisk >= 60 ? "RF-2 (Vendor Lock-in)" : null,
+        priceVariance >= 15 ? "RF-5 (Price Escalation Drift)" : null,
+        bidAnomaly >= 70 ? "RF-1 (Single Bidder Cartel)" : null,
+        networkExposure >= 3.5 ? "RF-6 (Repeat Winner Pattern)" : null
+      ].filter(Boolean)
+    };
+  }, [vendorRisk, priceVariance, bidAnomaly, networkExposure]);
+
+  const riskClass = simulation.totalCRS >= 70 ? "critical" : simulation.totalCRS >= 40 ? "medium" : "low";
 
   return (
-    <div>
-      <div style={{ marginBottom: 24 }}>
-        <div className="eyebrow">FORENSIC SIMULATION LAB</div>
-        <h1 style={{ fontSize: 28, fontWeight: 800 }}>Risk Engine Sensitivity Sandbox</h1>
-        <p style={{ color: "var(--text-secondary)" }}>
-          Simulate procurement risk scenarios and test how heuristic threshold sensitivity affects the Corruption Risk Score (CRS).
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+      {/* Top Header */}
+      <div>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
+          <span
+            style={{
+              fontSize: "0.6875rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              padding: "0.15rem 0.5rem",
+              borderRadius: "9999px",
+              backgroundColor: "var(--color-secondary-fixed)",
+              color: "var(--color-on-secondary-fixed)"
+            }}
+          >
+            Simulation Lab
+          </span>
+          <span style={{ fontSize: "0.75rem", color: "var(--color-on-surface-variant)" }}>
+            • Live Algorithmic Sensitivity Workbench
+          </span>
+        </div>
+        <h1 style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.02em", color: "var(--color-on-surface)" }}>
+          Risk Sandbox Simulator
+        </h1>
+        <p style={{ fontSize: "0.875rem", color: "var(--color-on-surface-variant)", maxWidth: "48rem", marginTop: "0.25rem" }}>
+          Model hypothetical corruption vectors, stress-test indicator thresholds, and analyze attribution deltas across multi-tier procurement signals in real time.
         </p>
       </div>
 
-      <div className="grid-2" style={{ marginBottom: 24 }}>
-        {/* Threshold Configuration */}
-        <div className="card">
-          <div className="card-title">⚙️ Policy & Threshold Settings</div>
-          <div style={{ display: "grid", gap: 14, fontSize: 13 }}>
-            <div>
-              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
-                <span>Statutory Approval Limit</span>
-                <strong className="font-mono">{formatINR(approvalThreshold)}</strong>
-              </label>
-              <input
-                type="range"
-                min="1000000"
-                max="20000000"
-                step="500000"
-                value={approvalThreshold}
-                onChange={(e) => setApprovalThreshold(Number(e.target.value))}
-                style={{ width: "100%" }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
-                <span>Min. Tender Window (Days)</span>
-                <strong>{durationThreshold} Days</strong>
-              </label>
-              <input
-                type="range"
-                min="3"
-                max="30"
-                value={durationThreshold}
-                onChange={(e) => setDurationThreshold(Number(e.target.value))}
-                style={{ width: "100%" }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
-                <span>Max Estimate Deviation</span>
-                <strong>{(priceDevThreshold * 100).toFixed(0)}%</strong>
-              </label>
-              <input
-                type="range"
-                min="0.10"
-                max="0.80"
-                step="0.05"
-                value={priceDevThreshold}
-                onChange={(e) => setPriceDevThreshold(Number(e.target.value))}
-                style={{ width: "100%" }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
-                <span>Vendor Concentration Limit (Lock-in)</span>
-                <strong>{(vendorLockinThreshold * 100).toFixed(0)}%</strong>
-              </label>
-              <input
-                type="range"
-                min="0.30"
-                max="0.90"
-                step="0.05"
-                value={vendorLockinThreshold}
-                onChange={(e) => setVendorLockinThreshold(Number(e.target.value))}
-                style={{ width: "100%" }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
-                <span>NLP Specification Similarity Threshold</span>
-                <strong>{(nlpThreshold * 100).toFixed(0)}%</strong>
-              </label>
-              <input
-                type="range"
-                min="0.50"
-                max="0.95"
-                step="0.05"
-                value={nlpThreshold}
-                onChange={(e) => setNlpThreshold(Number(e.target.value))}
-                style={{ width: "100%" }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Contract Scenario Input */}
-        <div className="card">
-          <div className="card-title">📝 Simulated Contract Parameters</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, fontSize: 13 }}>
-            <div>
-              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Sanctioned Estimate (₹)</label>
-              <input
-                type="number"
-                className="input-field"
-                value={estimateValue}
-                onChange={(e) => setEstimateValue(Number(e.target.value))}
-                style={{ width: "100%", marginTop: 4 }}
-              />
-            </div>
-
-            <div>
-              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Awarded Value (₹)</label>
-              <input
-                type="number"
-                className="input-field"
-                value={awardValue}
-                onChange={(e) => setAwardValue(Number(e.target.value))}
-                style={{ width: "100%", marginTop: 4 }}
-              />
-            </div>
-
-            <div>
-              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Tender Open Days</label>
-              <input
-                type="number"
-                className="input-field"
-                value={tenderDays}
-                onChange={(e) => setTenderDays(Number(e.target.value))}
-                style={{ width: "100%", marginTop: 4 }}
-              />
-            </div>
-
-            <div>
-              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Bidder Count</label>
-              <input
-                type="number"
-                className="input-field"
-                value={bidderCount}
-                onChange={(e) => setBidderCount(Number(e.target.value))}
-                style={{ width: "100%", marginTop: 4 }}
-              />
-            </div>
-
-            <div>
-              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Vendor Past Wins in Dept</label>
-              <input
-                type="number"
-                className="input-field"
-                value={vendorPastWins}
-                onChange={(e) => setVendorPastWins(Number(e.target.value))}
-                style={{ width: "100%", marginTop: 4 }}
-              />
-            </div>
-
-            <div>
-              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Total Department Tenders</label>
-              <input
-                type="number"
-                className="input-field"
-                value={totalDeptContracts}
-                onChange={(e) => setTotalDeptContracts(Number(e.target.value))}
-                style={{ width: "100%", marginTop: 4 }}
-              />
-            </div>
-
-            <div>
-              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Contract Extension Count</label>
-              <input
-                type="number"
-                className="input-field"
-                value={extensionCount}
-                onChange={(e) => setExtensionCount(Number(e.target.value))}
-                style={{ width: "100%", marginTop: 4 }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Live Calculated CRS Gauge */}
-      <div className="card" style={{ marginBottom: 24, borderColor: crs >= 70 ? "var(--risk-high-border)" : "var(--border-color)" }}>
-        <div className="card-title">
-          <span>Live Calculated Corruption Risk Score (CRS)</span>
-          <span className={`risk-badge ${riskLevel}`} style={{ fontSize: 14 }}>{riskLevel} Risk</span>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 24, margin: "14px 0", flexWrap: "wrap" }}>
-          <div style={{
-            width: 100, height: 100, borderRadius: "50%",
-            background: `conic-gradient(${crs >= 70 ? "#ef4444" : crs >= 40 ? "#f59e0b" : "#10b981"} ${crs * 3.6}deg, #1e293b 0deg)`,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
-            <div style={{ width: 78, height: 78, borderRadius: "50%", background: "#111827", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-              <span style={{ fontSize: 26, fontWeight: 900 }}>{crs}</span>
-              <span style={{ fontSize: 10, color: "var(--text-muted)" }}>CRS</span>
-            </div>
-          </div>
-
-          <div style={{ flex: 1, minWidth: 240 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, fontSize: 14 }}>
-              <div>
-                <span style={{ color: "var(--text-secondary)" }}>Rule Engine Score (80%):</span>{" "}
-                <strong>{ruleScore} / 100</strong>
+      {/* Main 2-Column Workbench Grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "1.25rem", alignItems: "start" }}>
+        {/* LEFT COLUMN: Input Sliders & Model Parameters */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          {/* Slider Control Card */}
+          <div className="stitch-card" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span className="material-symbols-outlined" style={{ fontSize: "22px", color: "var(--color-on-surface)" }}>
+                  tune
+                </span>
+                <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--color-on-surface)" }}>
+                  Heuristic & Statistical Parameter Sliders
+                </h2>
               </div>
-              <div>
-                <span style={{ color: "var(--text-secondary)" }}>Anomaly Score (20%):</span>{" "}
-                <strong>{anomalyFactor.toFixed(1)} / 100</strong>
-              </div>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={handleReset}
+                style={{ padding: "0.25rem 0.6rem", fontSize: "0.75rem" }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>
+                  refresh
+                </span>
+                <span>Reset</span>
+              </button>
             </div>
-            <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 6 }}>
-              Formula: <code>CRS = round(0.80 × {ruleScore} + 0.20 × {anomalyFactor.toFixed(1)}) = {crs}</code>
-            </p>
-          </div>
-        </div>
-      </div>
 
-      {/* Red Flags Evaluated */}
-      <div className="card" style={{ marginBottom: 24 }}>
-        <div className="card-title">
-          <span>Evaluated Heuristics ({flags.filter(f => f.detected).length} Detected)</span>
-        </div>
-        <div className="red-flags-grid">
-          {flags.map((f) => (
-            <div key={f.id} className={`flag-card ${f.detected ? "detected" : ""}`}>
-              <div className="flag-header">
-                <span className="font-mono" style={{ fontWeight: 700, color: f.detected ? "var(--risk-high)" : "var(--text-muted)" }}>{f.id}</span>
-                <span className={`risk-badge ${f.detected ? f.severity : "low"}`}>
-                  {f.detected ? `+${f.score} pts` : "Cleared"}
+            {/* Slider 1: Vendor Risk Profile */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <label style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", color: "var(--color-on-surface-variant)" }}>
+                  Vendor Risk Profile & History
+                </label>
+                <span style={{ fontFamily: "JetBrains Mono", fontSize: "0.8125rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "0.375rem", backgroundColor: "var(--color-surface-low)", color: "var(--color-on-surface)" }}>
+                  {vendorRisk}%
                 </span>
               </div>
-              <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4 }}>{f.name}</div>
-              <div className="flag-explanation">{f.explanation}</div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={vendorRisk}
+                onChange={(e) => setVendorRisk(Number(e.target.value))}
+                style={{ width: "100%", accentColor: "var(--color-primary)", cursor: "pointer" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.6875rem", color: "var(--color-on-surface-variant)" }}>
+                <span>Clean Record (0%)</span>
+                <span>High Collusion Exposure (100%)</span>
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* NLP Specification Similarity Tool */}
-      <div className="card">
-        <div className="card-title">
-          <span>TF-IDF NLP Specification Comparison (RF-7)</span>
-          <button className="btn btn-primary" onClick={handleRunNlp} disabled={nlpLoading} style={{ padding: "6px 14px", fontSize: 13 }}>
-            {nlpLoading ? "Analyzing..." : "Test NLP Specification"}
-          </button>
-        </div>
-        <div className="grid-2">
-          <div>
-            <label style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 700 }}>TENDER SPECIFICATION</label>
-            <textarea
-              className="input-field"
-              rows={3}
-              style={{ width: "100%", marginTop: 4, fontSize: 13 }}
-              value={specificationText}
-              onChange={(e) => setSpecificationText(e.target.value)}
-            />
+            {/* Slider 2: Price Variance vs Average */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <label style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", color: "var(--color-on-surface-variant)" }}>
+                  Price Variance vs Sanctioned Estimate
+                </label>
+                <span style={{ fontFamily: "JetBrains Mono", fontSize: "0.8125rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "0.375rem", backgroundColor: "var(--color-surface-low)", color: priceVariance >= 15 ? "var(--color-error)" : "var(--color-on-surface)" }}>
+                  {priceVariance >= 0 ? `+${priceVariance}%` : `${priceVariance}%`}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="-30"
+                max="50"
+                value={priceVariance}
+                onChange={(e) => setPriceVariance(Number(e.target.value))}
+                style={{ width: "100%", accentColor: "var(--color-primary)", cursor: "pointer" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.6875rem", color: "var(--color-on-surface-variant)" }}>
+                <span>Under Bid (-30%)</span>
+                <span>Over Bid (+50%)</span>
+              </div>
+            </div>
+
+            {/* Slider 3: Bid Pattern Anomaly */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <label style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", color: "var(--color-on-surface-variant)" }}>
+                  Bid Pattern & Cartel Anomaly
+                </label>
+                <span style={{ fontFamily: "JetBrains Mono", fontSize: "0.8125rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "0.375rem", backgroundColor: "var(--color-error-container)", color: "var(--color-error)" }}>
+                  {bidAnomaly}/100
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={bidAnomaly}
+                onChange={(e) => setBidAnomaly(Number(e.target.value))}
+                style={{ width: "100%", accentColor: "var(--color-error)", cursor: "pointer" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.6875rem", color: "var(--color-on-surface-variant)" }}>
+                <span>Competitive Tenders (0)</span>
+                <span>Single Bidder Monopoly (100)</span>
+              </div>
+            </div>
+
+            {/* Slider 4: Network Exposure */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <label style={{ fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", color: "var(--color-on-surface-variant)" }}>
+                  Network Exposure (Tier 2/3 Centrality)
+                </label>
+                <span style={{ fontFamily: "JetBrains Mono", fontSize: "0.8125rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "0.375rem", backgroundColor: "var(--color-surface-low)", color: "var(--color-on-surface)" }}>
+                  {networkExposure}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="10"
+                step="0.1"
+                value={networkExposure}
+                onChange={(e) => setNetworkExposure(parseFloat(e.target.value))}
+                style={{ width: "100%", accentColor: "var(--color-primary)", cursor: "pointer" }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.6875rem", color: "var(--color-on-surface-variant)" }}>
+                <span>Isolated Entity (0.0)</span>
+                <span>High Cross-Department Cartel (10.0)</span>
+              </div>
+            </div>
           </div>
-          <div>
-            <label style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 700 }}>VENDOR PRODUCT CATALOG</label>
-            <textarea
-              className="input-field"
-              rows={3}
-              style={{ width: "100%", marginTop: 4, fontSize: 13 }}
-              value={vendorCatalogText}
-              onChange={(e) => setVendorCatalogText(e.target.value)}
-            />
+
+          {/* Model Parameters Card */}
+          <div className="stitch-card" style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "0.6875rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--color-on-surface-variant)" }}>
+                Model Parameters & Governance
+              </span>
+              <span style={{ fontFamily: "JetBrains Mono", fontSize: "0.6875rem", padding: "0.1rem 0.4rem", borderRadius: "0.25rem", backgroundColor: "var(--color-surface-low)", color: "var(--color-on-surface)" }}>
+                LIVE PIPELINE
+              </span>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.8125rem", backgroundColor: "var(--color-surface-low)", padding: "0.75rem", borderRadius: "0.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ color: "var(--color-on-surface-variant)" }}>Base Model:</span>
+                <strong>Procurement_Audit_v4.2 (Hybrid Ensemble)</strong>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ color: "var(--color-on-surface-variant)" }}>Formula:</span>
+                <span style={{ fontFamily: "JetBrains Mono" }}>0.80 × RuleScore + 0.20 × AnomalyScore</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ color: "var(--color-on-surface-variant)" }}>Confidence Interval:</span>
+                <span style={{ fontFamily: "JetBrains Mono" }}>95% (Two-tailed Z-score ±1.96)</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ color: "var(--color-on-surface-variant)" }}>Audit Horizon:</span>
+                <span>OCDS Public Ledger (2017–2024)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: Real-Time Simulated CRS & Attribution Deltas */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          {/* Simulated Score Card */}
+          <div
+            className="stitch-card"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              padding: "2rem 1.5rem",
+              borderTop: simulation.totalCRS >= 70 ? "4px solid var(--color-error)" : "4px solid var(--color-warning)"
+            }}
+          >
+            <span style={{ fontSize: "0.6875rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-on-surface-variant)" }}>
+              Simulated Corruption Risk Score
+            </span>
+
+            <div style={{ margin: "1rem 0 0.5rem 0", display: "flex", alignItems: "baseline", gap: "0.25rem" }}>
+              <span style={{ fontSize: "3.5rem", fontWeight: 900, fontFamily: "JetBrains Mono", lineHeight: 1, color: simulation.totalCRS >= 70 ? "var(--color-error)" : "var(--color-warning)" }}>
+                {simulation.totalCRS}
+              </span>
+              <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--color-on-surface-variant)" }}>
+                / 100
+              </span>
+            </div>
+
+            <span className={`risk-pill ${riskClass}`} style={{ fontSize: "0.75rem", padding: "0.3rem 0.8rem" }}>
+              {simulation.riskLevel}
+            </span>
+
+            <p style={{ fontSize: "0.8125rem", color: "var(--color-on-surface-variant)", marginTop: "0.75rem", maxWidth: "22rem" }}>
+              {simulation.totalCRS >= 70
+                ? "High statutory review priority. Meets or exceeds vigilance charge sheet recommendation criteria."
+                : "Moderate risk level. Procedural indicators warrant sample audit review."}
+            </p>
+          </div>
+
+          {/* Attribution Delta Breakdown Card */}
+          <div className="stitch-card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <h3 style={{ fontSize: "0.9375rem", fontWeight: 700, color: "var(--color-on-surface)" }}>
+              Risk Score Attribution Breakdown
+            </h3>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              {/* Attribution 1 */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                  <span style={{ color: "var(--color-on-surface)", fontWeight: 600 }}>Vendor Risk Profile</span>
+                  <span style={{ fontFamily: "JetBrains Mono", fontWeight: 700, color: "var(--color-primary)" }}>
+                    +{simulation.vendorPts} pts
+                  </span>
+                </div>
+                <div style={{ width: "100%", height: 6, borderRadius: 3, backgroundColor: "var(--color-surface-low)", overflow: "hidden" }}>
+                  <div style={{ width: `${(simulation.vendorPts / 30) * 100}%`, height: "100%", backgroundColor: "var(--color-primary)" }} />
+                </div>
+              </div>
+
+              {/* Attribution 2 */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                  <span style={{ color: "var(--color-on-surface)", fontWeight: 600 }}>Price Escalation vs Benchmark</span>
+                  <span style={{ fontFamily: "JetBrains Mono", fontWeight: 700, color: "var(--color-error)" }}>
+                    +{simulation.pricePts} pts
+                  </span>
+                </div>
+                <div style={{ width: "100%", height: 6, borderRadius: 3, backgroundColor: "var(--color-surface-low)", overflow: "hidden" }}>
+                  <div style={{ width: `${(simulation.pricePts / 25) * 100}%`, height: "100%", backgroundColor: "var(--color-error)" }} />
+                </div>
+              </div>
+
+              {/* Attribution 3 */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                  <span style={{ color: "var(--color-on-surface)", fontWeight: 600 }}>Bid Pattern & Collusion</span>
+                  <span style={{ fontFamily: "JetBrains Mono", fontWeight: 700, color: "var(--color-error)" }}>
+                    +{simulation.bidPts} pts
+                  </span>
+                </div>
+                <div style={{ width: "100%", height: 6, borderRadius: 3, backgroundColor: "var(--color-surface-low)", overflow: "hidden" }}>
+                  <div style={{ width: `${(simulation.bidPts / 25) * 100}%`, height: "100%", backgroundColor: "var(--color-error)" }} />
+                </div>
+              </div>
+
+              {/* Attribution 4 */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", marginBottom: "0.25rem" }}>
+                  <span style={{ color: "var(--color-on-surface)", fontWeight: 600 }}>Network Exposure Centrality</span>
+                  <span style={{ fontFamily: "JetBrains Mono", fontWeight: 700, color: "var(--color-secondary)" }}>
+                    +{simulation.netPts} pts
+                  </span>
+                </div>
+                <div style={{ width: "100%", height: 6, borderRadius: 3, backgroundColor: "var(--color-surface-low)", overflow: "hidden" }}>
+                  <div style={{ width: `${(simulation.netPts / 20) * 100}%`, height: "100%", backgroundColor: "var(--color-secondary)" }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Triggered Flags list */}
+            <div style={{ borderTop: "1px solid var(--color-outline-variant)", paddingTop: "0.75rem" }}>
+              <span style={{ fontSize: "0.6875rem", fontWeight: 700, textTransform: "uppercase", color: "var(--color-on-surface-variant)" }}>
+                Triggered Heuristic Semaphores:
+              </span>
+              <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", marginTop: "0.4rem" }}>
+                {simulation.flagsTriggered.length > 0 ? (
+                  simulation.flagsTriggered.map((flag, i) => (
+                    <span key={i} className="risk-pill critical" style={{ fontSize: "0.6875rem" }}>
+                      {flag}
+                    </span>
+                  ))
+                ) : (
+                  <span className="risk-pill low" style={{ fontSize: "0.6875rem" }}>
+                    No critical thresholds violated
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
