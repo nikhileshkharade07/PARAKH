@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { api } from "../services/api";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
 export default function DepartmentProfilePage() {
   const { id } = useParams();
   const [department, setDepartment] = useState(null);
   const [contracts, setContracts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadDepartment() {
@@ -17,22 +17,9 @@ export default function DepartmentProfilePage() {
           api.get(`/contracts?department_id=${id}&limit=100`)
         ]);
         setDepartment(dRes.data);
-        setContracts(cRes.data || []);
+        setContracts(cRes.data);
       } catch (err) {
-        // Safe fallback mock if direct endpoint is unavailable
-        setDepartment({
-          id: id,
-          name: "IT & Electronics Department",
-          code: "DEPT-ITE-01",
-          total_spend: 184500000,
-          avg_crs: 76,
-          risk_level: "high",
-          flagged_contract_count: 5
-        });
-        setContracts([
-          { id: 7, contract_number: "GEM-2024-C-000007", title: "Enterprise Server Infrastructure Supply", vendor_name: "Apex Solutions Ltd", award_value: 4850000, crs: 92, status: "Under Review" },
-          { id: 78, contract_number: "GEM-2024-C-000078", title: "Data Center Maintenance & Cloud Hosting", vendor_name: "Apex Solutions Ltd", award_value: 12500000, crs: 88, status: "Audited" }
-        ]);
+        console.error("Error loading department profile:", err);
       } finally {
         setLoading(false);
       }
@@ -40,144 +27,164 @@ export default function DepartmentProfilePage() {
     loadDepartment();
   }, [id]);
 
-  const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val || 0);
-
   const exportCSV = () => {
     if (contracts.length === 0) return;
-    const headers = ["Contract Number", "Title", "Winning Vendor", "Award Value", "CRS Score"];
+    const headers = ["Contract Number", "Title", "Winning Vendor", "Award Value", "CRS Score", "Risk Level"];
     const rows = contracts.map(c => [
       c.contract_number,
       `"${c.title.replace(/"/g, '""')}"`,
       `"${c.vendor_name || ''}"`,
       c.award_value,
-      c.crs || 0
+      c.crs || 0,
+      c.risk_level || ''
     ]);
     const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `department-${id}-contracts.csv`);
+    link.setAttribute("download", `department-${department.name.toLowerCase().replace(/\s+/g, '-')}-contracts.csv`);
     link.click();
+    URL.revokeObjectURL(url);
   };
 
-  if (loading) {
-    return (
-      <div className="p-12 text-center text-sm font-mono text-on-surface-variant">
-        Loading forensic department profile...
-      </div>
-    );
-  }
+  if (loading) return <div className="loading-spinner">Loading department profile...</div>;
+  if (!department) return <div className="card">Department not found.</div>;
+
+  const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
+
+  // Group contracts by vendor
+  const vendorWinCounts = {};
+  contracts.forEach(c => {
+    const vName = c.vendor_name || "Unknown Vendor";
+    vendorWinCounts[vName] = (vendorWinCounts[vName] || 0) + 1;
+  });
+
+  const COLORS = ["#38bdf8", "#818cf8", "#c084fc", "#f472b6", "#fb923c", "#facc15", "#4ade80", "#2dd4bf"];
+  const vendorPieData = Object.entries(vendorWinCounts).map(([name, count], idx) => ({
+    name,
+    value: count,
+    color: COLORS[idx % COLORS.length]
+  }));
 
   return (
-    <>
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-outline-variant/20 pb-6 mb-6">
+    <div>
+      <div style={{ marginBottom: 24, display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-orange-100 text-orange-800 border border-orange-200">
-              AUDITED PROCURING ENTITY
-            </span>
-            <span className="font-mono text-xs text-on-surface-variant">CODE: {department?.code || "DEPT-01"}</span>
-          </div>
-          <h1 className="font-headline-page text-headline-page-mobile md:text-headline-page text-primary tracking-tight">
-            {department?.name || "Department Profile"}
-          </h1>
-          <p className="font-body-base text-body-base text-on-surface-variant mt-1">
-            Procuring entity spend metrics, vendor concentration ratio, and risk assessment history.
+          <div className="eyebrow">DEPARTMENT AUDIT PROFILE</div>
+          <h1 style={{ fontSize: 28, fontWeight: 800 }}>{department.name}</h1>
+          <p style={{ color: "var(--text-secondary)" }}>
+            Procurement expenditure, vendor concentration, risk profile, and issued tenders.
           </p>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <button
-            onClick={() => navigate("/network")}
-            className="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-on-surface font-label-bold text-label-bold uppercase hover:bg-surface-container-low transition-colors shadow-sm cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[18px]">hub</span>
-            <span>View in Network</span>
-          </button>
-          <button
-            onClick={exportCSV}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-bold text-label-bold uppercase hover:opacity-90 transition-opacity shadow-sm cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[18px]">download</span>
-            <span>Export Contracts</span>
-          </button>
+        <button className="btn btn-outline" onClick={exportCSV}>
+          📊 Export Department Dossier (CSV)
+        </button>
+      </div>
+
+      <div className="kpi-grid">
+        <div className="kpi-card">
+          <div className="kpi-label">Contracts Issued</div>
+          <div className="kpi-value">{department.total_contracts}</div>
+          <div className="kpi-sub">Total procurement tenders</div>
+        </div>
+
+        <div className="kpi-card">
+          <div className="kpi-label">Total Budget Spent</div>
+          <div className="kpi-value" style={{ fontSize: 22 }}>{formatINR(department.total_value)}</div>
+          <div className="kpi-sub">Total value awarded</div>
+        </div>
+
+        <div className="kpi-card" style={{ borderColor: department.vendor_concentration > 0.5 ? "var(--risk-high-border)" : "var(--border-color)" }}>
+          <div className="kpi-label">Vendor Concentration</div>
+          <div className="kpi-value" style={{ color: department.vendor_concentration > 0.5 ? "var(--risk-high)" : "#fff" }}>
+            {(department.vendor_concentration * 100).toFixed(0)}%
+          </div>
+          <div className="kpi-sub">Top vendor award dominance (RF-2)</div>
+        </div>
+
+        <div className="kpi-card">
+          <div className="kpi-label">Average Department CRS</div>
+          <div className="kpi-value">{department.average_crs?.toFixed(1) || 0} / 100</div>
+          <div className="kpi-sub">Average risk score</div>
         </div>
       </div>
 
-      {/* 4 KPI Bento Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm">
-          <p className="font-label-bold text-xs uppercase text-on-surface-variant">Average CRS Risk</p>
-          <p className="font-mono text-3xl font-extrabold text-orange-600 mt-1">{department?.avg_crs || 76}/100</p>
-          <p className="text-[11px] text-on-surface-variant mt-0.5">High Anomaly Threshold</p>
+      <div className="grid-2" style={{ marginBottom: 24 }}>
+        <div className="card">
+          <div className="card-title">Vendor Share Distribution</div>
+          <div style={{ height: 220, width: "100%" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={vendorPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3}>
+                  {vendorPieData.map((entry, idx) => (
+                    <Cell key={`cell-${idx}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ background: "#172033", borderColor: "#1e293b", borderRadius: 8, color: "#fff" }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", fontSize: 12 }}>
+            {vendorPieData.map((v, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: v.color }} />
+                <span>{v.name}: <strong>{v.value}</strong></span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm">
-          <p className="font-label-bold text-xs uppercase text-on-surface-variant">Total Spend</p>
-          <p className="font-mono text-3xl font-extrabold text-primary mt-1">{formatINR(department?.total_spend || 184500000)}</p>
-          <p className="text-[11px] text-on-surface-variant mt-0.5">{contracts.length} Monitored Tenders</p>
-        </div>
-
-        <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm">
-          <p className="font-label-bold text-xs uppercase text-on-surface-variant">Flagged Tenders</p>
-          <p className="font-mono text-3xl font-extrabold text-error mt-1">{department?.flagged_contract_count || 5}</p>
-          <p className="text-[11px] text-on-surface-variant mt-0.5">Under Investigation</p>
-        </div>
-
-        <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-5 shadow-sm">
-          <p className="font-label-bold text-xs uppercase text-on-surface-variant">Vendor Diversity</p>
-          <p className="font-mono text-3xl font-extrabold text-primary mt-1">42%</p>
-          <p className="text-[11px] text-on-surface-variant mt-0.5">High Winner Concentration</p>
+        <div className="card">
+          <div className="card-title">Lock-in & Concentration Analysis</div>
+          <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7 }}>
+            <p style={{ marginBottom: 12 }}>
+              <strong>Vendor Lock-in Heuristic (RF-2)</strong> flags departments where a single supplier wins more than 60% of all issued tenders.
+            </p>
+            <div style={{ padding: 14, borderRadius: 8, background: department.vendor_concentration > 0.6 ? "var(--risk-high-bg)" : "var(--risk-low-bg)", border: `1px solid ${department.vendor_concentration > 0.6 ? "var(--risk-high-border)" : "var(--risk-low-border)"}` }}>
+              <strong style={{ color: department.vendor_concentration > 0.6 ? "var(--risk-high)" : "var(--risk-low)" }}>
+                {department.vendor_concentration > 0.6 ? "⚠️ High Vendor Concentration Detected" : "✓ Healthy Vendor Competition"}
+              </strong>
+              <p style={{ fontSize: 13, marginTop: 4, margin: 0 }}>
+                Top vendor captured {(department.vendor_concentration * 100).toFixed(1)}% of all contracts in this department.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Contracts Table */}
-      <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] mb-6">
-        <div className="p-4 border-b border-outline-variant/20 bg-surface-container-low/30 flex justify-between items-center">
-          <h2 className="font-section-title text-base font-semibold text-primary">
-            Department Procurement Registry ({contracts.length})
-          </h2>
+      <div className="card">
+        <div className="card-title">
+          <span>Issued Procurement Contracts ({contracts.length})</span>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="table-container">
+          <table className="data-table">
             <thead>
-              <tr className="border-b border-outline-variant/20 bg-surface-container-low/50">
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase">Contract ID</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase">Title</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase">Winning Vendor</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase">Award Value</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase">Risk Score</th>
-                <th className="px-6 py-4 font-label-bold text-label-bold text-on-surface-variant uppercase text-right">Actions</th>
+              <tr>
+                <th>Contract No.</th>
+                <th>Title</th>
+                <th>Winning Vendor</th>
+                <th>Award Value</th>
+                <th>CRS Score</th>
+                <th>Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-outline-variant/10">
+            <tbody>
               {contracts.map((c) => (
-                <tr key={c.id} className="hover:bg-surface-container-low/50 transition-colors">
-                  <td className="px-6 py-4 font-mono font-semibold text-primary text-xs">
-                    {c.contract_number || `CNT-${c.id}`}
+                <tr key={c.id}>
+                  <td className="font-mono">{c.contract_number}</td>
+                  <td>
+                    <Link to={`/contracts/${c.id}`} style={{ fontWeight: 600, color: "#fff" }}>{c.title}</Link>
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-primary max-w-xs line-clamp-1">
-                    {c.title}
+                  <td>
+                    <Link to={`/vendors/${c.vendor_id}`}>{c.vendor_name}</Link>
                   </td>
-                  <td className="px-6 py-4 text-sm text-on-surface">
-                    {c.vendor_name || "Supplier Org"}
+                  <td className="font-mono">{formatINR(c.award_value)}</td>
+                  <td>
+                    <span className={`risk-badge ${c.risk_level}`}>CRS {c.crs}</span>
                   </td>
-                  <td className="px-6 py-4 font-mono font-bold text-sm text-primary">
-                    {formatINR(c.award_value)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-error-container/40 text-error border border-error/20 font-mono">
-                      CRS {c.crs || 88}/100
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button
-                      onClick={() => navigate(`/investigation?contract_id=${c.id}`)}
-                      className="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-xs font-medium hover:opacity-90 transition-opacity shadow-sm cursor-pointer"
-                    >
-                      Investigate
-                    </button>
+                  <td>
+                    <Link to={`/contracts/${c.id}`} className="btn btn-outline" style={{ padding: "4px 10px", fontSize: 12 }}>Inspect</Link>
                   </td>
                 </tr>
               ))}
@@ -185,6 +192,6 @@ export default function DepartmentProfilePage() {
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,307 +1,402 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { api } from "../services/api";
 
 export default function SimulatorPage() {
-  const [vendorRisk, setVendorRisk] = useState(65);
-  const [priceVariance, setPriceVariance] = useState(18);
-  const [specSimilarity, setSpecSimilarity] = useState(72);
-  const [biddingDays, setBiddingDays] = useState(7);
-  const [bidderCount, setBidderCount] = useState(2);
-  const [isShellCompany, setIsShellCompany] = useState(true);
-  const [hasCrossDirectorship, setHasCrossDirectorship] = useState(true);
+  // Configurable thresholds
+  const [approvalThreshold, setApprovalThreshold] = useState(5000000);
+  const [durationThreshold, setDurationThreshold] = useState(7);
+  const [priceDevThreshold, setPriceDevThreshold] = useState(0.30);
+  const [nlpThreshold, setNlpThreshold] = useState(0.85);
+  const [vendorLockinThreshold, setVendorLockinThreshold] = useState(0.60);
 
-  // Dynamic CRS Calculation
-  const calculateCRS = () => {
-    let score = (vendorRisk * 0.25) + (Math.max(0, priceVariance) * 1.2) + (specSimilarity * 0.3);
-    if (biddingDays < 10) score += (10 - biddingDays) * 2.5;
-    if (bidderCount <= 2) score += 15;
-    if (isShellCompany) score += 18;
-    if (hasCrossDirectorship) score += 15;
-    return Math.min(100, Math.round(score));
+  // Contract Inputs
+  const [estimateValue, setEstimateValue] = useState(4000000);
+  const [awardValue, setAwardValue] = useState(4850000);
+  const [tenderDays, setTenderDays] = useState(4);
+  const [bidderCount, setBidderCount] = useState(1);
+  const [vendorPastWins, setVendorPastWins] = useState(4);
+  const [totalDeptContracts, setTotalDeptContracts] = useState(5);
+  const [extensionCount, setExtensionCount] = useState(2);
+  const [specificationText, setSpecificationText] = useState("Enterprise core network switches and routers with redundant power supply");
+  const [vendorCatalogText, setVendorCatalogText] = useState("Enterprise core network switches and routers with redundant power supply catalog");
+
+  // Simulation result
+  const [nlpResult, setNlpResult] = useState(null);
+  const [nlpLoading, setNlpLoading] = useState(false);
+
+  const calculateFlags = () => {
+    const deviation = estimateValue > 0 ? (awardValue - estimateValue) / estimateValue : 0;
+    const vendorWinRatio = totalDeptContracts > 0 ? vendorPastWins / totalDeptContracts : 0;
+    const isNearThreshold = awardValue <= approvalThreshold && awardValue >= approvalThreshold * 0.90;
+
+    const flags = [
+      {
+        id: "RF-1",
+        name: "Single Bidder Tender",
+        score: 20,
+        severity: "high",
+        detected: bidderCount === 1,
+        explanation: bidderCount === 1 ? "Only 1 bidder participated in the procurement." : "Multiple bidders participated."
+      },
+      {
+        id: "RF-2",
+        name: "Vendor Lock-in Dominance",
+        score: 20,
+        severity: "high",
+        detected: vendorWinRatio > vendorLockinThreshold,
+        explanation: `Vendor win ratio is ${(vendorWinRatio * 100).toFixed(0)}% (threshold: ${(vendorLockinThreshold * 100).toFixed(0)}%).`
+      },
+      {
+        id: "RF-3",
+        name: "Approval Threshold Proximity",
+        score: 15,
+        severity: "high",
+        detected: isNearThreshold,
+        explanation: isNearThreshold
+          ? `Award value ₹${awardValue.toLocaleString()} is within 10% below the ₹${approvalThreshold.toLocaleString()} approval threshold.`
+          : "Contract value is not suspiciously near approval limit."
+      },
+      {
+        id: "RF-4",
+        name: "Compressed Tender Window",
+        score: 10,
+        severity: "medium",
+        detected: tenderDays < durationThreshold,
+        explanation: `Tender window open for ${tenderDays} days (minimum required: ${durationThreshold} days).`
+      },
+      {
+        id: "RF-5",
+        name: "Estimate Deviation",
+        score: 10,
+        severity: "medium",
+        detected: deviation > priceDevThreshold,
+        explanation: `Award exceeds estimate by ${(deviation * 100).toFixed(0)}% (threshold: ${(priceDevThreshold * 100).toFixed(0)}%).`
+      },
+      {
+        id: "RF-6",
+        name: "Repeat Winner Pattern",
+        score: 20,
+        severity: "high",
+        detected: vendorPastWins >= 3,
+        explanation: `Vendor has won ${vendorPastWins} contracts from this department.`
+      },
+      {
+        id: "RF-7",
+        name: "Specification Tailoring (NLP)",
+        score: 15,
+        severity: "medium",
+        detected: nlpResult ? nlpResult.flagged : false,
+        explanation: nlpResult
+          ? `TF-IDF Cosine Similarity is ${(nlpResult.similarity_score * 100).toFixed(1)}% (threshold: ${(nlpThreshold * 100).toFixed(0)}%).`
+          : "Click 'Test NLP Specification' below to compute similarity."
+      },
+      {
+        id: "RF-8",
+        name: "Unusual Extensions",
+        score: 5,
+        severity: "low",
+        detected: extensionCount >= 2,
+        explanation: `${extensionCount} extensions granted to the winning supplier.`
+      }
+    ];
+
+    const ruleScore = Math.min(100, flags.filter(f => f.detected).reduce((sum, f) => sum + f.score, 0));
+    // Simulated statistical anomaly based on combined outliers
+    const anomalyFactor = Math.min(100, (flags.filter(f => f.detected).length * 14) + (deviation > 0.3 ? 25 : 0) + (tenderDays < 5 ? 20 : 0));
+    const crs = Math.min(100, Math.round(0.80 * ruleScore + 0.20 * anomalyFactor));
+    const riskLevel = crs >= 70 ? "high" : crs >= 40 ? "medium" : "low";
+
+    return { flags, ruleScore, anomalyFactor, crs, riskLevel };
   };
 
-  const crs = calculateCRS();
-
-  const handleReset = () => {
-    setVendorRisk(50);
-    setPriceVariance(5);
-    setSpecSimilarity(30);
-    setBiddingDays(21);
-    setBidderCount(5);
-    setIsShellCompany(false);
-    setHasCrossDirectorship(false);
+  const handleRunNlp = async () => {
+    setNlpLoading(true);
+    try {
+      const res = await api.post("/nlp/analyze", {
+        specification: specificationText,
+        vendor_description: vendorCatalogText,
+        threshold: nlpThreshold
+      });
+      setNlpResult(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setNlpLoading(false);
+    }
   };
+
+  const { flags, ruleScore, anomalyFactor, crs, riskLevel } = calculateFlags();
+  const formatINR = (val) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(val);
 
   return (
-    <>
-      {/* Page Header */}
-      <header className="border-b border-outline-variant/20 pb-6 mb-8">
-        <h1 className="font-headline-page text-headline-page-mobile md:text-headline-page text-primary tracking-tight mb-2">
-          Risk Sandbox
-        </h1>
-        <p className="font-body-base text-body-base text-on-surface-variant max-w-2xl">
-          Model risk scenarios and understand how individual signals affect the overall risk score.
+    <div>
+      <div style={{ marginBottom: 24 }}>
+        <div className="eyebrow">FORENSIC SIMULATION LAB</div>
+        <h1 style={{ fontSize: 28, fontWeight: 800 }}>Risk Engine Sensitivity Sandbox</h1>
+        <p style={{ color: "var(--text-secondary)" }}>
+          Simulate procurement risk scenarios and test how heuristic threshold sensitivity affects the Corruption Risk Score (CRS).
         </p>
-      </header>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Simulator Inputs (5 cols) */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="glass-card rounded-xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6 border-b border-outline-variant/20 pb-4">
-              <h2 className="font-section-title text-section-title text-primary flex items-center gap-2 font-semibold">
-                <span className="material-symbols-outlined text-[20px]">tune</span>
-                Risk Score Simulator
-              </h2>
-              <button
-                onClick={handleReset}
-                className="text-on-surface-variant hover:text-primary text-body-sm font-label-bold flex items-center gap-1 transition-colors text-xs font-semibold uppercase"
-              >
-                <span className="material-symbols-outlined text-[16px]">restart_alt</span> Reset
-              </button>
+      <div className="grid-2" style={{ marginBottom: 24 }}>
+        {/* Threshold Configuration */}
+        <div className="card">
+          <div className="card-title">⚙️ Policy & Threshold Settings</div>
+          <div style={{ display: "grid", gap: 14, fontSize: 13 }}>
+            <div>
+              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
+                <span>Statutory Approval Limit</span>
+                <strong className="font-mono">{formatINR(approvalThreshold)}</strong>
+              </label>
+              <input
+                type="range"
+                min="1000000"
+                max="20000000"
+                step="500000"
+                value={approvalThreshold}
+                onChange={(e) => setApprovalThreshold(Number(e.target.value))}
+                style={{ width: "100%" }}
+              />
             </div>
 
-            <div className="flex flex-col gap-5">
-              {/* Slider 1: Vendor Risk */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-center">
-                  <label className="font-label-bold text-label-bold text-on-surface uppercase text-[11px]">
-                    Vendor Risk Profile
-                  </label>
-                  <span className="font-code-data text-code-data text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded text-[12px] tabular-nums">
-                    {vendorRisk}%
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={vendorRisk}
-                  onChange={(e) => setVendorRisk(Number(e.target.value))}
-                  className="w-full accent-black cursor-pointer"
-                />
-                <div className="flex justify-between text-[10px] text-on-surface-variant">
-                  <span>Low (Historical)</span>
-                  <span>High (New/Flagged)</span>
-                </div>
-              </div>
+            <div>
+              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
+                <span>Min. Tender Window (Days)</span>
+                <strong>{durationThreshold} Days</strong>
+              </label>
+              <input
+                type="range"
+                min="3"
+                max="30"
+                value={durationThreshold}
+                onChange={(e) => setDurationThreshold(Number(e.target.value))}
+                style={{ width: "100%" }}
+              />
+            </div>
 
-              {/* Slider 2: Price Variance */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-center">
-                  <label className="font-label-bold text-label-bold text-on-surface uppercase text-[11px]">
-                    Price Variance vs Estimate
-                  </label>
-                  <span className="font-code-data text-code-data text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded text-[12px] tabular-nums">
-                    {priceVariance > 0 ? `+${priceVariance}%` : `${priceVariance}%`}
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="-20"
-                  max="60"
-                  value={priceVariance}
-                  onChange={(e) => setPriceVariance(Number(e.target.value))}
-                  className="w-full accent-black cursor-pointer"
-                />
-                <div className="flex justify-between text-[10px] text-on-surface-variant">
-                  <span>-20% Under Budget</span>
-                  <span>+60% Over Estimate</span>
-                </div>
-              </div>
+            <div>
+              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
+                <span>Max Estimate Deviation</span>
+                <strong>{(priceDevThreshold * 100).toFixed(0)}%</strong>
+              </label>
+              <input
+                type="range"
+                min="0.10"
+                max="0.80"
+                step="0.05"
+                value={priceDevThreshold}
+                onChange={(e) => setPriceDevThreshold(Number(e.target.value))}
+                style={{ width: "100%" }}
+              />
+            </div>
 
-              {/* Slider 3: Spec Similarity */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-center">
-                  <label className="font-label-bold text-label-bold text-on-surface uppercase text-[11px]">
-                    Specification Similarity
-                  </label>
-                  <span className="font-code-data text-code-data text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded text-[12px] tabular-nums">
-                    {specSimilarity}%
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={specSimilarity}
-                  onChange={(e) => setSpecSimilarity(Number(e.target.value))}
-                  className="w-full accent-black cursor-pointer"
-                />
-                <div className="flex justify-between text-[10px] text-on-surface-variant">
-                  <span>Standard RFP Specs</span>
-                  <span>Tailored to Vendor Catalog</span>
-                </div>
-              </div>
+            <div>
+              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
+                <span>Vendor Concentration Limit (Lock-in)</span>
+                <strong>{(vendorLockinThreshold * 100).toFixed(0)}%</strong>
+              </label>
+              <input
+                type="range"
+                min="0.30"
+                max="0.90"
+                step="0.05"
+                value={vendorLockinThreshold}
+                onChange={(e) => setVendorLockinThreshold(Number(e.target.value))}
+                style={{ width: "100%" }}
+              />
+            </div>
 
-              {/* Slider 4: Bidding Window */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-center">
-                  <label className="font-label-bold text-label-bold text-on-surface uppercase text-[11px]">
-                    Tender Bidding Duration
-                  </label>
-                  <span className="font-code-data text-code-data text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded text-[12px] tabular-nums">
-                    {biddingDays} Days
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="3"
-                  max="45"
-                  value={biddingDays}
-                  onChange={(e) => setBiddingDays(Number(e.target.value))}
-                  className="w-full accent-black cursor-pointer"
-                />
-                <div className="flex justify-between text-[10px] text-on-surface-variant">
-                  <span>3 Days (Compressed)</span>
-                  <span>45 Days (CVC Standard)</span>
-                </div>
-              </div>
-
-              {/* Slider 5: Qualified Bidders */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-center">
-                  <label className="font-label-bold text-label-bold text-on-surface uppercase text-[11px]">
-                    Qualified Bidders Count
-                  </label>
-                  <span className="font-code-data text-code-data text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded text-[12px] tabular-nums">
-                    {bidderCount} Bidders
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="1"
-                  max="10"
-                  value={bidderCount}
-                  onChange={(e) => setBidderCount(Number(e.target.value))}
-                  className="w-full accent-black cursor-pointer"
-                />
-                <div className="flex justify-between text-[10px] text-on-surface-variant">
-                  <span>1 (Sole Source)</span>
-                  <span>10+ (Competitive)</span>
-                </div>
-              </div>
-
-              {/* Toggles */}
-              <div className="pt-3 border-t border-outline-variant/20 flex flex-col gap-3">
-                <label className="flex items-center justify-between cursor-pointer">
-                  <span className="text-body-sm font-medium text-on-surface">Shell Company Nexus Indicator</span>
-                  <input
-                    type="checkbox"
-                    checked={isShellCompany}
-                    onChange={(e) => setIsShellCompany(e.target.checked)}
-                    className="w-4 h-4 accent-black rounded"
-                  />
-                </label>
-                <label className="flex items-center justify-between cursor-pointer">
-                  <span className="text-body-sm font-medium text-on-surface">Cross-Directorship Syndicate</span>
-                  <input
-                    type="checkbox"
-                    checked={hasCrossDirectorship}
-                    onChange={(e) => setHasCrossDirectorship(e.target.checked)}
-                    className="w-4 h-4 accent-black rounded"
-                  />
-                </label>
-              </div>
+            <div>
+              <label style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", marginBottom: 4 }}>
+                <span>NLP Specification Similarity Threshold</span>
+                <strong>{(nlpThreshold * 100).toFixed(0)}%</strong>
+              </label>
+              <input
+                type="range"
+                min="0.50"
+                max="0.95"
+                step="0.05"
+                value={nlpThreshold}
+                onChange={(e) => setNlpThreshold(Number(e.target.value))}
+                style={{ width: "100%" }}
+              />
             </div>
           </div>
         </div>
 
-        {/* Right Column: Projected CRS Output (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
-          <div className="glass-card rounded-xl p-8 shadow-sm">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <span className="font-label-bold text-[10px] uppercase tracking-wider text-on-surface-variant bg-surface-container py-0.5 px-2.5 rounded">
-                  Simulation Outcome
-                </span>
-                <h3 className="font-headline-page text-2xl font-bold text-primary mt-2">
-                  Projected Composite Risk Score
-                </h3>
-              </div>
-              <div
-                className={`px-3 py-1 rounded-full text-xs font-bold font-mono uppercase ${
-                  crs >= 75
-                    ? "bg-error-container/30 text-error border border-error/30"
-                    : crs >= 50
-                    ? "bg-[#b45309]/10 text-[#b45309] border border-[#b45309]/30"
-                    : "bg-[#047857]/10 text-[#047857] border border-[#047857]/30"
-                }`}
-              >
-                {crs >= 75 ? "CRITICAL RISK" : crs >= 50 ? "ELEVATED RISK" : "CONFORMANT"}
-              </div>
+        {/* Contract Scenario Input */}
+        <div className="card">
+          <div className="card-title">📝 Simulated Contract Parameters</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, fontSize: 13 }}>
+            <div>
+              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Sanctioned Estimate (₹)</label>
+              <input
+                type="number"
+                className="input-field"
+                value={estimateValue}
+                onChange={(e) => setEstimateValue(Number(e.target.value))}
+                style={{ width: "100%", marginTop: 4 }}
+              />
             </div>
 
-            {/* Big Score Gauge */}
-            <div className="flex items-baseline gap-3 my-6">
-              <span className="font-display-lg text-6xl font-extrabold text-primary tracking-tight">
-                {crs}
-              </span>
-              <span className="text-2xl text-on-surface-variant font-medium">/ 100 CRS</span>
+            <div>
+              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Awarded Value (₹)</label>
+              <input
+                type="number"
+                className="input-field"
+                value={awardValue}
+                onChange={(e) => setAwardValue(Number(e.target.value))}
+                style={{ width: "100%", marginTop: 4 }}
+              />
             </div>
 
-            {/* Score Bar */}
-            <div className="w-full bg-surface-container-high h-3.5 rounded-full overflow-hidden mb-6">
-              <div
-                className="h-full rounded-full transition-all duration-300"
-                style={{
-                  width: `${crs}%`,
-                  backgroundColor: crs >= 75 ? "#ba1a1a" : crs >= 50 ? "#b45309" : "#047857"
-                }}
-              ></div>
+            <div>
+              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Tender Open Days</label>
+              <input
+                type="number"
+                className="input-field"
+                value={tenderDays}
+                onChange={(e) => setTenderDays(Number(e.target.value))}
+                style={{ width: "100%", marginTop: 4 }}
+              />
             </div>
 
-            {/* Contribution Breakdown */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-outline-variant/20">
-              <div>
-                <div className="text-[11px] font-mono text-on-surface-variant uppercase">Pricing Weight</div>
-                <div className="text-lg font-bold text-primary font-display mt-0.5">
-                  {Math.round(Math.max(0, priceVariance) * 1.2)} pts
-                </div>
-              </div>
-              <div>
-                <div className="text-[11px] font-mono text-on-surface-variant uppercase">Vendor Profile</div>
-                <div className="text-lg font-bold text-primary font-display mt-0.5">
-                  {Math.round(vendorRisk * 0.25)} pts
-                </div>
-              </div>
-              <div>
-                <div className="text-[11px] font-mono text-on-surface-variant uppercase">Syndicate Risk</div>
-                <div className="text-lg font-bold text-primary font-display mt-0.5">
-                  {(isShellCompany ? 18 : 0) + (hasCrossDirectorship ? 15 : 0)} pts
-                </div>
-              </div>
+            <div>
+              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Bidder Count</label>
+              <input
+                type="number"
+                className="input-field"
+                value={bidderCount}
+                onChange={(e) => setBidderCount(Number(e.target.value))}
+                style={{ width: "100%", marginTop: 4 }}
+              />
             </div>
-          </div>
 
-          {/* Remediation Recommendations */}
-          <div className="glass-card rounded-xl p-6 shadow-sm">
-            <h4 className="font-section-title text-base font-semibold text-primary mb-3 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">verified</span>
-              Automated Policy Recommendations
-            </h4>
-            <ul className="space-y-2.5 text-body-sm text-on-surface-variant text-sm">
-              <li className="flex items-start gap-2">
-                <span className="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">check_circle</span>
-                <span>
-                  Extend tender publication window from <strong>{biddingDays} days</strong> to at least <strong>21 days</strong> to conform with CVC transparency guidelines.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">check_circle</span>
-                <span>
-                  Require minimum of <strong>3 independent verified bidders</strong> before technical evaluation unlocking.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">check_circle</span>
-                <span>
-                  Perform automated MCA-21 cross-verification for beneficial ownership and shared directors.
-                </span>
-              </li>
-            </ul>
+            <div>
+              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Vendor Past Wins in Dept</label>
+              <input
+                type="number"
+                className="input-field"
+                value={vendorPastWins}
+                onChange={(e) => setVendorPastWins(Number(e.target.value))}
+                style={{ width: "100%", marginTop: 4 }}
+              />
+            </div>
+
+            <div>
+              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Total Department Tenders</label>
+              <input
+                type="number"
+                className="input-field"
+                value={totalDeptContracts}
+                onChange={(e) => setTotalDeptContracts(Number(e.target.value))}
+                style={{ width: "100%", marginTop: 4 }}
+              />
+            </div>
+
+            <div>
+              <label style={{ color: "var(--text-muted)", fontSize: 12 }}>Contract Extension Count</label>
+              <input
+                type="number"
+                className="input-field"
+                value={extensionCount}
+                onChange={(e) => setExtensionCount(Number(e.target.value))}
+                style={{ width: "100%", marginTop: 4 }}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </>
+
+      {/* Live Calculated CRS Gauge */}
+      <div className="card" style={{ marginBottom: 24, borderColor: crs >= 70 ? "var(--risk-high-border)" : "var(--border-color)" }}>
+        <div className="card-title">
+          <span>Live Calculated Corruption Risk Score (CRS)</span>
+          <span className={`risk-badge ${riskLevel}`} style={{ fontSize: 14 }}>{riskLevel} Risk</span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 24, margin: "14px 0", flexWrap: "wrap" }}>
+          <div style={{
+            width: 100, height: 100, borderRadius: "50%",
+            background: `conic-gradient(${crs >= 70 ? "#ef4444" : crs >= 40 ? "#f59e0b" : "#10b981"} ${crs * 3.6}deg, #1e293b 0deg)`,
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }}>
+            <div style={{ width: 78, height: 78, borderRadius: "50%", background: "#111827", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+              <span style={{ fontSize: 26, fontWeight: 900 }}>{crs}</span>
+              <span style={{ fontSize: 10, color: "var(--text-muted)" }}>CRS</span>
+            </div>
+          </div>
+
+          <div style={{ flex: 1, minWidth: 240 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, fontSize: 14 }}>
+              <div>
+                <span style={{ color: "var(--text-secondary)" }}>Rule Engine Score (80%):</span>{" "}
+                <strong>{ruleScore} / 100</strong>
+              </div>
+              <div>
+                <span style={{ color: "var(--text-secondary)" }}>Anomaly Score (20%):</span>{" "}
+                <strong>{anomalyFactor.toFixed(1)} / 100</strong>
+              </div>
+            </div>
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 6 }}>
+              Formula: <code>CRS = round(0.80 × {ruleScore} + 0.20 × {anomalyFactor.toFixed(1)}) = {crs}</code>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Red Flags Evaluated */}
+      <div className="card" style={{ marginBottom: 24 }}>
+        <div className="card-title">
+          <span>Evaluated Heuristics ({flags.filter(f => f.detected).length} Detected)</span>
+        </div>
+        <div className="red-flags-grid">
+          {flags.map((f) => (
+            <div key={f.id} className={`flag-card ${f.detected ? "detected" : ""}`}>
+              <div className="flag-header">
+                <span className="font-mono" style={{ fontWeight: 700, color: f.detected ? "var(--risk-high)" : "var(--text-muted)" }}>{f.id}</span>
+                <span className={`risk-badge ${f.detected ? f.severity : "low"}`}>
+                  {f.detected ? `+${f.score} pts` : "Cleared"}
+                </span>
+              </div>
+              <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4 }}>{f.name}</div>
+              <div className="flag-explanation">{f.explanation}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* NLP Specification Similarity Tool */}
+      <div className="card">
+        <div className="card-title">
+          <span>TF-IDF NLP Specification Comparison (RF-7)</span>
+          <button className="btn btn-primary" onClick={handleRunNlp} disabled={nlpLoading} style={{ padding: "6px 14px", fontSize: 13 }}>
+            {nlpLoading ? "Analyzing..." : "Test NLP Specification"}
+          </button>
+        </div>
+        <div className="grid-2">
+          <div>
+            <label style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 700 }}>TENDER SPECIFICATION</label>
+            <textarea
+              className="input-field"
+              rows={3}
+              style={{ width: "100%", marginTop: 4, fontSize: 13 }}
+              value={specificationText}
+              onChange={(e) => setSpecificationText(e.target.value)}
+            />
+          </div>
+          <div>
+            <label style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 700 }}>VENDOR PRODUCT CATALOG</label>
+            <textarea
+              className="input-field"
+              rows={3}
+              style={{ width: "100%", marginTop: 4, fontSize: 13 }}
+              value={vendorCatalogText}
+              onChange={(e) => setVendorCatalogText(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
